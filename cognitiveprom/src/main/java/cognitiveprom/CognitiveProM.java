@@ -3,7 +3,10 @@ package cognitiveprom;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JSlider;
@@ -13,7 +16,9 @@ import javax.swing.event.ChangeListener;
 import org.deckfour.xes.in.XParser;
 import org.deckfour.xes.in.XesXmlParser;
 import org.deckfour.xes.model.XLog;
+import org.processmining.plugins.graphviz.dot.DotElement;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
+import org.processmining.plugins.graphviz.visualisation.listeners.SelectionChangedListener;
 
 import cognitiveprom.tools.DfgMinerResult;
 import cognitiveprom.tools.Miner;
@@ -37,14 +42,19 @@ public class CognitiveProM {
 		mainFrame.setVisible(true);
 		
 		final DotPanel diagram = new DotPanel(Visualizer.visualize(dfg, 1));
-		
 		diagram.setPreferredSize(new Dimension(1600, 900));
 		diagram.setOpaque(true);
 		diagram.setBackground(Color.white);
+//		diagram.addSelectionChangedListener(new SelectionChangedListener<DotElement>() {
+//			public void selectionChanged(Set<DotElement> selectedElements) {
+//				System.out.println(selectedElements);
+//			}
+//		});
 		
 		final JSlider slider = new JSlider(JSlider.VERTICAL, 0, 100, 100);
-		slider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
+		slider.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
 				diagram.changeDot(Visualizer.visualize(dfg, slider.getValue() / 100d), true);
 			}
 		});
