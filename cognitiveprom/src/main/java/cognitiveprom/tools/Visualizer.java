@@ -1,14 +1,17 @@
 package cognitiveprom.tools;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.model.XTrace;
 import org.processmining.causalactivitygraph.models.CausalActivityGraph;
 import org.processmining.dataawarecnetminer.model.EventRelationStorage;
+import org.processmining.framework.util.Pair;
 import org.processmining.models.causalgraph.Relation;
 import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.mining.IMLogInfo;
@@ -24,15 +27,26 @@ import cognitiveprom.graphical.CognitiveDotEdge;
 import cognitiveprom.graphical.CognitiveDotEndNode;
 import cognitiveprom.graphical.CognitiveDotNode;
 import cognitiveprom.graphical.CognitiveDotStartNode;
+import cognitiveprom.projections.AggregationValues;
 
 public class Visualizer {
 	
 	private static DecimalFormat df = new DecimalFormat("#.###");
 	
-	public static Dot visualize(DfgMinerResult dfgResult, double threshold) {
+	public static Map<String, Pair<String, Double>> getAggregated(Collection<XTrace> tracesToConsider, AggregationValues attribute) {
+		Map<String, Pair<String, Double>> values = new HashMap<String, Pair<String, Double>>();
+		
+		for (XTrace trace : tracesToConsider) {
+			
+		}
+		
+		return values;
+	}
+	
+	public static Dot visualize(DfgMinerResult dfgResult, double threshold, Collection<XTrace> tracesToConsider, String attribute) {
 		EventRelationStorage eventRelations = dfgResult.ers;
 		Long maxAllowedToCut = dfgResult.maxAllowedToCut;
-		
+
 		double mostOccurringActivity = Utils.getMostFrequencActivity(eventRelations);
 		double mostOccurringRelation = Utils.getMostFrequentRelation(eventRelations);
 		double mostOccurringRelationStart = Utils.getMostFrequentRelationStart(eventRelations);
