@@ -5,11 +5,10 @@ import java.awt.Color;
 import org.processmining.plugins.graphviz.dot.DotNode;
 
 import cognitiveprom.tools.ColorPalette;
-import cognitiveprom.tools.ColorPalette.Colors;
 
 public class CognitiveDotNode extends DotNode {
 
-	public CognitiveDotNode(String label, String secondLine, Double weight) {
+	public CognitiveDotNode(String label, String secondLine, Double weight, ColorPalette.Colors activityColor) {
 		super(label, null);
 		
 		setSelectable(true);
@@ -30,7 +29,7 @@ public class CognitiveDotNode extends DotNode {
 		if (weight == null) {
 			setOption("fillcolor", "#FDEFD8:#E1D3BC");
 		} else {
-			Color backgroundColor = ColorPalette.getValue(Colors.BLUE, weight);
+			Color backgroundColor = ColorPalette.getValue(activityColor, weight);
 			Color fontColor = ColorPalette.getFontColor(backgroundColor);
 			setOption("fillcolor", ColorPalette.colorToString(backgroundColor) + ":" + ColorPalette.colorToString(backgroundColor.darker()));
 			setOption("fontcolor", ColorPalette.colorToString(fontColor));

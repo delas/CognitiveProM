@@ -1,6 +1,6 @@
 package cognitiveprom.projections;
 
 public enum AggregationFunctions {
-	SUM,
-	AVERAGE
+
+	SUM, MIN, MAX, MEAN, MEDIAN;
 }

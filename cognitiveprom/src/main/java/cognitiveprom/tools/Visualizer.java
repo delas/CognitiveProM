@@ -3,54 +3,71 @@ package cognitiveprom.tools;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XTrace;
-import org.processmining.causalactivitygraph.models.CausalActivityGraph;
 import org.processmining.dataawarecnetminer.model.EventRelationStorage;
 import org.processmining.framework.util.Pair;
 import org.processmining.models.causalgraph.Relation;
-import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
-import org.processmining.plugins.InductiveMiner.mining.IMLogInfo;
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.dot.DotCluster;
 import org.processmining.plugins.graphviz.dot.DotEdge;
 import org.processmining.plugins.graphviz.dot.DotNode;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multiset.Entry;
 
 import cognitiveprom.graphical.CognitiveDotEdge;
 import cognitiveprom.graphical.CognitiveDotEndNode;
 import cognitiveprom.graphical.CognitiveDotNode;
 import cognitiveprom.graphical.CognitiveDotStartNode;
+import cognitiveprom.projections.AggregationFunction;
+import cognitiveprom.projections.AggregationFunctions;
 import cognitiveprom.projections.AggregationValues;
+import cognitiveprom.tools.ColorPalette.Colors;
 
 public class Visualizer {
 	
 	private static DecimalFormat df = new DecimalFormat("#.###");
 	
-	public static Map<String, Pair<String, Double>> getAggregated(Collection<XTrace> tracesToConsider, AggregationValues attribute) {
-		Map<String, Pair<String, Double>> values = new HashMap<String, Pair<String, Double>>();
-		
+	public static Map<String, Pair<String, Double>> getAggregated(Collection<XTrace> tracesToConsider, AggregationValues attribute, AggregationFunctions function) {
+		Map<String, AggregationFunction> aggregators = new HashMap<String, AggregationFunction>();
 		for (XTrace trace : tracesToConsider) {
-			
+			for (XEvent event : trace) {
+				String activity = XLogHelper.getName(event);
+				if (!aggregators.containsKey(activity)) {
+					aggregators.put(activity, AggregationFunction.construct(function));
+				}
+				aggregators.get(activity).addObservation(attribute.getValue(event));
+			}
+		}
+		
+		Double max = Double.MIN_VALUE;
+		for (String activity : aggregators.keySet()) {
+			max = Math.max(max, aggregators.get(activity).getValue().doubleValue());
+		}
+		
+		Map<String, Pair<String, Double>> values = new HashMap<String, Pair<String, Double>>();
+		for (String activity : aggregators.keySet()) {
+			AggregationFunction af = aggregators.get(activity);
+			Pair<String, Double> p = new Pair<String, Double>(af.getValue().toString(), af.getValue().doubleValue() / max);
+			values.put(activity, p);
 		}
 		
 		return values;
 	}
 	
-	public static Dot visualize(DfgMinerResult dfgResult, double threshold, Collection<XTrace> tracesToConsider, String attribute) {
+	public static Dot visualize(DfgMinerResult dfgResult, double threshold, Collection<XTrace> tracesToConsider, AggregationValues attribute, AggregationFunctions function, Colors activityColor) {
 		EventRelationStorage eventRelations = dfgResult.ers;
 		Long maxAllowedToCut = dfgResult.maxAllowedToCut;
 
-		double mostOccurringActivity = Utils.getMostFrequencActivity(eventRelations);
 		double mostOccurringRelation = Utils.getMostFrequentRelation(eventRelations);
 		double mostOccurringRelationStart = Utils.getMostFrequentRelationStart(eventRelations);
 		double mostOccurringRelationEnd = Utils.getMostFrequentRelationEnd(eventRelations);
+		
+		Map<String, Pair<String, Double>> activityDecoration = getAggregated(tracesToConsider, attribute, function);
 		
 		Dot dot = new Dot();
 		dot.setOption("outputorder", "edgesfirst");
@@ -76,11 +93,12 @@ public class Visualizer {
 				node = new CognitiveDotEndNode();
 				e.addNode(node);
 			} else {
-				long frequency = eventRelations.countOccurence(act);
+				String activity = act.toString();
 				node = new CognitiveDotNode(
 						act.toString(),
-						Long.toString(frequency),
-						frequency / mostOccurringActivity);
+						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getFirst() : null,
+						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getSecond() : null,
+						activityColor);
 				n.addNode(node);
 			}
 			mapNodes.put(act, node);
@@ -137,7 +155,7 @@ public class Visualizer {
 
 	
 	
-	public static Dot visualize(DfgMinerResultOld dfgResult, double threshold) {
+	/*public static Dot visualize(DfgMinerResultOld dfgResult, double threshold) {
 		IMLogInfo logInfo = dfgResult.logInfo;
 		Dfg dfg = dfgResult.dfg;
 		Long maxAllowedToCut = dfgResult.maxAllowedToCut;
@@ -237,6 +255,6 @@ public class Visualizer {
 		}
 		
 		return dot;
-	}
+	}*/
 
 }

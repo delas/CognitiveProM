@@ -10,11 +10,10 @@ public class AggregationValues implements Comparable<AggregationValues> {
 
 	public static AggregationValues FREQUENCY = new AggregationValues(null, "Event frequency") {
 		@Override
-		public Number getValue(XEvent event) {
-			return 1;
+		public Double getValue(XEvent event) {
+			return 1d;
 		}
 	};
-
 
 	private String specialFunction = null;
 	private String attributeName = null;
@@ -32,14 +31,14 @@ public class AggregationValues implements Comparable<AggregationValues> {
 		return attributeName;
 	}
 	
-	public Number getValue(XEvent event) {
+	public Double getValue(XEvent event) {
 		XAttribute a = event.getAttributes().get(attributeName);
 		if (a instanceof XAttributeDiscrete) {
-			return ((XAttributeDiscrete) a).getValue();
+			return new Double(((XAttributeDiscrete) a).getValue());
 		} else if (a instanceof XAttributeContinuous) {
 			return ((XAttributeContinuous) a).getValue();
 		}
-		return 0;
+		return 0d;
 	}
 	
 	@Override
@@ -75,7 +74,6 @@ public class AggregationValues implements Comparable<AggregationValues> {
 		}
 	}
 
-	@Override
 	public int compareTo(AggregationValues o) {
 		if (specialFunction != null && o.specialFunction != null) {
 			return specialFunction.compareTo(o.specialFunction);

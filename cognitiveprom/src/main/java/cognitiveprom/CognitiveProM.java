@@ -37,7 +37,10 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 
+import cognitiveprom.projections.AggregationFunctions;
 import cognitiveprom.projections.AggregationValues;
+import cognitiveprom.tools.ColorPalette;
+import cognitiveprom.tools.ColorPalette.Colors;
 import cognitiveprom.tools.DfgMinerResult;
 import cognitiveprom.tools.Miner;
 import cognitiveprom.tools.Utils;
@@ -46,8 +49,8 @@ import cognitiveprom.tools.Visualizer;
 public class CognitiveProM {
 
 	public static void main(String[] args) throws Exception {
-		String file = "C:\\Users\\andbur\\Desktop\\1.1.tsv-quadrants.xes";
-//		String file = "C:\\Users\\andbur\\Desktop\\test.xes";
+//		String file = "C:\\Users\\andbur\\Desktop\\1.1.tsv-quadrants.xes";
+		String file = "C:\\Users\\andbur\\Desktop\\test.xes";
 //		String file = "C:\\Users\\andbur\\Desktop\\test-2starts.xes";
 		XParser parser = new XesXmlParser();
 		final XLog log = parser.parse(new File(file)).get(0);
@@ -61,7 +64,7 @@ public class CognitiveProM {
 		mainFrame.setVisible(true);
 		
 		// diagram panel
-		final DotPanel diagram = new DotPanel(Visualizer.visualize(dfg, 1, log, "ActivityFrequency"));
+		final DotPanel diagram = new DotPanel(Visualizer.visualize(dfg, 1, log, AggregationValues.FREQUENCY, AggregationFunctions.SUM, Colors.BLUE));
 		diagram.setPreferredSize(new Dimension(1600, 900));
 		diagram.setOpaque(true);
 		diagram.setBackground(Color.white);
@@ -72,21 +75,29 @@ public class CognitiveProM {
 		slider.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				diagram.changeDot(Visualizer.visualize(dfg, slider.getValue() / 100d, log, "ActivityFrequency"), true);
+				diagram.changeDot(Visualizer.visualize(dfg, slider.getValue() / 100d, log, AggregationValues.FREQUENCY, AggregationFunctions.SUM, Colors.BLUE), true);
 			}
 		});
 		
 		// attribute panel selector
 		JPanel attributePanel = new JPanel(new BorderLayout());
+		JPanel attributeConfiguration = new JPanel(new BorderLayout());
+		attributePanel.add(attributeConfiguration, BorderLayout.NORTH);
 		
-		DefaultComboBoxModel<AggregationValues> comboModel = new DefaultComboBoxModel<AggregationValues>();
+		final JComboBox<AggregationValues> comboAttributes = new JComboBox<AggregationValues>();
 		for (AggregationValues av : Utils.getProjectableAttributes(log)) {
-			comboModel.addElement(av);
+			comboAttributes.addItem(av);
 		}
-		comboModel.addElement(AggregationValues.FREQUENCY);
-		final JComboBox<AggregationValues> comboAttributes = new JComboBox<AggregationValues>(comboModel);
+		comboAttributes.addItem(AggregationValues.FREQUENCY);
 		comboAttributes.setSelectedItem(AggregationValues.FREQUENCY);
-		attributePanel.add(comboAttributes, BorderLayout.NORTH);
+		attributeConfiguration.add(comboAttributes, BorderLayout.NORTH);
+		
+		final JComboBox<AggregationFunctions> comboAttributesFunctions = new JComboBox<AggregationFunctions>();
+		for (AggregationFunctions f : AggregationFunctions.values()) {
+			comboAttributesFunctions.addItem(f);
+		}
+		comboAttributesFunctions.setSelectedItem(AggregationFunctions.SUM);
+		attributeConfiguration.add(comboAttributesFunctions, BorderLayout.SOUTH);
 		
 		DefaultListModel<XTrace> listModel = new DefaultListModel<XTrace>();
 		for (XTrace trace : log) {
@@ -108,21 +119,67 @@ public class CognitiveProM {
 				return l;
 			}
 		});
+		attributePanel.add(tracesSelector, BorderLayout.CENTER);
+		
+		final JComboBox<ColorPalette.Colors> comboColors = new JComboBox<ColorPalette.Colors>();
+		for (ColorPalette.Colors c : ColorPalette.Colors.values()) {
+			comboColors.addItem(c);
+		}
+		comboColors.setSelectedItem(ColorPalette.Colors.BLUE);
+		attributePanel.add(comboColors, BorderLayout.SOUTH);
 		
 		comboAttributes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(comboAttributes.getSelectedItem() + tracesSelector.getSelectedValuesList().toString());
-//				diagram.changeDot(Visualizer.visualize(dfg, slider.getValue() / 100d, tracesSelector.getSelectedValuesList(), comboAttributes.getSelectedItem().toString()), true);
+				diagram.changeDot(
+						Visualizer.visualize(
+								dfg,
+								slider.getValue() / 100d,
+								tracesSelector.getSelectedValuesList(),
+								(AggregationValues) comboAttributes.getSelectedItem(),
+								(AggregationFunctions) comboAttributesFunctions.getSelectedItem(),
+								(ColorPalette.Colors) comboColors.getSelectedItem()),
+						true);
+			}
+		});
+		comboAttributesFunctions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				diagram.changeDot(
+						Visualizer.visualize(
+								dfg,
+								slider.getValue() / 100d,
+								tracesSelector.getSelectedValuesList(),
+								(AggregationValues) comboAttributes.getSelectedItem(),
+								(AggregationFunctions) comboAttributesFunctions.getSelectedItem(),
+								(ColorPalette.Colors) comboColors.getSelectedItem()),
+						true);
+			}
+		});
+		comboColors.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				diagram.changeDot(
+						Visualizer.visualize(
+								dfg,
+								slider.getValue() / 100d,
+								tracesSelector.getSelectedValuesList(),
+								(AggregationValues) comboAttributes.getSelectedItem(),
+								(AggregationFunctions) comboAttributesFunctions.getSelectedItem(),
+								(ColorPalette.Colors) comboColors.getSelectedItem()),
+						true);
 			}
 		});
 		tracesSelector.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				System.out.println(comboAttributes.getSelectedItem() + tracesSelector.getSelectedValuesList().toString());
-//				diagram.changeDot(Visualizer.visualize(dfg, slider.getValue() / 100d, tracesSelector.getSelectedValuesList(), comboAttributes.getSelectedItem().toString()), true);
+				diagram.changeDot(
+						Visualizer.visualize(
+								dfg,
+								slider.getValue() / 100d,
+								tracesSelector.getSelectedValuesList(),
+								(AggregationValues) comboAttributes.getSelectedItem(),
+								(AggregationFunctions) comboAttributesFunctions.getSelectedItem(),
+								(ColorPalette.Colors) comboColors.getSelectedItem()),
+						true);
 			}
 		});
-		
-		attributePanel.add(tracesSelector, BorderLayout.CENTER);
 		
 		
 		mainFrame.setLayout(new BorderLayout());
