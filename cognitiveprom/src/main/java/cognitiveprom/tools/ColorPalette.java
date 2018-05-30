@@ -15,7 +15,7 @@ public class ColorPalette {
 		PINK  ("#FBE2ED", "#951343"),
 		GREEN ("#E5EFC7", "#3F652D"),
 		GRAY  ("#E0E2E4", "#3A3C3E"),
-		DATK_GRAY("#86888A", "#252526");
+		DARK_GRAY("#86888A", "#252526");
 		
 		public Color min;
 		public Color max;

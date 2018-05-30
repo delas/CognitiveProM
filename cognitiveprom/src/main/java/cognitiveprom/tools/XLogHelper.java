@@ -12,6 +12,7 @@ import org.deckfour.xes.extension.std.XTimeExtension;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryNaiveImpl;
 import org.deckfour.xes.model.XAttributable;
+import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XAttributeBoolean;
 import org.deckfour.xes.model.XAttributeContinuous;
 import org.deckfour.xes.model.XAttributeDiscrete;
@@ -74,8 +75,8 @@ public class XLogHelper {
 		for (XTrace trace : log) {
 			trace.sort(new Comparator<XEvent>() {
 				public int compare(XEvent e1, XEvent e2) {
-					XAttributeTimestamp e1Time = (XAttributeTimestamp) e1.getAttributes().get("time:timestamp");
-					XAttributeTimestamp e2Time = (XAttributeTimestamp) e1.getAttributes().get("time:timestamp");
+					XAttributeTimestamp e1Time = (XAttributeTimestamp) e1.getAttributes().get(XTimeExtension.KEY_TIMESTAMP);
+					XAttributeTimestamp e2Time = (XAttributeTimestamp) e1.getAttributes().get(XTimeExtension.KEY_TIMESTAMP);
 					return e1Time.getValue().compareTo(e2Time.getValue());
 				}
 			});
@@ -124,11 +125,11 @@ public class XLogHelper {
 	public static XLog generateNewXLog(String logName) {
 		XLog log;
 		log = xesFactory.createLog();
-		decorateElement(log, "concept:name", logName, "Concept");
-		log.getExtensions().add(xesExtensionManager.getByName("Lifecycle"));
-		log.getExtensions().add(xesExtensionManager.getByName("Organizational"));
-		log.getExtensions().add(xesExtensionManager.getByName("Time"));
-		log.getExtensions().add(xesExtensionManager.getByName("Concept"));
+		decorateElement(log, XConceptExtension.KEY_NAME, logName, XConceptExtension.instance().getName());
+		log.getExtensions().add(XLifecycleExtension.instance());
+		log.getExtensions().add(XOrganizationalExtension.instance());
+		log.getExtensions().add(XTimeExtension.instance());
+		log.getExtensions().add(XConceptExtension.instance());
 		return log;
 	}
 	
@@ -153,7 +154,7 @@ public class XLogHelper {
 		}
 		
 		XTrace trace = xesFactory.createTrace();
-		decorateElement(trace, "concept:name", caseId, "Concept");
+		decorateElement(trace, XConceptExtension.KEY_NAME, caseId, XConceptExtension.instance().getName());
 		log.add(trace);
 		return trace;
 	}
@@ -175,8 +176,8 @@ public class XLogHelper {
 			return null;
 		}
 		XEvent e = xesFactory.createEvent();
-		decorateElement(e, "concept:name", activityName, "Concept");
-		decorateElement(e, "time:timestamp", timestamp, "Time");
+		decorateElement(e, XConceptExtension.KEY_NAME, activityName, XConceptExtension.instance().getName());
+		decorateElement(e, XTimeExtension.KEY_TIMESTAMP, timestamp, XTimeExtension.instance().getName());
 		trace.add(e);
 		return e;
 	}
@@ -396,7 +397,31 @@ public class XLogHelper {
 	 * @return the value of the <tt>concept:name</tt> attribute
 	 */
 	public static String getName(XAttributable element) {
-		XAttributeLiteral name = (XAttributeLiteral) element.getAttributes().get("concept:name");
-		return name.getValue();
+		return getStringAttribute(element, XConceptExtension.KEY_NAME);
+	}
+	
+	public static String getStringAttribute(XAttributable element, String attributeName) {
+		XAttributeLiteral attribute = (XAttributeLiteral) element.getAttributes().get(attributeName);
+		return attribute.getValue();
+	}
+	
+	public static Double getDoubleAttribute(XAttributable element, String attributeName) {
+		XAttributeContinuous attribute = (XAttributeContinuous) element.getAttributes().get(attributeName);
+		return attribute.getValue();
+	}
+	
+	public static Long getLongAttribute(XAttributable element, String attributeName) {
+		XAttributeDiscrete attribute = (XAttributeDiscrete) element.getAttributes().get(attributeName);
+		return attribute.getValue();
+	}
+	
+	public static boolean hasDoubleAttribute(XAttributable element, String attributeName) {
+		XAttribute attribute = element.getAttributes().get(attributeName);
+		return (attribute instanceof XAttributeContinuous);
+	}
+	
+	public static boolean hasLongAttribute(XAttributable element, String attributeName) {
+		XAttribute attribute = element.getAttributes().get(attributeName);
+		return (attribute instanceof XAttributeDiscrete);
 	}
 }

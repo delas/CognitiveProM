@@ -1,44 +1,60 @@
 package cognitiveprom.projections;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.deckfour.xes.model.XAttribute;
-import org.deckfour.xes.model.XAttributeContinuous;
-import org.deckfour.xes.model.XAttributeDiscrete;
 import org.deckfour.xes.model.XEvent;
+import org.deckfour.xes.model.XTrace;
+
+import cognitiveprom.tools.XLogHelper;
 
 public class AggregationValues implements Comparable<AggregationValues> {
 
-	public static AggregationValues FREQUENCY = new AggregationValues(null, "Event frequency") {
+	public static AggregationValues FREQUENCY = new AggregationValues("Event frequency", true) {
 		@Override
-		public Double getValue(XEvent event) {
-			return 1d;
+		public List<Double> getValues(XTrace trace, String activityName) {
+			List<Double> values = new ArrayList<Double>();
+			double counter = 0;
+			for (XEvent event : trace) {
+				if (activityName.equals(XLogHelper.getName(event))) {
+					counter++;
+				}
+			}
+			values.add(counter);
+			return values;
 		}
 	};
 
-	private String specialFunction = null;
-	private String attributeName = null;
+	protected String attributeName = null;
+	protected boolean isSpecialFunction;
 	
-	public AggregationValues(String attributeName) {
-		this(attributeName, null);
+	protected AggregationValues(String attributeName, boolean isSpecialFunction) {
+		this.attributeName = attributeName;
+		this.isSpecialFunction = isSpecialFunction;
 	}
 	
-	private AggregationValues(String attributeName, String specialFunction) {
-		this.attributeName = attributeName;
-		this.specialFunction = specialFunction;
+	public AggregationValues(String attributeName) {
+		this(attributeName, false);
 	}
 	
 	public String getAttributeName() {
 		return attributeName;
 	}
 	
-	public Double getValue(XEvent event) {
-		XAttribute a = event.getAttributes().get(attributeName);
-		if (a instanceof XAttributeDiscrete) {
-			return new Double(((XAttributeDiscrete) a).getValue());
-		} else if (a instanceof XAttributeContinuous) {
-			return ((XAttributeContinuous) a).getValue();
+	public List<Double> getValues(XTrace trace, String activityName) {
+		List<Double> values = new ArrayList<Double>();
+		for (XEvent event : trace) {
+			if (activityName.equals(XLogHelper.getName(event))) {
+				if (XLogHelper.hasDoubleAttribute(event, attributeName)) {
+					values.add(XLogHelper.getDoubleAttribute(event, attributeName));
+				}
+				if (XLogHelper.hasLongAttribute(event, attributeName)) {
+					values.add(XLogHelper.getLongAttribute(event, attributeName).doubleValue());
+				}
+			}
 		}
-		return 0d;
+		return values;
 	}
 	
 	@Override
@@ -50,37 +66,32 @@ public class AggregationValues implements Comparable<AggregationValues> {
 			return false;
 		}
 		AggregationValues rhs = (AggregationValues) obj;
-		boolean att1 = (specialFunction == null)? (rhs.specialFunction == null) : specialFunction.equals(rhs.specialFunction);
-		boolean att2 = (attributeName == null)? (rhs.attributeName == null) : attributeName.equals(rhs.attributeName);
-		return att1 && att2;
+		boolean attName = (attributeName == null)? (rhs.attributeName == null) : attributeName.equals(rhs.attributeName);
+		return (isSpecialFunction == rhs.isSpecialFunction) && attName;
 	}
 	
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 37)
-				.append(specialFunction)
+				.append(isSpecialFunction)
 				.append(attributeName)
 				.toHashCode();
 	}
 	
 	@Override
 	public String toString() {
-		if (specialFunction != null) {
-			return "Function - " + specialFunction;
-		} else if (attributeName != null) {
-			return "Attribute - " + attributeName;
+		if (isSpecialFunction) {
+			return "Function - " + attributeName;
 		} else {
-			return "";
+			return "Attribute - " + attributeName;
 		}
 	}
 
 	public int compareTo(AggregationValues o) {
-		if (specialFunction != null && o.specialFunction != null) {
-			return specialFunction.compareTo(o.specialFunction);
-		} else if (attributeName != null && o.attributeName != null) {
+		if (isSpecialFunction == o.isSpecialFunction) {
 			return attributeName.compareTo(o.attributeName);
 		} else {
-			return (specialFunction != null && o.attributeName == null)? -1 : 1;
+			return (isSpecialFunction == true)? 1 : -1;
 		}
 	}
 }

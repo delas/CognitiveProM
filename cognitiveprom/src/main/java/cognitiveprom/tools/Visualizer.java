@@ -3,6 +3,7 @@ package cognitiveprom.tools;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,24 +36,30 @@ public class Visualizer {
 	public static Map<String, Pair<String, Double>> getAggregated(Collection<XTrace> tracesToConsider, AggregationValues attribute, AggregationFunctions function) {
 		Map<String, AggregationFunction> aggregators = new HashMap<String, AggregationFunction>();
 		for (XTrace trace : tracesToConsider) {
+			Set<String> processedActivities = new HashSet<String>();
 			for (XEvent event : trace) {
 				String activity = XLogHelper.getName(event);
-				if (!aggregators.containsKey(activity)) {
-					aggregators.put(activity, AggregationFunction.construct(function));
+				if (!processedActivities.contains(activity)) {
+					if (!aggregators.containsKey(activity)) {
+						aggregators.put(activity, new AggregationFunction());
+					}
+					for(Double value : attribute.getValues(trace, activity)) {
+						aggregators.get(activity).addObservation(value);
+					}
+					processedActivities.add(activity);
 				}
-				aggregators.get(activity).addObservation(attribute.getValue(event));
 			}
 		}
 		
 		Double max = Double.MIN_VALUE;
 		for (String activity : aggregators.keySet()) {
-			max = Math.max(max, aggregators.get(activity).getValue().doubleValue());
+			max = Math.max(max, aggregators.get(activity).getValue(function).doubleValue());
 		}
 		
 		Map<String, Pair<String, Double>> values = new HashMap<String, Pair<String, Double>>();
 		for (String activity : aggregators.keySet()) {
 			AggregationFunction af = aggregators.get(activity);
-			Pair<String, Double> p = new Pair<String, Double>(af.getValue().toString(), af.getValue().doubleValue() / max);
+			Pair<String, Double> p = new Pair<String, Double>(af.getStringValue(function), af.getValue(function).doubleValue() / max);
 			values.put(activity, p);
 		}
 		

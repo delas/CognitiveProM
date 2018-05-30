@@ -2,5 +2,5 @@ package cognitiveprom.projections;
 
 public enum AggregationFunctions {
 
-	SUM, MIN, MAX, MEAN, MEDIAN;
+	SUM, MIN, MAX, MEAN;
 }

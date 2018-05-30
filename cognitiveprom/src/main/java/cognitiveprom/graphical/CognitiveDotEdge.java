@@ -23,7 +23,7 @@ public class CognitiveDotEdge extends DotEdge {
 		}
 		
 		if (weight != null) {
-			setOption("color", ColorPalette.colorToString(ColorPalette.getValue(Colors.DATK_GRAY, weight)));
+			setOption("color", ColorPalette.colorToString(ColorPalette.getValue(Colors.DARK_GRAY, weight)));
 			setOption("penwidth", "" + (1 + (4 * weight)));
 		}
 		
