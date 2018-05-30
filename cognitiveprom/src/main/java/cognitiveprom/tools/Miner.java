@@ -56,7 +56,7 @@ public class Miner {
 
 		DfgMinerResult dfg = new DfgMinerResult();
 		dfg.ers = eventStorage;
-		dfg.maxAllowedToCut = maxConnList.get(0);
+		dfg.maxAllowedToCut = (maxConn.size() > 0)? maxConnList.get(0) : 0;
 		
 		return dfg;
 	}
