@@ -59,13 +59,10 @@ public class CognitiveProM {
 		
 		JFrame mainFrame = new JFrame("CognitiveProM");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setSize(1600, 900);
-		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setVisible(true);
 		
 		// diagram panel
 		final DotPanel diagram = new DotPanel(Visualizer.visualize(dfg, 1, log, AggregationValues.FREQUENCY, AggregationFunctions.SUM, Colors.BLUE));
-		diagram.setPreferredSize(new Dimension(1600, 900));
+//		diagram.setPreferredSize(new Dimension(800, 450));
 		diagram.setOpaque(true);
 		diagram.setBackground(Color.white);
 		
@@ -187,5 +184,9 @@ public class CognitiveProM {
 		mainFrame.add(diagram, BorderLayout.CENTER);
 		mainFrame.add(slider, BorderLayout.EAST);
 		mainFrame.pack();
+		
+		mainFrame.setSize(1600, 900);
+		mainFrame.setLocationRelativeTo(null);
+		mainFrame.setVisible(true);
 	}
 }
