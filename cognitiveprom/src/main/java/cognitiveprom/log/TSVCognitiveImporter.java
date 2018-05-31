@@ -46,7 +46,9 @@ public class TSVCognitiveImporter extends CognitiveLogImporter {
 	 * @param AOIs the names of the AOIs as in Tobii Studio
 	 */
 	public void addAOIs(String... AOIs) {
-		namesOfAOIs.addAll(namesOfAOIs);
+		for (String AOI : AOIs) {
+			namesOfAOIs.add(AOI);
+		}
 	}
 	
 	@Override
