@@ -15,14 +15,14 @@ import cognitiveprom.log.CognitiveLog;
  * @author Andrea Burattin
  */
 @Importer(
-	name = "Load XES file",
+	name = "XES file",
 	fileExtension = "xes"
 )
 public class XesCognitiveImporter extends CognitiveLogImporter {
 
 	@Override
 	public String getDescription() {
-		return "Load XES file";
+		return "XES file";
 	}
 
 	@Override
