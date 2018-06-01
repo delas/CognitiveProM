@@ -19,7 +19,7 @@ public class LoadProcessPanel extends JPanel {
 		
 		JLabel label = new JLabel("<html><div style=\"text-align: center;\">"
 				+ "<span style=\"font-size: 30px\">No data to display</span><br/><br/>"
-				+ "<span style=\"font-size: 14px\">Start by opening a XES log file or importing data from a supported file format</span>"
+				+ "<span style=\"font-size: 14px\">Click to open a XES log file or to import data from a supported file format</span>"
 				+ "</div></html>");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setForeground(Color.LIGHT_GRAY);
