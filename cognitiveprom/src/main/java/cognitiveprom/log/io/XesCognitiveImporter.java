@@ -5,6 +5,7 @@ import java.io.File;
 import org.deckfour.xes.in.XParser;
 import org.deckfour.xes.in.XesXmlParser;
 
+import cognitiveprom.annotations.Importer;
 import cognitiveprom.exceptions.LogImportException;
 import cognitiveprom.log.CognitiveLog;
 
@@ -13,6 +14,10 @@ import cognitiveprom.log.CognitiveLog;
  * 
  * @author Andrea Burattin
  */
+@Importer(
+	name = "Load XES file",
+	fileExtension = "xes"
+)
 public class XesCognitiveImporter extends CognitiveLogImporter {
 
 	@Override

@@ -67,49 +67,6 @@ public class XLogHelper {
 	private static XExtensionManager xesExtensionManager = XExtensionManager.instance();
 	
 	/**
-	 * This method sorts all the events in the traces of the log with respect to their timestamp, in increasing order.
-	 * 
-	 * @param log
-	 */
-	public static void sortXLog(XLog log) {
-		for (XTrace trace : log) {
-			trace.sort(new Comparator<XEvent>() {
-				public int compare(XEvent e1, XEvent e2) {
-					XAttributeTimestamp e1Time = (XAttributeTimestamp) e1.getAttributes().get(XTimeExtension.KEY_TIMESTAMP);
-					XAttributeTimestamp e2Time = (XAttributeTimestamp) e1.getAttributes().get(XTimeExtension.KEY_TIMESTAMP);
-					return e1Time.getValue().compareTo(e2Time.getValue());
-				}
-			});
-		}
-	}
-	
-	/**
-	 * This method merges contiguous events which are referring to the same activity.
-	 * 
-	 * @param log the input log
-	 * @param hasCompleteEvents whether the log has start/complete events or just start
-	 * @return the log with the contiguous event merged
-	 */
-	public static XLog mergeEventsWithSameName(XLog log, boolean hasCompleteEvents) {
-		XLog newLog = generateNewXLog(getName(log));
-		for(XTrace trace : log) {
-			XTrace newTrace = insertTrace(newLog, getName(trace));
-			int increment = (hasCompleteEvents)? 2 : 1;
-			for(int i = 0; i < trace.size(); i += increment) {
-				XEvent current = trace.get(i);
-				newTrace.add(current);
-				int j = i + increment;
-				while (j < trace.size() && getName(current).equals(getName(trace.get(j)))) {
-					j += increment;
-				}
-				newTrace.add(trace.get(j - 1));
-				i = j - increment;
-			}
-		}
-		return newLog;
-	}
-	
-	/**
 	 * This method generates a new {@link XLog} and returns it. By default,
 	 * some of the standard extensions are registered, specifically:
 	 * <ul>
@@ -125,11 +82,11 @@ public class XLogHelper {
 	public static XLog generateNewXLog(String logName) {
 		XLog log;
 		log = xesFactory.createLog();
-		decorateElement(log, XConceptExtension.KEY_NAME, logName, XConceptExtension.instance().getName());
-		log.getExtensions().add(XLifecycleExtension.instance());
-		log.getExtensions().add(XOrganizationalExtension.instance());
-		log.getExtensions().add(XTimeExtension.instance());
-		log.getExtensions().add(XConceptExtension.instance());
+		decorateElement(log, "concept:name", logName, "Concept");
+		log.getExtensions().add(xesExtensionManager.getByName("Lifecycle"));
+		log.getExtensions().add(xesExtensionManager.getByName("Organizational"));
+		log.getExtensions().add(xesExtensionManager.getByName("Time"));
+		log.getExtensions().add(xesExtensionManager.getByName("Concept"));
 		return log;
 	}
 	
@@ -154,7 +111,7 @@ public class XLogHelper {
 		}
 		
 		XTrace trace = xesFactory.createTrace();
-		decorateElement(trace, XConceptExtension.KEY_NAME, caseId, XConceptExtension.instance().getName());
+		decorateElement(trace, "concept:name", caseId, "Concept");
 		log.add(trace);
 		return trace;
 	}
@@ -176,8 +133,8 @@ public class XLogHelper {
 			return null;
 		}
 		XEvent e = xesFactory.createEvent();
-		decorateElement(e, XConceptExtension.KEY_NAME, activityName, XConceptExtension.instance().getName());
-		decorateElement(e, XTimeExtension.KEY_TIMESTAMP, timestamp, XTimeExtension.instance().getName());
+		decorateElement(e, "concept:name", activityName, "Concept");
+		decorateElement(e, "time:timestamp", timestamp, "Time");
 		trace.add(e);
 		return e;
 	}
@@ -397,7 +354,8 @@ public class XLogHelper {
 	 * @return the value of the <tt>concept:name</tt> attribute
 	 */
 	public static String getName(XAttributable element) {
-		return getStringAttribute(element, XConceptExtension.KEY_NAME);
+		XAttributeLiteral name = (XAttributeLiteral) element.getAttributes().get("concept:name");
+		return name.getValue();
 	}
 	
 	public static String getStringAttribute(XAttributable element, String attributeName) {
