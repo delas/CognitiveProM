@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xesextension name="Cognitive" prefix="cognitive" uri="https://andrea.burattin.net/public/cognitive.xesext">
+	<trace>
+		<string key="subjectName">
+			<alias mapping="EN" name="Subject name" />
+		</string>
+	</trace>
+	<event>
+		<boolean key="isStimulus">
+			<alias mapping="EN" name="Whether the event refers to a stimulus" />
+		</boolean>
+		<string key="aoi">
+			<alias mapping="EN" name="Area of interest of the fixation" />
+		</string>
+		<int key="duration">
+			<alias mapping="EN" name="Fixation duration" />
+		</int>
+		<list key="metrics">
+			<alias mapping="EN" name="List of metrics" />
+		</list>
+	</event>
+</xesextension>
