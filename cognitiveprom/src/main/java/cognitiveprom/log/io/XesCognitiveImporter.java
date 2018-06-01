@@ -1,4 +1,4 @@
-package cognitiveprom.log;
+package cognitiveprom.log.io;
 
 import java.io.File;
 
@@ -6,6 +6,7 @@ import org.deckfour.xes.in.XParser;
 import org.deckfour.xes.in.XesXmlParser;
 
 import cognitiveprom.exceptions.LogImportException;
+import cognitiveprom.log.CognitiveLog;
 
 /**
  * Class to import a {@link CognitiveLog} starting from a XES file

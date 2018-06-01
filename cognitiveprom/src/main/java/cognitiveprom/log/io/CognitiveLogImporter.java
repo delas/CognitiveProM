@@ -1,10 +1,11 @@
-package cognitiveprom.log;
+package cognitiveprom.log.io;
 
 import java.io.File;
 
 import com.google.common.io.Files;
 
 import cognitiveprom.exceptions.LogImportException;
+import cognitiveprom.log.CognitiveLog;
 
 /**
  * This abstract class should be used to define customized importer of cognitive log files.

@@ -1,4 +1,4 @@
-package cognitiveprom.log;
+package cognitiveprom.log.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +32,7 @@ import org.deckfour.xes.model.XTrace;
 import com.google.common.base.Joiner;
 
 import cognitiveprom.exceptions.LogImportException;
+import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.extension.XCognitiveExtension;
 import cognitiveprom.log.utils.XCognitiveLogHelper;
 

@@ -12,6 +12,7 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.framework.util.Pair;
 
+import cognitiveprom.log.io.CognitiveLogImporter;
 import cognitiveprom.projections.AggregationFunction;
 import cognitiveprom.projections.AggregationValues;
 import cognitiveprom.tools.XLogHelper;
