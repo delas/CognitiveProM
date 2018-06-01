@@ -223,29 +223,4 @@ public class TSVCognitiveImporter extends CognitiveLogImporter {
 			}
 		}
 	}
-//	private static XLog mergeEventsWithSameName(XLog log) {
-//		XLog newLog = XCognitiveLogHelper.prepareLog();
-//		for(XTrace trace : log) {
-//			XTrace newTrace = XCognitiveLogHelper.insertTraceForSubject(newLog, XCognitiveLogHelper.getSubjectName(trace));
-//			for(int i = 0; i < trace.size(); i++) {
-//				long duration = 0;
-//				XEvent current = trace.get(i);
-//				newTrace.add(current);
-//				int j = i;
-//				while (j < trace.size() && XCognitiveLogHelper.getAOIName(current).equals(XCognitiveLogHelper.getAOIName(trace.get(j)))) {
-//					duration += XCognitiveExtension.instance().extractDuration(trace.get(j));
-//					XCognitiveExtension.instance().addMetric(
-//							current,
-//							"fixation",
-//							XTimeExtension.instance().extractTimestamp(trace.get(j)),
-//							XCognitiveExtension.instance().extractDuration(trace.get(j)).doubleValue());
-//					j++;
-//				}
-//				XCognitiveExtension.instance().assignDuration(current, duration);
-//				duration = 0;
-//				i = j - 1;
-//			}
-//		}
-//		return newLog;
-//	}
 }
