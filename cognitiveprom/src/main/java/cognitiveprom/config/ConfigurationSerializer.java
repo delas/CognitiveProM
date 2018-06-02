@@ -56,7 +56,7 @@ public class ConfigurationSerializer {
 	
 	public static void serialize(ConfigurationSet set, OutputStream out) throws IOException {
 		SXDocument doc = new SXDocument(out);
-		doc.addComment("PLG configuration file");
+		doc.addComment("CognitiveProM configuration file");
 		doc.addComment("(c) 2009 by Christian W. Guenther (christian@deckfour.org)");
 		doc.addComment("(c) 2018 by Andrea Burattin");
 		doc.addComment("WARNING: Do not manually edit this file, unless you know what you are doing!");
