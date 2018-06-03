@@ -46,7 +46,7 @@ import cognitiveprom.view.io.TSVImporterConfigurator;
 @Importer(
 	name = "Tobii TSV file",
 	fileExtension = "tsv",
-	configurator = TSVImporterConfigurator.class
+	guiConfigurator = TSVImporterConfigurator.class
 )
 public class TSVCognitiveImporter extends CognitiveLogImporter {
 
@@ -74,16 +74,6 @@ public class TSVCognitiveImporter extends CognitiveLogImporter {
 		this.format = format;
 	}
 	
-	@Override
-	public String getDescription() {
-		return "Tobii TSV file";
-	}
-
-	@Override
-	public String getSupportedFileExtension() {
-		return "tsv";
-	}
-
 	@Override
 	public CognitiveLog load(File fileName) throws LogImportException {
 		if (namesOfAOIs.isEmpty()) {

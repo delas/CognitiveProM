@@ -21,16 +21,6 @@ import cognitiveprom.log.CognitiveLog;
 public class XesCognitiveImporter extends CognitiveLogImporter {
 
 	@Override
-	public String getDescription() {
-		return "XES file";
-	}
-
-	@Override
-	public String getSupportedFileExtension() {
-		return "xes";
-	}
-	
-	@Override
 	public CognitiveLog load(File fileName) throws LogImportException {
 		try {
 			XParser parser = new XesXmlParser();
