@@ -104,11 +104,16 @@ public class FileFilterHelper {
 			if (description.equals(fileFilter.getDescription())) {
 				try {
 					CognitiveLogImporterConfigurator configurator = null;
-					if (!annotation.getClass().equals(CognitiveLogImporterConfigurator.class)) {
-						configurator = (CognitiveLogImporterConfigurator) annotation.getClass().newInstance();
+					if (!annotation.configurator().equals(CognitiveLogImporterConfigurator.class)) {
+						configurator = (CognitiveLogImporterConfigurator) annotation.configurator().newInstance();
 					}
-					return new Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator>((CognitiveLogImporter) importer.newInstance(), configurator);
-				} catch (InstantiationException | IllegalAccessException e) { }
+					return new Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator>(
+							(CognitiveLogImporter) importer.newInstance(),
+							configurator
+						);
+				} catch (InstantiationException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return null;
