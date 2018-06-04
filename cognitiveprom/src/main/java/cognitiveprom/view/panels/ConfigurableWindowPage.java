@@ -10,7 +10,7 @@ import cognitiveprom.config.ConfigurationSet;
  * 
  * @author Andrea Burattin
  */
-public abstract class MainWindowPanel extends JPanel {
+public abstract class ConfigurableWindowPage extends JPanel {
 
 	private static final long serialVersionUID = -1656824607024522518L;
 	protected ConfigurationSet conf;
@@ -20,7 +20,16 @@ public abstract class MainWindowPanel extends JPanel {
 	 * 
 	 * @param conf
 	 */
-	public MainWindowPanel(ConfigurationSet conf) {
+	public ConfigurableWindowPage(ConfigurationSet conf) {
 		this.conf = conf;
+	}
+	
+	/**
+	 * Class to return the page name.
+	 * 
+	 * <strong>Attention:</strong> each page must have a unique value
+	 */
+	public String getName() {
+		return getClass().getCanonicalName();
 	}
 }

@@ -17,7 +17,7 @@ import cognitiveprom.config.ConfigurationSet;
  *
  * @author Andrea Burattin
  */
-public class Console extends MainWindowPanel  {
+public class Console extends ConfigurableWindowPage  {
 
 	private static final long serialVersionUID = -8707628278434660233L;
 	protected static final int HEIGHT = 200;

@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.config.UIConfiguration;
+import cognitiveprom.utils.CPUUtils;
+import cognitiveprom.utils.Logger;
 import cognitiveprom.view.frames.MainFrame;
 import cognitiveprom.view.panels.LoadProcessPanel;
-import cognitiveprom.view.panels.MainWindow;
+import cognitiveprom.view.panels.MainPanel;
 
 /**
  * This class represents the application controller, and is in charge of
@@ -22,7 +24,7 @@ public class ApplicationController {
 	private ConfigurationSet configuration;
 	
 	private MainFrame mainFrame;
-	private MainWindow mainWindow;
+	private MainPanel mainPanel;
 	private LoadProcessPanel loadProcessPanel;
 	
 	
@@ -46,31 +48,51 @@ public class ApplicationController {
 		logsController = new LogsController(this);
 		
 		// creates the panels
-		mainWindow = new MainWindow(configuration.getChild(MainWindow.class.getCanonicalName()));
+		mainPanel = new MainPanel(configuration.getChild(MainPanel.class.getCanonicalName()));
 		loadProcessPanel = new LoadProcessPanel(configuration.getChild(LoadProcessPanel.class.getCanonicalName()));
 		
 		// creates the main frame
 		mainFrame = new MainFrame(this);
+		mainFrame.addPage(mainPanel);
+		mainFrame.addPage(loadProcessPanel);
+		
+		// initialization logging
+		Logger.instance().debug("Application started!");
+		Logger.instance().debug("You have " + CPUUtils.CPUAvailable() + " CPU(s) available");
 	}
 	
+	public void showMainFrame() {
+		mainFrame.setVisible(true);
+	}
+	
+	public void showLoadProcessPanel() {
+		mainFrame.showPage(loadProcessPanel.getClass().getCanonicalName());
+	}
+	
+	public void showMainPanel() {
+		
+	}
+
 	/**
-	 * This method returns the {@link MainFrame} built.
 	 * 
-	 * @return the main frame available
+	 * @return
 	 */
 	public MainFrame getMainFrame() {
 		return mainFrame;
 	}
 
 	/**
-	 * This method returns the {@link MainWindow} built.
 	 * 
-	 * @return the main window available
+	 * @return
 	 */
-	public MainWindow getMainWindow() {
-		return mainWindow;
+	public MainPanel getMainWindow() {
+		return mainPanel;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public LoadProcessPanel getLoadProcessPanel() {
 		return loadProcessPanel;
 	}
@@ -82,6 +104,7 @@ public class ApplicationController {
 	 */
 	public void close() throws IOException {
 		UIConfiguration.save();
+		Logger.instance().debug("Application terminated");
 	}
 	
 	/**

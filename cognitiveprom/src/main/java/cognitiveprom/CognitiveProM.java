@@ -9,6 +9,7 @@ import cognitiveprom.controllers.ApplicationController;
  */
 public class CognitiveProM {
 	public static void main(String[] args) {
-		ApplicationController.instance().getMainFrame().setVisible(true);
+		ApplicationController.instance().showMainFrame();
+		ApplicationController.instance().showLoadProcessPanel();
 	}
 }

@@ -13,6 +13,7 @@ import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.io.CognitiveLogImporter;
 import cognitiveprom.utils.FileFilterHelper;
+import cognitiveprom.utils.Logger;
 import cognitiveprom.utils.RuntimeUtils;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
 
@@ -67,12 +68,14 @@ public class LogsController {
 				@Override
 				protected CognitiveLog doInBackground() throws Exception {
 					log = importer.getFirst().load(fileName);
+					
+					Logger.instance().info("Loaded file `" + fileName + "`");
 					return log;
 				}
 				
 				@Override
 				protected void done() {
-					
+					applicationController.showMainPanel();
 				}
 			};
 			worker.execute();

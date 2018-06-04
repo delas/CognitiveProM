@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.controllers.ApplicationController;
 
-public class LoadProcessPanel extends MainWindowPanel {
+public class LoadProcessPanel extends ConfigurableWindowPage {
 
 	private static final long serialVersionUID = 8735041859396682095L;
 

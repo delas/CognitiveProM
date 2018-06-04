@@ -36,6 +36,7 @@ package cognitiveprom.config;
 import java.io.File;
 import java.io.IOException;
 
+import cognitiveprom.CognitiveProMConstants;
 import cognitiveprom.utils.RuntimeUtils;
 
 /**
@@ -64,7 +65,7 @@ public class UIConfiguration {
 			configSet = ConfigurationParser.parse(new File(path));
 		} catch (Exception e) {
 			configSet = new ConfigurationSet("master");
-			System.err.println("WARNING: No configuration found for CognitiveProM! (This is okay if you start the application for the first time)");
+			System.err.println("WARNING: No configuration found for " + CognitiveProMConstants.NAME + "! (This is okay if you start the application for the first time)");
 			System.err.println("Creating new configuration file at " + path + "...");
 		}
 	}

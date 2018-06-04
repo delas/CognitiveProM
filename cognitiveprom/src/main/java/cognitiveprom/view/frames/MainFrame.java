@@ -11,10 +11,12 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import cognitiveprom.CognitiveProMConstants;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.controllers.ApplicationController;
+import cognitiveprom.view.panels.ConfigurableWindowPage;
 
 /**
  * This class contains the main frame of CognitiveProM
@@ -42,6 +44,8 @@ public class MainFrame extends JFrame {
 	private ApplicationController controller = null;
 	// the actual configuration
 	private ConfigurationSet conf;
+	// the container panel
+	private JPanel container;
 		
 	/**
 	 * 
@@ -81,8 +85,33 @@ public class MainFrame extends JFrame {
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		
 		// add here the main window
-		setLayout(new CardLayout());
-		add(controller.getLoadProcessPanel());
+		container = new JPanel();
+		container.setLayout(new CardLayout());
+		add(container);
+	}
+	
+	/**
+	 * Method to add a new page (as {@link ConfigurableWindowPage}) to the
+	 * current main frame.
+	 * 
+	 * <strong>Attention:</strong> only one page per type can be added. In case
+	 * more pages of the same type are needed, be sure to have a unique
+	 * {@link ConfigurableWindowPage#getName()} value for each of them.
+	 * 
+	 * @param page
+	 */
+	public void addPage(ConfigurableWindowPage page) {
+		container.add(page, page.getName());
+	}
+	
+	/**
+	 * Method to put into the foreground the page with the given name
+	 * 
+	 * @param pageName
+	 */
+	public void showPage(String pageName) {
+		CardLayout cl = (CardLayout) container.getLayout();
+		cl.show(container, pageName);
 	}
 	
 	/**
