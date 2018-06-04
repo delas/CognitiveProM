@@ -18,10 +18,12 @@ import cognitiveprom.projections.AggregationValues;
 import cognitiveprom.tools.XLogHelper;
 
 /**
- * This class represents a cognitive log. Specifically, a cognitive an XES log which can (potentially) include cognitive
- * information. Examples of such cognitive information are coming from eye-tracking.
+ * This class represents a cognitive log. Specifically, a cognitive an XES log
+ * which can (potentially) include cognitive information. Examples of such
+ * cognitive information are coming from eye-tracking.
  * 
- * Iterating over a cognitive log means to iterate over the {@link XTrace}s it wraps.
+ * Iterating over a cognitive log means to iterate over the {@link XTrace}s it
+ * wraps.
  * 
  * To import a cognitive log it is possible to use {@link CognitiveLogImporter}s
  * 
@@ -35,7 +37,8 @@ public class CognitiveLog implements Iterable<XTrace> {
 	/**
 	 * Constructor to create a new cognitive log wrapping a {@link XLog}.
 	 * 
-	 * To import a cognitive log it is possible to use {@link CognitiveLogImporter}s.
+	 * To import a cognitive log it is possible to use
+	 * {@link CognitiveLogImporter}s.
 	 * 
 	 * @param log the XES log to be wrapped
 	 */
@@ -69,7 +72,8 @@ public class CognitiveLog implements Iterable<XTrace> {
 	}
 	
 	/**
-	 * Computes a summary of the attribute, to be cached in {@link #getSummary(Collection, AggregationValues)}
+	 * Computes a summary of the attribute, to be cached in
+	 * {@link #getSummary(Collection, AggregationValues)}
 	 * 
 	 * @param tracesToConsider
 	 * @param attribute

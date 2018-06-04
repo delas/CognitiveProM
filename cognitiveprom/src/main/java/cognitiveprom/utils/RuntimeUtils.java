@@ -38,9 +38,9 @@ import java.io.File;
 
 
 /**
- * This class provides runtime utilities for library components.
- * Its main purpose is to identify the host OS, and to locate
- * a standard support folder location on each platform.
+ * This class provides runtime utilities for library components. Its main
+ * purpose is to identify the host OS, and to locate a standard support folder
+ * location on each platform.
  * 
  * @author Christian W. Guenther (christian@deckfour.org)
  * @author Andrea Burattin (just for minor changes)

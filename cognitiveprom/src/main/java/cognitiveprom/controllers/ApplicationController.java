@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.config.UIConfiguration;
-import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.view.frames.MainFrame;
+import cognitiveprom.view.panels.LoadProcessPanel;
 import cognitiveprom.view.panels.MainWindow;
 
 /**
- * This class represents the application controller, and is in charge of managing the entire application workflow.
+ * This class represents the application controller, and is in charge of
+ * managing the entire application workflow.
  *
  * @author Andrea Burattin
  */
@@ -18,11 +19,12 @@ public class ApplicationController {
 	private static ApplicationController controller = new ApplicationController();
 	
 	private LogsController logsController;
+	private ConfigurationSet configuration;
 	
-	private CognitiveLog log;
 	private MainFrame mainFrame;
 	private MainWindow mainWindow;
-	private ConfigurationSet configuration;
+	private LoadProcessPanel loadProcessPanel;
+	
 	
 	/**
 	 * This method returns the available instance of the application controller.
@@ -40,12 +42,15 @@ public class ApplicationController {
 	private ApplicationController() {
 		configuration = UIConfiguration.master();
 		
-		// creates gui
-		mainWindow = new MainWindow(this);
-		mainFrame = new MainFrame(this);
-		
 		// creates children controllers
 		logsController = new LogsController(this);
+		
+		// creates the panels
+		mainWindow = new MainWindow(configuration.getChild(MainWindow.class.getCanonicalName()));
+		loadProcessPanel = new LoadProcessPanel(configuration.getChild(LoadProcessPanel.class.getCanonicalName()));
+		
+		// creates the main frame
+		mainFrame = new MainFrame(this);
 	}
 	
 	/**
@@ -64,6 +69,10 @@ public class ApplicationController {
 	 */
 	public MainWindow getMainWindow() {
 		return mainWindow;
+	}
+	
+	public LoadProcessPanel getLoadProcessPanel() {
+		return loadProcessPanel;
 	}
 	
 	/**
@@ -99,7 +108,7 @@ public class ApplicationController {
 	 * 
 	 * @return the logs controller
 	 */
-	public LogsController logs() {
+	public LogsController log() {
 		return logsController;
 	}
 }

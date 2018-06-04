@@ -6,7 +6,8 @@ import cognitiveprom.exceptions.LogImportException;
 import cognitiveprom.log.CognitiveLog;
 
 /**
- * This abstract class should be used to define customized importer of cognitive log files.
+ * This abstract class should be used to define customized importer of cognitive
+ * log files.
  * 
  * @author Andrea Burattin
  */

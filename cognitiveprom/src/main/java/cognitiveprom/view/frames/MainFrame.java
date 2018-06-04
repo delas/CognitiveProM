@@ -1,6 +1,6 @@
 package cognitiveprom.view.frames;
 
-import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -81,8 +81,8 @@ public class MainFrame extends JFrame {
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		
 		// add here the main window
-		setLayout(new BorderLayout());
-		add(controller.getMainWindow());
+		setLayout(new CardLayout());
+		add(controller.getLoadProcessPanel());
 	}
 	
 	/**

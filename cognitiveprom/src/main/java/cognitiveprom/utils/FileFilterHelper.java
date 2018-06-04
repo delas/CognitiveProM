@@ -11,11 +11,12 @@ import cognitiveprom.log.io.CognitiveLogImporter;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
 
 /**
- * This class contains utility methods to assign proper file filters, according to the available
- * {@link CognitiveLogImporter}s.
+ * This class contains utility methods to assign proper file filters, according
+ * to the available {@link CognitiveLogImporter}s.
  * 
  * <p>
- * This class uses the methods in {@link RegisteredImporter} in order to retrieve the available importers and exporters.
+ * This class uses the methods in {@link RegisteredImporter} in order to
+ * retrieve the available importers and exporters.
  * 
  * @author Andrea Burattin
  */
@@ -24,8 +25,8 @@ public class FileFilterHelper {
 	protected static String FILE_HELPER_DESCRIPTION = "%s (*.%s)";
 	
 	/**
-	 * This class assigns, to the provided file chooser, the {@link FileFilter}s according to the available
-	 * {@link Importer}s.
+	 * This class assigns, to the provided file chooser, the {@link FileFilter}s
+	 * according to the available {@link Importer}s.
 	 * 
 	 * @param fileChooser the file chooser that will receive the file filters
 	 */
@@ -92,7 +93,8 @@ public class FileFilterHelper {
 //	}
 	
 	/**
-	 * This method generates a new instance of a {@link CognitiveLogImporter} starting from the file extension provided
+	 * This method generates a new instance of a {@link CognitiveLogImporter}
+	 * starting from the file extension provided
 	 * 
 	 * @param fileFilter the file extension to consider
 	 * @return the file importer
@@ -104,8 +106,8 @@ public class FileFilterHelper {
 			if (description.equals(fileFilter.getDescription())) {
 				try {
 					CognitiveLogImporterConfigurator configurator = null;
-					if (!annotation.configurator().equals(CognitiveLogImporterConfigurator.class)) {
-						configurator = (CognitiveLogImporterConfigurator) annotation.configurator().newInstance();
+					if (!annotation.guiConfigurator().equals(CognitiveLogImporterConfigurator.class)) {
+						configurator = (CognitiveLogImporterConfigurator) annotation.guiConfigurator().newInstance();
 					}
 					return new Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator>(
 							(CognitiveLogImporter) importer.newInstance(),

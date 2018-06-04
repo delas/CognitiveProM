@@ -35,5 +35,5 @@ public @interface Importer {
 	 * 
 	 * @return
 	 */
-	Class<? extends CognitiveLogImporterConfigurator> configurator() default CognitiveLogImporterConfigurator.class;
+	Class<? extends CognitiveLogImporterConfigurator> guiConfigurator() default CognitiveLogImporterConfigurator.class;
 }

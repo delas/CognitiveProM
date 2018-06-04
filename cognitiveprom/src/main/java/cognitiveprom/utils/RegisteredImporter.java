@@ -10,7 +10,8 @@ import org.reflections.Reflections;
 import cognitiveprom.annotations.Importer;
 
 /**
- * This class contains utility methods to retrieve all the registered file importer and exporters.
+ * This class contains utility methods to retrieve all the registered file
+ * importer and exporters.
  * 
  * @author Andrea Burattin
  */

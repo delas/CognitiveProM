@@ -45,8 +45,9 @@ public class XCognitiveLogHelper {
 	}
 	
 	/**
-	 * Returns the subject name that the given trace refers to. If the {@link XCognitiveExtension} is available, then it
-	 * is used, otherwise the name comes from the {@link XConceptExtension}
+	 * Returns the subject name that the given trace refers to. If the
+	 * {@link XCognitiveExtension} is available, then it is used, otherwise the
+	 * name comes from the {@link XConceptExtension}
 	 * 
 	 * @param trace
 	 * @return
@@ -60,8 +61,9 @@ public class XCognitiveLogHelper {
 	}
 	
 	/**
-	 * Returns the AOI name that the given trace refers to. If the {@link XCognitiveExtension} is available, then it is
-	 * used, otherwise the name comes from the {@link XConceptExtension}
+	 * Returns the AOI name that the given trace refers to. If the
+	 * {@link XCognitiveExtension} is available, then it is used, otherwise the
+	 * name comes from the {@link XConceptExtension}
 	 * 
 	 * @param event
 	 * @return
@@ -75,8 +77,9 @@ public class XCognitiveLogHelper {
 	}
 	
 	/**
-	 * This method creates a new {@link XTrace} for the given subject (if needed), adds it to the given log object (if
-	 * needed), and returns the trace itself.
+	 * This method creates a new {@link XTrace} for the given subject (if
+	 * needed), adds it to the given log object (if needed), and returns the
+	 * trace itself.
 	 * 
 	 * @param log the log that is going to host the new trace
 	 * @param subjectName the case identifier of the new trace
@@ -124,7 +127,8 @@ public class XCognitiveLogHelper {
 	}
 	
 	/**
-	 * This method sorts all the events in the traces of the log with respect to their timestamp, in increasing order.
+	 * This method sorts all the events in the traces of the log with respect to
+	 * their timestamps, in increasing order.
 	 * 
 	 * @param log
 	 */
