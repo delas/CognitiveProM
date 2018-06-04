@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
+import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.view.collections.ToolbarIcons;
 
 /**
@@ -20,23 +21,23 @@ public class MainToolbar extends JToolBar {
 
 	private static final long serialVersionUID = -2290088626676975817L;
 
-	private JButton newProcess = new JButton("New Process", ToolbarIcons.ICON_NEW);
-	private JButton openProcess = new JButton("Open", ToolbarIcons.ICON_OPEN);
-	private JButton saveProcess = new JButton("Save As...", ToolbarIcons.ICON_SAVE);
-	private JButton generateLog = new JButton("Generate Log", ToolbarIcons.ICON_LOG);
-	private JButton generateStream = new JButton("Stream", ToolbarIcons.ICON_STREAM);
+//	private JButton newProcess = new JButton("New Session", ToolbarIcons.ICON_NEW);
+	private JButton openProcess = new JButton("Open a new log", ToolbarIcons.ICON_OPEN);
+	private JButton saveProcess = new JButton("Export log", ToolbarIcons.ICON_SAVE);
+//	private JButton generateLog = new JButton("Generate Log", ToolbarIcons.ICON_LOG);
+//	private JButton generateStream = new JButton("Stream", ToolbarIcons.ICON_STREAM);
 	private JToggleButton showConsole = new JToggleButton("", ToolbarIcons.ICON_CONSOLE);
 	
 	public MainToolbar() {
 		setFloatable(false);
 		setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 		
-		add(newProcess);
+//		add(newProcess);
 		add(openProcess);
 		add(saveProcess);
 		add(Box.createHorizontalGlue());
-		add(generateLog);
-		add(generateStream);
+//		add(generateLog);
+//		add(generateStream);
 		add(Box.createHorizontalStrut(20));
 		add(showConsole);
 		
@@ -62,25 +63,26 @@ public class MainToolbar extends JToolBar {
 	 */
 	public void setProcessSelected(boolean processVisualized) {
 		saveProcess.setEnabled(processVisualized);
-		generateLog.setEnabled(processVisualized);
-		generateStream.setEnabled(processVisualized);
+//		generateLog.setEnabled(processVisualized);
+//		generateStream.setEnabled(processVisualized);
 	}
 	
 	/**
 	 * Method to register the button listeners
 	 */
 	private void registerListeners() {
-		newProcess.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-//				ApplicationController.instance().processes().randomProcess();
-			}
-		});
+//		newProcess.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+////				ApplicationController.instance().processes().randomProcess();
+//			}
+//		});
 		
 		openProcess.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				ApplicationController.instance().processes().openProcess();
+				ApplicationController.instance().showLoadProcessPage();
+				ApplicationController.instance().log().loadFile();
 			}
 		});
 		
@@ -91,24 +93,24 @@ public class MainToolbar extends JToolBar {
 			}
 		});
 		
-		generateLog.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-//				ApplicationController.instance().log().generateLog();
-			}
-		});
-		
-		generateStream.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-//				ApplicationController.instance().log().generateStream();
-			}
-		});
+//		generateLog.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+////				ApplicationController.instance().log().generateLog();
+//			}
+//		});
+//		
+//		generateStream.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+////				ApplicationController.instance().log().generateStream();
+//			}
+//		});
 		
 		showConsole.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				ApplicationController.instance().console().setConsoleVisibility(showConsole.isSelected());
+				ApplicationController.instance().console().setConsoleVisibility(showConsole.isSelected());
 			}
 		});
 	}

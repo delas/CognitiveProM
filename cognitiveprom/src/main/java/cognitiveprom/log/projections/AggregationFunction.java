@@ -1,4 +1,4 @@
-package cognitiveprom.projections;
+package cognitiveprom.log.projections;
 
 import java.text.DecimalFormat;
 

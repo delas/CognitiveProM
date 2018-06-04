@@ -1,4 +1,4 @@
-package cognitiveprom.view.panels;
+package cognitiveprom.view.pages;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,13 +13,26 @@ import javax.swing.SwingConstants;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.controllers.ApplicationController;
 
-public class LoadProcessPanel extends ConfigurableWindowPage {
+public class LoadProcessPage extends ConfigurableWindowPage {
 
 	private static final long serialVersionUID = 8735041859396682095L;
 
-	public LoadProcessPanel(ConfigurationSet conf) {
+	public LoadProcessPage(ConfigurationSet conf) {
 		super(conf);
 		
+		// place the components of the window
+		placeComponents();
+		
+		// listener
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ApplicationController.instance().log().loadFile();
+			}
+		});
+	}
+
+	private void placeComponents() {
 		// basic setup
 		setBackground(Color.WHITE);
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -34,14 +47,5 @@ public class LoadProcessPanel extends ConfigurableWindowPage {
 		label.setForeground(Color.LIGHT_GRAY);
 		label.setFont(label.getFont().deriveFont(Font.PLAIN));
 		add(label, BorderLayout.CENTER);
-		
-		
-		// listener
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ApplicationController.instance().log().loadFile();
-			}
-		});
 	}
 }

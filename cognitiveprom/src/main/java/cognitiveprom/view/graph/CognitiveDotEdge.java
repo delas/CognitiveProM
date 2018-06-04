@@ -1,4 +1,4 @@
-package cognitiveprom.graphical;
+package cognitiveprom.view.graph;
 
 import org.processmining.plugins.graphviz.dot.DotEdge;
 import org.processmining.plugins.graphviz.dot.DotNode;

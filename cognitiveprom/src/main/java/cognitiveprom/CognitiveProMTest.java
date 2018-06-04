@@ -39,8 +39,8 @@ import org.processmining.plugins.graphviz.visualisation.listeners.SelectionChang
 
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.io.TSVCognitiveImporter;
-import cognitiveprom.projections.AggregationFunctions;
-import cognitiveprom.projections.AggregationValues;
+import cognitiveprom.log.projections.AggregationFunctions;
+import cognitiveprom.log.projections.AggregationValues;
 import cognitiveprom.tools.ColorPalette;
 import cognitiveprom.tools.DfgMinerResult;
 import cognitiveprom.tools.Miner;

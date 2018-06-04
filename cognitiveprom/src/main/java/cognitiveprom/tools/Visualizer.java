@@ -20,14 +20,14 @@ import org.processmining.plugins.graphviz.dot.DotNode;
 
 import com.google.common.collect.Multiset.Entry;
 
-import cognitiveprom.graphical.CognitiveDotEdge;
-import cognitiveprom.graphical.CognitiveDotEndNode;
-import cognitiveprom.graphical.CognitiveDotNode;
-import cognitiveprom.graphical.CognitiveDotStartNode;
-import cognitiveprom.projections.AggregationFunction;
-import cognitiveprom.projections.AggregationFunctions;
-import cognitiveprom.projections.AggregationValues;
+import cognitiveprom.log.projections.AggregationFunction;
+import cognitiveprom.log.projections.AggregationFunctions;
+import cognitiveprom.log.projections.AggregationValues;
 import cognitiveprom.tools.ColorPalette.Colors;
+import cognitiveprom.view.graph.CognitiveDotEdge;
+import cognitiveprom.view.graph.CognitiveDotEndNode;
+import cognitiveprom.view.graph.CognitiveDotNode;
+import cognitiveprom.view.graph.CognitiveDotStartNode;
 
 public class Visualizer {
 	

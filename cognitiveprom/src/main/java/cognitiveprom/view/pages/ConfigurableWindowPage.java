@@ -1,8 +1,7 @@
-package cognitiveprom.view.panels;
-
-import javax.swing.JPanel;
+package cognitiveprom.view.pages;
 
 import cognitiveprom.config.ConfigurationSet;
+import cognitiveprom.view.panels.ConfigurablePanel;
 
 /**
  * This abstract class must be derived by all the panels that wants to belong
@@ -10,10 +9,9 @@ import cognitiveprom.config.ConfigurationSet;
  * 
  * @author Andrea Burattin
  */
-public abstract class ConfigurableWindowPage extends JPanel {
+public abstract class ConfigurableWindowPage extends ConfigurablePanel {
 
 	private static final long serialVersionUID = -1656824607024522518L;
-	protected ConfigurationSet conf;
 	
 	/**
 	 * Class constructor
@@ -21,7 +19,7 @@ public abstract class ConfigurableWindowPage extends JPanel {
 	 * @param conf
 	 */
 	public ConfigurableWindowPage(ConfigurationSet conf) {
-		this.conf = conf;
+		super(conf);
 	}
 	
 	/**

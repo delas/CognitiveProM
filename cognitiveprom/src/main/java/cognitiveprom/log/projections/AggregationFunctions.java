@@ -1,4 +1,4 @@
-package cognitiveprom.projections;
+package cognitiveprom.log.projections;
 
 public enum AggregationFunctions {
 

@@ -1,4 +1,4 @@
-package cognitiveprom.projections;
+package cognitiveprom.log.projections;
 
 import java.util.ArrayList;
 import java.util.List;

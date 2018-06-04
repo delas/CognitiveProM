@@ -36,7 +36,7 @@ public class ConsoleController {
 	protected ConsoleController(ApplicationController applicationController) {
 		this.applicationController = applicationController;
 		this.configuration = applicationController.getConfiguration(ConsoleController.class.getCanonicalName());
-//		this.console = applicationController.getMainWindow().getConsole();
+		this.console = applicationController.getMainPage().getConsole();
 		this.consolePrintStream = new ConsolePrintStream(console.getStyledDocument());
 		
 		// redirect the logger to the application console
@@ -53,8 +53,8 @@ public class ConsoleController {
 	 */
 	public void setConsoleVisibility(boolean visible) {
 		configuration.setBoolean(KEY_CONSOLE_VISIBLE, visible);
-//		applicationController.getMainWindow().getToolbar().setShowConsoleSelected(visible);
-//		applicationController.getMainWindow().getConsole().setVisible(visible);
+		applicationController.getMainPage().getToolbar().setShowConsoleSelected(visible);
+		applicationController.getMainPage().getConsole().setVisible(visible);
 	}
 	
 	/**

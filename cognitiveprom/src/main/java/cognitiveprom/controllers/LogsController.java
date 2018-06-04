@@ -3,7 +3,6 @@ package cognitiveprom.controllers;
 import java.io.File;
 
 import javax.swing.JFileChooser;
-import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -12,10 +11,12 @@ import org.processmining.framework.util.Pair;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.io.CognitiveLogImporter;
+import cognitiveprom.model.CognitiveModel;
 import cognitiveprom.utils.FileFilterHelper;
-import cognitiveprom.utils.Logger;
 import cognitiveprom.utils.RuntimeUtils;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
+import cognitiveprom.workers.LoadFileWorker;
+import cognitiveprom.workers.MineLogWorker;
 
 /**
  * 
@@ -27,6 +28,7 @@ public class LogsController {
 	private static final String KEY_FILE_FILTER = "LOGS_FILTER";
 	
 	private CognitiveLog log;
+	private CognitiveModel model;
 	
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
@@ -36,8 +38,20 @@ public class LogsController {
 		this.configuration = applicationController.getConfiguration(LogsController.class.getCanonicalName());
 	}
 	
-	public CognitiveLog loadedLog() {
+	public CognitiveLog log() {
 		return log;
+	}
+	
+	public CognitiveModel model() {
+		return model;
+	}
+	
+	public void setCognitiveLog(CognitiveLog log) {
+		this.log = log;
+	}
+	
+	public void setCognitiveModel(CognitiveModel model) {
+		this.model = model;
 	}
 	
 	public void loadFile() {
@@ -64,21 +78,11 @@ public class LogsController {
 				importer.getSecond().configure(applicationController.getMainFrame(), importer.getFirst());
 			}
 			
-			SwingWorker<CognitiveLog, Void> worker = new SwingWorker<CognitiveLog, Void>() {
-				@Override
-				protected CognitiveLog doInBackground() throws Exception {
-					log = importer.getFirst().load(fileName);
-					
-					Logger.instance().info("Loaded file `" + fileName + "`");
-					return log;
-				}
-				
-				@Override
-				protected void done() {
-					applicationController.showMainPanel();
-				}
-			};
-			worker.execute();
+			new LoadFileWorker(fileName, importer.getFirst()).execute();
 		}
+	}
+	
+	public void mineLog() {
+		new MineLogWorker(log).execute();
 	}
 }

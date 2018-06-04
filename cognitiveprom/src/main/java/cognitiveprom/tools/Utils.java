@@ -20,7 +20,7 @@ import org.processmining.plugins.InductiveMiner.mining.IMLogInfo;
 
 import com.google.common.collect.Multiset.Entry;
 
-import cognitiveprom.projections.AggregationValues;
+import cognitiveprom.log.projections.AggregationValues;
 
 public class Utils {
 

@@ -7,8 +7,9 @@ import cognitiveprom.config.UIConfiguration;
 import cognitiveprom.utils.CPUUtils;
 import cognitiveprom.utils.Logger;
 import cognitiveprom.view.frames.MainFrame;
-import cognitiveprom.view.panels.LoadProcessPanel;
-import cognitiveprom.view.panels.MainPanel;
+import cognitiveprom.view.pages.LoadProcessPage;
+import cognitiveprom.view.pages.MainPage;
+import cognitiveprom.view.pages.WaitingPage;
 
 /**
  * This class represents the application controller, and is in charge of
@@ -21,11 +22,13 @@ public class ApplicationController {
 	private static ApplicationController controller = new ApplicationController();
 	
 	private LogsController logsController;
-	private ConfigurationSet configuration;
+	private ConsoleController consoleController;
 	
+	private ConfigurationSet configuration;
 	private MainFrame mainFrame;
-	private MainPanel mainPanel;
-	private LoadProcessPanel loadProcessPanel;
+	private MainPage mainPage;
+	private LoadProcessPage loadProcessPage;
+	private WaitingPage waitingPage;
 	
 	
 	/**
@@ -42,35 +45,66 @@ public class ApplicationController {
 	 * {@link #instance()} method.
 	 */
 	private ApplicationController() {
+		// creates the master configuration
 		configuration = UIConfiguration.master();
 		
-		// creates children controllers
-		logsController = new LogsController(this);
-		
 		// creates the panels
-		mainPanel = new MainPanel(configuration.getChild(MainPanel.class.getCanonicalName()));
-		loadProcessPanel = new LoadProcessPanel(configuration.getChild(LoadProcessPanel.class.getCanonicalName()));
+		mainPage = new MainPage(configuration.getChild(MainPage.class.getCanonicalName()));
+		loadProcessPage = new LoadProcessPage(configuration.getChild(LoadProcessPage.class.getCanonicalName()));
+		waitingPage = new WaitingPage(configuration.getChild(WaitingPage.class.getCanonicalName()));
 		
 		// creates the main frame
 		mainFrame = new MainFrame(this);
-		mainFrame.addPage(mainPanel);
-		mainFrame.addPage(loadProcessPanel);
+		mainFrame.addPage(mainPage);
+		mainFrame.addPage(loadProcessPage);
+		mainFrame.addPage(waitingPage);
+
+		// creates children controllers
+		logsController = new LogsController(this);
+		consoleController = new ConsoleController(this);
 		
 		// initialization logging
 		Logger.instance().debug("Application started!");
 		Logger.instance().debug("You have " + CPUUtils.CPUAvailable() + " CPU(s) available");
 	}
 	
-	public void showMainFrame() {
-		mainFrame.setVisible(true);
+	/**
+	 * Sets the visibility of the main frame
+	 * 
+	 * @param show
+	 */
+	public void showMainFrame(boolean show) {
+		mainFrame.setVisible(show);
 	}
 	
-	public void showLoadProcessPanel() {
-		mainFrame.showPage(loadProcessPanel.getClass().getCanonicalName());
+	/**
+	 * Shows the load process page
+	 */
+	public void showLoadProcessPage() {
+		mainFrame.setTitle(null);
+		mainFrame.showPage(loadProcessPage.getClass().getCanonicalName());
 	}
 	
-	public void showMainPanel() {
-		
+	/**
+	 * Shows the main page
+	 */
+	public void showMainPage() {
+		mainFrame.showPage(mainPage.getClass().getCanonicalName());
+	}
+	
+	/**
+	 * Shows the waiting page
+	 */
+	public void showWaitingPage() {
+		mainFrame.showPage(waitingPage.getClass().getCanonicalName());
+		waitingPage.start("Importing log...");
+	}
+	
+	/**
+	 * Stops the progress on the waiting page
+	 */
+	public void stopWaitingPage() {
+		waitingPage.stop();
 	}
 
 	/**
@@ -85,16 +119,8 @@ public class ApplicationController {
 	 * 
 	 * @return
 	 */
-	public MainPanel getMainWindow() {
-		return mainPanel;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public LoadProcessPanel getLoadProcessPanel() {
-		return loadProcessPanel;
+	public MainPage getMainPage() {
+		return mainPage;
 	}
 	
 	/**
@@ -133,5 +159,14 @@ public class ApplicationController {
 	 */
 	public LogsController log() {
 		return logsController;
+	}
+	
+	/**
+	 * This method returns the console controller
+	 * 
+	 * @return the console controller
+	 */
+	public ConsoleController console() {
+		return consoleController;
 	}
 }

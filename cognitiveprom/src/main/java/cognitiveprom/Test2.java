@@ -11,11 +11,11 @@ import org.processmining.plugins.graphviz.visualisation.listeners.DotElementSele
 
 import com.kitfox.svg.SVGDiagram;
 
-import cognitiveprom.graphical.CognitiveDotEdge;
-import cognitiveprom.graphical.CognitiveDotEndNode;
-import cognitiveprom.graphical.CognitiveDotNode;
-import cognitiveprom.graphical.CognitiveDotStartNode;
 import cognitiveprom.tools.ColorPalette;
+import cognitiveprom.view.graph.CognitiveDotEdge;
+import cognitiveprom.view.graph.CognitiveDotEndNode;
+import cognitiveprom.view.graph.CognitiveDotNode;
+import cognitiveprom.view.graph.CognitiveDotStartNode;
 
 public class Test2 {
 	public static void main(String a[]) {

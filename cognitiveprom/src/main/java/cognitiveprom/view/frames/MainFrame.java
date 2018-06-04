@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import cognitiveprom.CognitiveProMConstants;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.controllers.ApplicationController;
-import cognitiveprom.view.panels.ConfigurableWindowPage;
+import cognitiveprom.view.pages.ConfigurableWindowPage;
 
 /**
  * This class contains the main frame of CognitiveProM
@@ -80,6 +80,7 @@ public class MainFrame extends JFrame {
 
 		// restore window position and size
 		restoreWindowState();
+		setTitle(null);
 		
 		// set minimum dimensions
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
@@ -115,6 +116,21 @@ public class MainFrame extends JFrame {
 	}
 	
 	/**
+	 * Method to set the title of the main frame, according to the provided log
+	 * name
+	 * 
+	 * @param logName the name of the log to show, or <tt>null</tt> if no log is
+	 * to be shown
+	 */
+	public void setTitle(String logName) {
+		String fullTitle = "";
+		if (logName != null) {
+			fullTitle = logName + " - ";
+		}
+		super.setTitle(fullTitle + CognitiveProMConstants.SIGNATURE);
+	}
+	
+	/**
 	 * Method to get the current window state and save it into the configuration
 	 * 
 	 * @author Christian W. Guenther (christian@deckfour.org)
@@ -144,8 +160,6 @@ public class MainFrame extends JFrame {
 		int x = Math.max(0, conf.getInteger(KEY_POSITION_X, default_x));
 		int y = Math.max(0, conf.getInteger(KEY_POSITION_Y, default_y));
 		setLocation(x, y);
-		
-		setTitle(CognitiveProMConstants.SIGNATURE);
 		
 		if (conf.getBoolean(KEY_WINDOW_MAXIMIZED, false)) {
 			setExtendedState(JFrame.MAXIMIZED_BOTH);
