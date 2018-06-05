@@ -23,11 +23,11 @@ import com.google.common.collect.Multiset.Entry;
 import cognitiveprom.log.projections.AggregationFunction;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.AggregationValues;
-import cognitiveprom.tools.ColorPalette.Colors;
 import cognitiveprom.view.graph.CognitiveDotEdge;
 import cognitiveprom.view.graph.CognitiveDotEndNode;
 import cognitiveprom.view.graph.CognitiveDotNode;
 import cognitiveprom.view.graph.CognitiveDotStartNode;
+import cognitiveprom.view.graph.ColorPalette.Colors;
 
 public class Visualizer {
 	

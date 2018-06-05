@@ -11,47 +11,36 @@ import org.processmining.framework.util.Pair;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.io.CognitiveLogImporter;
-import cognitiveprom.model.CognitiveModel;
 import cognitiveprom.utils.FileFilterHelper;
 import cognitiveprom.utils.RuntimeUtils;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
 import cognitiveprom.workers.LoadFileWorker;
-import cognitiveprom.workers.MineLogWorker;
 
 /**
  * 
  * @author Andrea Burattin
  */
-public class LogsController {
+public class CognitiveLogController {
 
 	private static final String KEY_LOGS_LOCATION = "LOGS_LOCATION";
 	private static final String KEY_FILE_FILTER = "LOGS_FILTER";
 	
 	private CognitiveLog log;
-	private CognitiveModel model;
 	
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
 	
-	public LogsController(ApplicationController applicationController) {
+	public CognitiveLogController(ApplicationController applicationController) {
 		this.applicationController = applicationController;
-		this.configuration = applicationController.getConfiguration(LogsController.class.getCanonicalName());
+		this.configuration = applicationController.getConfiguration(CognitiveLogController.class.getCanonicalName());
 	}
 	
 	public CognitiveLog log() {
 		return log;
 	}
 	
-	public CognitiveModel model() {
-		return model;
-	}
-	
 	public void setCognitiveLog(CognitiveLog log) {
 		this.log = log;
-	}
-	
-	public void setCognitiveModel(CognitiveModel model) {
-		this.model = model;
 	}
 	
 	public void loadFile() {
@@ -80,9 +69,5 @@ public class LogsController {
 			
 			new LoadFileWorker(fileName, importer.getFirst()).execute();
 		}
-	}
-	
-	public void mineLog() {
-		new MineLogWorker(log).execute();
 	}
 }

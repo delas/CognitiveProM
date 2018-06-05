@@ -3,8 +3,7 @@ package cognitiveprom.view.graph;
 import org.processmining.plugins.graphviz.dot.DotEdge;
 import org.processmining.plugins.graphviz.dot.DotNode;
 
-import cognitiveprom.tools.ColorPalette;
-import cognitiveprom.tools.ColorPalette.Colors;
+import cognitiveprom.view.graph.ColorPalette.Colors;
 
 public class CognitiveDotEdge extends DotEdge {
 

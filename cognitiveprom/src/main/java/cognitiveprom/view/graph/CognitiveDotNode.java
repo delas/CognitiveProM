@@ -4,8 +4,6 @@ import java.awt.Color;
 
 import org.processmining.plugins.graphviz.dot.DotNode;
 
-import cognitiveprom.tools.ColorPalette;
-
 public class CognitiveDotNode extends DotNode {
 
 	public CognitiveDotNode(String label, String secondLine, Double weight, ColorPalette.Colors activityColor) {

@@ -31,8 +31,8 @@ public class MineLogWorker extends SwingWorker<CognitiveModel, Void> {
 	
 	@Override
 	protected CognitiveModel doInBackground() throws Exception {
-		Logger.instance().info("Mining started...");
-		ApplicationController.instance().getMainPage().showWaitingPanel();
+		Logger.instance().debug("Mining started...");
+		ApplicationController.instance().getMainPage().showWaitingPanel("Log mining...");
 		
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		EventRelationStorage eventStorage = EventRelationStorage.Factory.createEventRelations(
@@ -67,10 +67,11 @@ public class MineLogWorker extends SwingWorker<CognitiveModel, Void> {
 
 	@Override
 	protected void done() {
-		Logger.instance().info("Mining complete");
+		Logger.instance().debug("Mining complete");
 		try {
-			ApplicationController.instance().log().setCognitiveModel(get());
+			ApplicationController.instance().model().setCognitiveModel(get());
 		} catch (InterruptedException | ExecutionException e) { }
-		ApplicationController.instance().getMainPage().showProcessVisualizer();
+		
+		ApplicationController.instance().model().updateVisualization();
 	}
 }

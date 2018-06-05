@@ -38,13 +38,17 @@ public class MainPage extends ConfigurableWindowPage {
 		return debugConsole;
 	}
 	
-	public void showWaitingPanel() {
+	public void showWaitingPanel(String text) {
 		showPage(waitingPanel.getClass().getCanonicalName());
-		waitingPanel.start("Log mining...");
+		waitingPanel.start(text);
 	}
 	
 	public void showProcessVisualizer() {
 		showPage(processVisualizer.getClass().getCanonicalName());
+	}
+	
+	public ProcessVisualizer getProcessVisualizer() {
+		return processVisualizer;
 	}
 	
 	/**

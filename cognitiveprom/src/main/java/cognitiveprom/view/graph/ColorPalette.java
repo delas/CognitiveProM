@@ -1,4 +1,4 @@
-package cognitiveprom.tools;
+package cognitiveprom.view.graph;
 
 import java.awt.Color;
 

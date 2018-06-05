@@ -41,11 +41,11 @@ import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.io.TSVCognitiveImporter;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.AggregationValues;
-import cognitiveprom.tools.ColorPalette;
 import cognitiveprom.tools.DfgMinerResult;
 import cognitiveprom.tools.Miner;
 import cognitiveprom.tools.Utils;
 import cognitiveprom.tools.Visualizer;
+import cognitiveprom.view.graph.ColorPalette;
 
 public class CognitiveProMTest {
 
