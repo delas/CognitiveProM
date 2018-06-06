@@ -44,7 +44,7 @@ public class MineLogWorker extends SwingWorker<CognitiveModel, Void> {
 		for (Relation r : eventStorage.getDirectlyFollowsRelations()) {
 			XEventClass source = r.getSource();
 			XEventClass target = r.getTarget();
-			if (	!source.equals(target) &&
+			if (!source.equals(target) &&
 					!source.equals(eventStorage.getStartEventClass()) &&
 					!target.equals(eventStorage.getEndEventClass())) {
 				maxConn.put(source,

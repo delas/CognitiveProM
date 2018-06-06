@@ -2,16 +2,11 @@ package cognitiveprom.view.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JSlider;
 
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 
 import cognitiveprom.config.ConfigurationSet;
-import cognitiveprom.controllers.ApplicationController;
 
 /**
  * 
@@ -23,7 +18,7 @@ public class ProcessVisualizer extends ConfigurablePanel {
 	
 	private DotPanel graphVisualizer;
 	private AdvancedConfiguration advancedConfiguration;
-	private JSlider abstractionSlider;
+	private AbstractionSlider abstractionSlider;
 
 	public ProcessVisualizer(ConfigurationSet conf) {
 		super(conf);
@@ -41,27 +36,15 @@ public class ProcessVisualizer extends ConfigurablePanel {
 	}
 	
 	public double getAbstractionValue() {
-		return (double) abstractionSlider.getValue() / (double) abstractionSlider.getMaximum();
+		return abstractionSlider.getAbstractionValue();
 	}
 
 	private void placeComponents() {
 		// set the slider
-		abstractionSlider = new JSlider(JSlider.VERTICAL, 0, 100, 100);
-		abstractionSlider.setBackground(Color.white);
-		abstractionSlider.setMajorTickSpacing(25);
-		abstractionSlider.setMinorTickSpacing(5);
-		abstractionSlider.setPaintTicks(true);
-		abstractionSlider.setPaintLabels(true);
-		abstractionSlider.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				ApplicationController.instance().processController().updateVisualization();
-			}
-		});
+		abstractionSlider = new AbstractionSlider(conf.getChild(AbstractionSlider.class.getCanonicalName()));
 		
 		// sets the advanced configuration
 		advancedConfiguration = new AdvancedConfiguration(conf.getChild(AdvancedConfiguration.class.getCanonicalName()));
-		advancedConfiguration.setVisible(true);
 		
 		// set the graph
 		graphVisualizer = new DotPanel(new Dot());
