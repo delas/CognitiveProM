@@ -61,18 +61,20 @@ public class CognitiveLogController {
 		
 		int returnVal = fc.showOpenDialog(applicationController.getMainFrame());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			final String fileName = fc.getSelectedFile().getAbsolutePath();
-			configuration.set(KEY_OPEN_LOG_LOCATION, fileName.substring(0, fileName.lastIndexOf(File.separator)));
+			configuration.set(KEY_OPEN_LOG_LOCATION, fc.getSelectedFile().getAbsolutePath().substring(0, fc.getSelectedFile().getAbsolutePath().lastIndexOf(File.separator)));
 			configuration.set(KEY_OPEN_FILE_FILTER, fc.getFileFilter().getDescription());
-
-			final Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> importer = FileFilterHelper.getImporterFromFileName((FileNameExtensionFilter) fc.getFileFilter());
 			
-			if (importer.getSecond() != null) {
-				importer.getSecond().configure(applicationController.getMainFrame(), importer.getFirst());
-			}
-			
-			new LoadFileWorker(fileName, importer.getFirst()).execute();
+			loadFile(
+					fc.getSelectedFile().getAbsolutePath(),
+					FileFilterHelper.getImporterFromFileFilter((FileNameExtensionFilter) fc.getFileFilter()));
 		}
+	}
+	
+	public void loadFile(String fileName, Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> importer) {
+		if (importer.getSecond() != null) {
+			importer.getSecond().configure(applicationController.getMainFrame(), importer.getFirst());
+		}
+		new LoadFileWorker(fileName, importer.getFirst()).execute();
 	}
 
 	public void saveFile() {

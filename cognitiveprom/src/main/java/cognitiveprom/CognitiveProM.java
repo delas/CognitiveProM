@@ -4,6 +4,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import cognitiveprom.controllers.ApplicationController;
+import cognitiveprom.utils.FileFilterHelper;
 
 /**
  * Main application class
@@ -17,6 +18,12 @@ public class CognitiveProM {
 		
 		// gui startup
 		ApplicationController.instance().showMainFrame(true);
-		ApplicationController.instance().showLoadProcessPage();
+		
+		if (args.length == 0) {
+			ApplicationController.instance().showLoadProcessPage();
+		} else {
+			String fileName = args[0];
+			ApplicationController.instance().log().loadFile(fileName, FileFilterHelper.getImporterFromFileName(fileName));
+		}
 	}
 }

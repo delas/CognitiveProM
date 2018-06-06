@@ -1,12 +1,18 @@
 package cognitiveprom.log;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.deckfour.xes.model.XAttribute;
+import org.deckfour.xes.model.XAttributeContinuous;
+import org.deckfour.xes.model.XAttributeDiscrete;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -33,6 +39,7 @@ public class CognitiveLog implements Iterable<XTrace> {
 
 	private Map<Pair<Collection<XTrace>, AggregationValues>, Map<String, AggregationFunction>> summaryCache;
 	private XLog log;
+	private List<AggregationValues> projectableAttributes = null;
 	
 	/**
 	 * Constructor to create a new cognitive log wrapping a {@link XLog}.
@@ -97,6 +104,53 @@ public class CognitiveLog implements Iterable<XTrace> {
 			}
 		}
 		return aggregators;
+	}
+	
+	/**
+	 * Returns a cached list of attributes that can be associated with
+	 * activities as they have numerical nature (i.e., they are either
+	 * {@link XAttributeDiscrete} or {@link XAttributeContinuous}).
+	 * 
+	 * @return the cached list of attributes
+	 */
+	public List<AggregationValues> getProjectableAttributes() {
+		if (projectableAttributes == null) {
+			int MAX_TRACES_TO_CHECK = 10;
+			
+			// get all attributes that can be used for the timing
+			Set<String> candidateAttributes = new HashSet<String>();
+			for(int i = 0; i < MAX_TRACES_TO_CHECK && i <log.size(); i++) {
+				XTrace trace = log.get(i);
+				for (XEvent e : trace) {
+					for (String attributeName : e.getAttributes().keySet()) {
+						if (!candidateAttributes.contains(attributeName)) {
+							XAttribute a = e.getAttributes().get(attributeName);
+							if (a instanceof XAttributeDiscrete || a instanceof XAttributeContinuous) {
+								candidateAttributes.add(attributeName);
+							}
+						}
+					}
+				}
+			}
+			for(int i = 0; i < MAX_TRACES_TO_CHECK && i <log.size(); i++) {
+				XTrace trace = log.get(i);
+				for (XEvent e : trace) {
+					Iterator<String> iterAttributes = candidateAttributes.iterator();
+					while(iterAttributes.hasNext()) {
+						if (!e.getAttributes().containsKey(iterAttributes.next())) {
+							iterAttributes.remove();
+						}
+					}
+				}
+			}
+			
+			projectableAttributes = new ArrayList<AggregationValues>(candidateAttributes.size());
+			for (String attr : candidateAttributes) {
+				projectableAttributes.add(new AggregationValues(attr));
+			}
+			Collections.sort(projectableAttributes);
+		}
+		return projectableAttributes;
 	}
 	
 	@Override

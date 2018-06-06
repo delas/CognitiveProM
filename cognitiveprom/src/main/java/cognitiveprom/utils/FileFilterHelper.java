@@ -102,16 +102,44 @@ public class FileFilterHelper {
 	
 	/**
 	 * This method generates a new instance of a {@link CognitiveLogImporter}
-	 * starting from the file extension provided
+	 * starting from the file filter provided
 	 * 
-	 * @param fileFilter the file extension to consider
+	 * @param fileFilter the file filter to consider
 	 * @return the file importer
 	 */
-	public static Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> getImporterFromFileName(FileNameExtensionFilter fileFilter) {
+	public static Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> getImporterFromFileFilter(FileNameExtensionFilter fileFilter) {
 		for (Class<?> importer : RegisteredIO.getAllImporters()) {
 			Importer annotation = importer.getAnnotation(Importer.class);
 			String description = String.format(FILE_HELPER_DESCRIPTION, annotation.name(), annotation.fileExtension());
 			if (description.equals(fileFilter.getDescription())) {
+				try {
+					CognitiveLogImporterConfigurator configurator = null;
+					if (!annotation.guiConfigurator().equals(CognitiveLogImporterConfigurator.class)) {
+						configurator = (CognitiveLogImporterConfigurator) annotation.guiConfigurator().newInstance();
+					}
+					return new Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator>(
+							(CognitiveLogImporter) importer.newInstance(),
+							configurator
+						);
+				} catch (InstantiationException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * This method generates a new instance of a {@link CognitiveLogImporter}
+	 * starting from the file name provided
+	 * 
+	 * @param fileName the file name to consider
+	 * @return the file importer
+	 */
+	public static Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> getImporterFromFileName(String fileName) {
+		for (Class<?> importer : RegisteredIO.getAllImporters()) {
+			Importer annotation = importer.getAnnotation(Importer.class);
+			if (fileName.endsWith(annotation.fileExtension())) {
 				try {
 					CognitiveLogImporterConfigurator configurator = null;
 					if (!annotation.guiConfigurator().equals(CognitiveLogImporterConfigurator.class)) {
