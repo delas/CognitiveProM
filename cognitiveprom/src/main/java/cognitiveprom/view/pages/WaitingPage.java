@@ -21,10 +21,6 @@ public class WaitingPage extends ConfigurableWindowPage {
 		waitingPanel.start(firstLine);
 	}
 	
-	public void stop() {
-		waitingPanel.stop();
-	}
-	
 	private void placeComponents() {
 		waitingPanel = new WaitingPanel(conf.getChild(WaitingPanel.class.getCanonicalName()));
 		

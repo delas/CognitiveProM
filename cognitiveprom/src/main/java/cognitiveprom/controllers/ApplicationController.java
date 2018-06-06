@@ -103,13 +103,6 @@ public class ApplicationController {
 	}
 	
 	/**
-	 * Stops the progress on the waiting page
-	 */
-	public void stopWaitingPage() {
-		waitingPage.stop();
-	}
-
-	/**
 	 * 
 	 * @return
 	 */

@@ -3,8 +3,6 @@ package cognitiveprom.view.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -30,10 +28,7 @@ public class WaitingPanel extends ConfigurablePanel {
 	};
 
 	private static final long serialVersionUID = 8735041859396682095L;
-	private static final int UPDATE_PROGRESS_INTERVAL = 2000;
 	private JLabel label;
-	private TimerTask taskUpdater;
-	private Timer timerUpdater;
 
 	public WaitingPanel(ConfigurationSet conf) {
 		super(conf);
@@ -43,20 +38,16 @@ public class WaitingPanel extends ConfigurablePanel {
 	}
 	
 	public void start(String firstLine) {
-		timerUpdater = new Timer();
-		taskUpdater = new TimerTask() {
-			@Override
-			public void run() {
-				showNiceText(firstLine, SetUtils.getRandom(waitingSentences));
-			}
-		};
-		timerUpdater.schedule(taskUpdater, 500, UPDATE_PROGRESS_INTERVAL);
+		showNiceText(firstLine, SetUtils.getRandom(waitingSentences));
+		repaint();
 	}
 	
-	public void stop() {
-		taskUpdater.cancel();
-		if (timerUpdater != null) {
-			timerUpdater.cancel();
+	
+	public void setTranslucent(boolean translucent) {
+		if (translucent) {
+			setBackground(new Color(255, 255, 255, 190));
+		} else {
+			setBackground(new Color(255, 255, 255, 255));
 		}
 	}
 

@@ -16,9 +16,9 @@ public class MainPage extends ConfigurableWindowPage {
 	private static final long serialVersionUID = -8854311251130985383L;
 	
 	// main window components
+	private JPanel centralPanel = null;
 	private MainToolbar mainWindowToolbar = null;
 	private Console debugConsole = null;
-	private JPanel centralPanel = null;
 	private WaitingPanel waitingPanel = null;
 	private ProcessVisualizer processVisualizer = null;
 	
@@ -36,6 +36,10 @@ public class MainPage extends ConfigurableWindowPage {
 	 */
 	public Console getConsole() {
 		return debugConsole;
+	}
+	
+	public WaitingPanel getWaitingPanel() {
+		return waitingPanel;
 	}
 	
 	public void showWaitingPanel(String text) {

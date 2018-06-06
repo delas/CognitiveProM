@@ -37,7 +37,6 @@ public class LoadFileWorker extends SwingWorker<CognitiveLog, Void> {
 		
 		ApplicationController.instance().getMainFrame().setTitle(fileName);
 		ApplicationController.instance().showMainPage();
-		ApplicationController.instance().stopWaitingPage();
 		
 		// once the file is loaded start the mining
 		ApplicationController.instance().model().mineLog();
