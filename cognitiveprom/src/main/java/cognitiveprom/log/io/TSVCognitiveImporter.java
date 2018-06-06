@@ -32,7 +32,7 @@ import org.deckfour.xes.model.XTrace;
 import com.google.common.base.Joiner;
 
 import cognitiveprom.annotations.Importer;
-import cognitiveprom.exceptions.LogImportException;
+import cognitiveprom.exceptions.LogIOException;
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.extension.XCognitiveExtension;
 import cognitiveprom.log.utils.XCognitiveLogHelper;
@@ -77,16 +77,16 @@ public class TSVCognitiveImporter extends CognitiveLogImporter {
 	}
 	
 	@Override
-	public CognitiveLog load(File fileName) throws LogImportException {
+	public CognitiveLog load(File fileName) throws LogIOException {
 		if (namesOfAOIs.isEmpty()) {
-			throw new LogImportException("No AOI set for import!");
+			throw new LogIOException("No AOI set for import!");
 		}
 		
 		Reader reader;
 		try {
 			reader = new InputStreamReader(new BOMInputStream(new FileInputStream(fileName)), "UTF-8");
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
-			throw new LogImportException(e.getMessage());
+			throw new LogIOException(e.getMessage());
 		}
 
 		XLog log = XCognitiveLogHelper.prepareLog();
@@ -127,13 +127,13 @@ public class TSVCognitiveImporter extends CognitiveLogImporter {
 					}
 					
 					if (FIELD_TIMESTAMP == -1) {
-						throw new LogImportException("Cannot find timestamp field (should be named \"" + FIELD_TIMESTAMP + "\"");
+						throw new LogIOException("Cannot find timestamp field (should be named \"" + FIELD_TIMESTAMP + "\"");
 					}
 					if (FIELD_PARTICIPANT_NAME == -1) {
-						throw new LogImportException("Cannot find participant name field (should be named \"" + FIELD_PARTICIPANT_NAME + "\"");
+						throw new LogIOException("Cannot find participant name field (should be named \"" + FIELD_PARTICIPANT_NAME + "\"");
 					}
 					if (FIELD_GAZE_DURATION == -1) {
-						throw new LogImportException("Cannot find gaze duration field (should be named \"" + FIELD_GAZE_DURATION + "\"");
+						throw new LogIOException("Cannot find gaze duration field (should be named \"" + FIELD_GAZE_DURATION + "\"");
 					}
 					
 				} else {
@@ -156,7 +156,7 @@ public class TSVCognitiveImporter extends CognitiveLogImporter {
 														dateParser.parse(record.get(FIELD_TIMESTAMP)),
 														Long.parseLong(record.get(FIELD_GAZE_DURATION))));
 									} catch (ParseException e) {
-										throw new LogImportException(e.getMessage());
+										throw new LogIOException(e.getMessage());
 									}
 									break;
 								}
@@ -167,14 +167,14 @@ public class TSVCognitiveImporter extends CognitiveLogImporter {
 			}
 			
 		} catch (IOException e) {
-			throw new LogImportException(e.getMessage());
+			throw new LogIOException(e.getMessage());
 		} finally {
 			try {
 				if (parser != null) {
 					parser.close();
 				}
 			} catch (IOException e) {
-				throw new LogImportException(e.getMessage());
+				throw new LogIOException(e.getMessage());
 			}
 		}
 		

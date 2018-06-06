@@ -1,11 +1,11 @@
 package cognitiveprom.exceptions;
 
 /**
- * An exception which can occur during the import of a log file
+ * An exception which can occur during the import or the export of a log file
  * 
  * @author Andrea Burattin
  */
-public class LogImportException extends Exception {
+public class LogIOException extends Exception {
 
 	private static final long serialVersionUID = 6611592367102399986L;
 
@@ -13,7 +13,7 @@ public class LogImportException extends Exception {
 	 * 
 	 * @param message
 	 */
-	public LogImportException(String message) {
+	public LogIOException(String message) {
 		super(message);
 	}
 }

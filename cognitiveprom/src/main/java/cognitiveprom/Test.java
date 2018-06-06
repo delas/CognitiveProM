@@ -14,7 +14,7 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.out.XesXmlSerializer;
 
-import cognitiveprom.exceptions.LogImportException;
+import cognitiveprom.exceptions.LogIOException;
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.extension.XCognitiveEventClassifier;
 import cognitiveprom.log.extension.XCognitiveExtension;
@@ -23,7 +23,7 @@ import cognitiveprom.log.utils.XCognitiveLogHelper;
 
 public class Test {
 
-	public static void main(String[] args) throws LogImportException, FileNotFoundException, IOException {
+	public static void main(String[] args) throws LogIOException, FileNotFoundException, IOException {
 		
 		TSVCognitiveImporter i = new TSVCognitiveImporter();
 		i.addAOIs("legend", "graph", "title");

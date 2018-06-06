@@ -6,8 +6,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
@@ -15,6 +13,10 @@ import org.processmining.plugins.graphviz.visualisation.DotPanel;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.controllers.ApplicationController;
 
+/**
+ * 
+ * @author Andrea Burattin
+ */
 public class ProcessVisualizer extends ConfigurablePanel {
 
 	private static final long serialVersionUID = -1749483831141989186L;

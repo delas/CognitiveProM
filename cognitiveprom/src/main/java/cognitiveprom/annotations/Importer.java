@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
 
 /**
- * This annotation is used to identify all the available process importers
+ * This annotation is used to identify all the available cognitive log importers
  * 
  * @author Andrea Burattin
  */

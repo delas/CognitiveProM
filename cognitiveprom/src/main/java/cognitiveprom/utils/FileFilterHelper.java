@@ -6,16 +6,20 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.processmining.framework.util.Pair;
 
+import cognitiveprom.annotations.Exporter;
 import cognitiveprom.annotations.Importer;
+import cognitiveprom.log.io.CognitiveLogExporter;
 import cognitiveprom.log.io.CognitiveLogImporter;
+import cognitiveprom.log.io.RegisteredIO;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
 
 /**
  * This class contains utility methods to assign proper file filters, according
- * to the available {@link CognitiveLogImporter}s.
+ * to the available {@link CognitiveLogImporter}s or
+ * {@link CognitiveLogExporter}s.
  * 
  * <p>
- * This class uses the methods in {@link RegisteredImporter} in order to
+ * This class uses the methods in {@link RegisteredIO} in order to
  * retrieve the available importers and exporters.
  * 
  * @author Andrea Burattin
@@ -32,7 +36,7 @@ public class FileFilterHelper {
 	 */
 	public static void assignImportFileFilters(JFileChooser fileChooser) {
 		fileChooser.setAcceptAllFileFilterUsed(false);
-		for (Class<?> importer : RegisteredImporter.getAllImporters()) {
+		for (Class<?> importer : RegisteredIO.getAllImporters()) {
 			final Importer annotation = importer.getAnnotation(Importer.class);
 			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(
 					String.format(FILE_HELPER_DESCRIPTION,
@@ -42,19 +46,23 @@ public class FileFilterHelper {
 		}
 	}
 	
-//	/**
-//	 * This class assigns, to the provided file chooser, the {@link FileFilter}s
-//	 * according to the available {@link Exporter}s.
-//	 * 
-//	 * @param fileChooser the file chooser that will receive the file filters
-//	 */
-//	public static void assignExportFileFilters(JFileChooser fileChooser) {
-//		fileChooser.setAcceptAllFileFilterUsed(false);
-//		for (Class<?> exporter : RegisteredImporter.getAllExporters()) {
-//			final Exporter annotation = exporter.getAnnotation(Exporter.class);
-//			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(String.format(FILE_HELPER_DESCRIPTION, annotation.name(), annotation.fileExtension()), annotation.fileExtension()));
-//		}
-//	}
+	/**
+	 * This class assigns, to the provided file chooser, the {@link FileFilter}s
+	 * according to the available {@link Exporter}s.
+	 * 
+	 * @param fileChooser the file chooser that will receive the file filters
+	 */
+	public static void assignExportFileFilters(JFileChooser fileChooser) {
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		for (Class<?> exporter : RegisteredIO.getAllExporters()) {
+			final Exporter annotation = exporter.getAnnotation(Exporter.class);
+			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(
+					String.format(FILE_HELPER_DESCRIPTION,
+							annotation.name(),
+							annotation.fileExtension()),
+					annotation.fileExtension()));
+		}
+	}
 	
 	/**
 	 * This method fixes the name of the provided file by adding the required
@@ -72,25 +80,25 @@ public class FileFilterHelper {
 		return currentFileName;
 	}
 	
-//	/**
-//	 * This method generates a new instance of a file exporter starting from the
-//	 * file extension provided
-//	 * 
-//	 * @param fileFilter the file extension to consider
-//	 * @return the file exporter
-//	 */
-//	public static IFileExporter getExporterFromFileName(FileNameExtensionFilter fileFilter) {
-//		for (Class<?> exporter : RegisteredIO.getAllExporters()) {
-//			Exporter annotation = exporter.getAnnotation(Exporter.class);
-//			String description = String.format(FILE_HELPER_DESCRIPTION, annotation.name(), annotation.fileExtension());
-//			if (description.equals(fileFilter.getDescription())) {
-//				try {
-//					return (IFileExporter) exporter.newInstance();
-//				} catch (InstantiationException | IllegalAccessException e) { }
-//			}
-//		}
-//		return null;
-//	}
+	/**
+	 * This method generates a new instance of a file exporter starting from the
+	 * file extension provided
+	 * 
+	 * @param fileFilter the file extension to consider
+	 * @return the file exporter
+	 */
+	public static CognitiveLogExporter getExporterFromFileName(FileNameExtensionFilter fileFilter) {
+		for (Class<?> exporter : RegisteredIO.getAllExporters()) {
+			Exporter annotation = exporter.getAnnotation(Exporter.class);
+			String description = String.format(FILE_HELPER_DESCRIPTION, annotation.name(), annotation.fileExtension());
+			if (description.equals(fileFilter.getDescription())) {
+				try {
+					return (CognitiveLogExporter) exporter.newInstance();
+				} catch (InstantiationException | IllegalAccessException e) { }
+			}
+		}
+		return null;
+	}
 	
 	/**
 	 * This method generates a new instance of a {@link CognitiveLogImporter}
@@ -100,7 +108,7 @@ public class FileFilterHelper {
 	 * @return the file importer
 	 */
 	public static Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> getImporterFromFileName(FileNameExtensionFilter fileFilter) {
-		for (Class<?> importer : RegisteredImporter.getAllImporters()) {
+		for (Class<?> importer : RegisteredIO.getAllImporters()) {
 			Importer annotation = importer.getAnnotation(Importer.class);
 			String description = String.format(FILE_HELPER_DESCRIPTION, annotation.name(), annotation.fileExtension());
 			if (description.equals(fileFilter.getDescription())) {

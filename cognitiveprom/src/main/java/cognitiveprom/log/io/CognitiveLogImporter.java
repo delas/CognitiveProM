@@ -2,7 +2,7 @@ package cognitiveprom.log.io;
 
 import java.io.File;
 
-import cognitiveprom.exceptions.LogImportException;
+import cognitiveprom.exceptions.LogIOException;
 import cognitiveprom.log.CognitiveLog;
 
 /**
@@ -18,18 +18,18 @@ public abstract class CognitiveLogImporter {
 	 * 
 	 * @param fileName the file with the log
 	 * @return the imported log
-	 * @throws LogImportException
+	 * @throws LogIOException
 	 */
-	public abstract CognitiveLog load(File fileName) throws LogImportException;
+	public abstract CognitiveLog load(File fileName) throws LogIOException;
 	
 	/**
 	 * Loads a {@link CognitiveLog} from a file
 	 * 
 	 * @param fileName the file with the log
 	 * @return the imported log
-	 * @throws LogImportException
+	 * @throws LogIOException
 	 */
-	public CognitiveLog load(String fileName) throws LogImportException {
+	public CognitiveLog load(String fileName) throws LogIOException {
 		return load(new File(fileName));
 	}
 }

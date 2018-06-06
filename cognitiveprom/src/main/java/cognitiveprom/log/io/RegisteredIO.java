@@ -1,4 +1,4 @@
-package cognitiveprom.utils;
+package cognitiveprom.log.io;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.reflections.Reflections;
 
+import cognitiveprom.annotations.Exporter;
 import cognitiveprom.annotations.Importer;
 
 /**
@@ -15,7 +16,7 @@ import cognitiveprom.annotations.Importer;
  * 
  * @author Andrea Burattin
  */
-public class RegisteredImporter {
+public class RegisteredIO {
 
 	/**
 	 * This method returns all the registered importers (i.e., classes annotated
@@ -31,6 +32,26 @@ public class RegisteredImporter {
 			public int compare(Class<?> o1, Class<?> o2) {
 				String s1 = o1.getAnnotation(Importer.class).name();
 				String s2 = o2.getAnnotation(Importer.class).name();
+				return s1.compareTo(s2);
+			}
+		});
+		return importers;
+	}
+	
+	/**
+	 * This method returns all the registered exporter (i.e., classes annotated
+	 * as {@link Exporter})
+	 * 
+	 * @return a set of importers
+	 */
+	public static List<Class<?>> getAllExporters() {
+		Reflections reflections = new Reflections("cognitiveprom");
+		List<Class<?>> importers = new LinkedList<Class<?>>(reflections.getTypesAnnotatedWith(Exporter.class));
+		Collections.sort(importers, new Comparator<Class<?>>() {
+			@Override
+			public int compare(Class<?> o1, Class<?> o2) {
+				String s1 = o1.getAnnotation(Exporter.class).name();
+				String s2 = o2.getAnnotation(Exporter.class).name();
 				return s1.compareTo(s2);
 			}
 		});

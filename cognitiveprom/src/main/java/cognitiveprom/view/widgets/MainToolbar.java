@@ -42,7 +42,6 @@ public class MainToolbar extends JToolBar {
 		add(showConsole);
 		
 		registerListeners();
-		setProcessSelected(false);
 	}
 	
 	/**
@@ -55,29 +54,9 @@ public class MainToolbar extends JToolBar {
 	}
 	
 	/**
-	 * Method to set internal button statuses, depending on whether the
-	 * application is showing a process or not.
-	 * 
-	 * @param processVisualized indicating whether the application is
-	 * visualizing a process or not
-	 */
-	public void setProcessSelected(boolean processVisualized) {
-		saveProcess.setEnabled(processVisualized);
-//		generateLog.setEnabled(processVisualized);
-//		generateStream.setEnabled(processVisualized);
-	}
-	
-	/**
 	 * Method to register the button listeners
 	 */
 	private void registerListeners() {
-//		newProcess.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-////				ApplicationController.instance().processes().randomProcess();
-//			}
-//		});
-		
 		openProcess.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -89,23 +68,9 @@ public class MainToolbar extends JToolBar {
 		saveProcess.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				ApplicationController.instance().processes().saveProcess();
+				ApplicationController.instance().log().saveFile();
 			}
 		});
-		
-//		generateLog.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-////				ApplicationController.instance().log().generateLog();
-//			}
-//		});
-//		
-//		generateStream.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-////				ApplicationController.instance().log().generateStream();
-//			}
-//		});
 		
 		showConsole.addActionListener(new ActionListener() {
 			@Override
