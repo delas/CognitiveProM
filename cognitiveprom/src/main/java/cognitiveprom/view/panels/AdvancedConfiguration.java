@@ -12,6 +12,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
 import org.deckfour.xes.model.XTrace;
@@ -129,7 +130,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		c.weightx = 1;
 		c.weighty = 1;
 		c.fill = GridBagConstraints.BOTH;
-		add(tracesSelector, c);
+		add(new JScrollPane(tracesSelector), c);
 
 		add(new JLabel("Activities color", ImageIcons.ICON_COLORS, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
 		add(comboColors, GridBagLayoutHelper.createHorizontalComponentConstraint(0, row++));
