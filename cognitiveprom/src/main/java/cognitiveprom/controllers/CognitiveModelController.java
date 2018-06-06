@@ -1,5 +1,6 @@
 package cognitiveprom.controllers;
 
+import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.AggregationValues;
 import cognitiveprom.model.CognitiveModel;
@@ -14,11 +15,20 @@ import cognitiveprom.workers.ModelRendererWorker;
  */
 public class CognitiveModelController {
 
+	protected static final String KEY_ADVANCED_CONFIG_VISIBLE = "ADVANCED_CONFIGURATION_VISIBLE";
+	protected static final boolean DEFAULT_ADVANCED_CONFIG_VISIBILITY = false;
+
 	private CognitiveModel model;
+	
 	private ApplicationController applicationController;
+	private ConfigurationSet configuration;
 	
 	public CognitiveModelController(ApplicationController applicationController) {
 		this.applicationController = applicationController;
+		this.configuration = applicationController.getConfiguration(CognitiveModelController.class.getCanonicalName());
+		
+		// set default console visibility
+		setAdvancedConfigurationVisibility(configuration.getBoolean(KEY_ADVANCED_CONFIG_VISIBLE, DEFAULT_ADVANCED_CONFIG_VISIBILITY));
 	}
 	
 	public CognitiveModel model() {
@@ -45,5 +55,11 @@ public class CognitiveModelController {
 				AggregationValues.FREQUENCY,
 				AggregationFunctions.SUM,
 				ColorPalette.Colors.BLUE).execute();
+	}
+
+	public void setAdvancedConfigurationVisibility(boolean visible) {
+		configuration.setBoolean(KEY_ADVANCED_CONFIG_VISIBLE, visible);
+		applicationController.getMainPage().getToolbar().setShowAdvancedConfigurationSelected(visible);
+		applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().setVisible(visible);
 	}
 }

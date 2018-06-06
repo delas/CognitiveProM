@@ -21,26 +21,22 @@ public class MainToolbar extends JToolBar {
 
 	private static final long serialVersionUID = -2290088626676975817L;
 
-//	private JButton newProcess = new JButton("New Session", ToolbarIcons.ICON_NEW);
 	private JButton openProcess = new JButton("Open a new log", ImageIcons.ICON_OPEN);
 	private JButton saveProcess = new JButton("Export log", ImageIcons.ICON_SAVE);
 	private JButton saveFigure = new JButton("Export figure", ImageIcons.ICON_EXPORT_PIC);
-//	private JButton generateLog = new JButton("Generate Log", ToolbarIcons.ICON_LOG);
-//	private JButton generateStream = new JButton("Stream", ToolbarIcons.ICON_STREAM);
+	private JToggleButton showAdvancedConfiguration = new JToggleButton("Advanced configuration", ImageIcons.ICON_ADVANCED_CONFIG);
 	private JToggleButton showConsole = new JToggleButton("", ImageIcons.ICON_CONSOLE);
 	
 	public MainToolbar() {
 		setFloatable(false);
 		setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 		
-//		add(newProcess);
 		add(openProcess);
 		add(saveProcess);
 		add(saveFigure);
 		add(Box.createHorizontalGlue());
-//		add(generateLog);
-//		add(generateStream);
-		add(Box.createHorizontalStrut(20));
+		add(showAdvancedConfiguration);
+		add(Box.createHorizontalGlue());
 		add(showConsole);
 		
 		registerListeners();
@@ -53,6 +49,15 @@ public class MainToolbar extends JToolBar {
 	 */
 	public void setShowConsoleSelected(boolean visible) {
 		showConsole.setSelected(visible);
+	}
+	
+	/**
+	 * Method to set the selection of the "show advanced configuration" button
+	 * 
+	 * @param visible
+	 */
+	public void setShowAdvancedConfigurationSelected(boolean visible) {
+		showAdvancedConfiguration.setSelected(visible);
 	}
 	
 	/**
@@ -78,6 +83,13 @@ public class MainToolbar extends JToolBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ApplicationController.instance().getMainPage().getProcessVisualizer().getGraphVisualizer().exportView();
+			}
+		});
+		
+		showAdvancedConfiguration.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().model().setAdvancedConfigurationVisibility(showAdvancedConfiguration.isSelected());
 			}
 		});
 		
