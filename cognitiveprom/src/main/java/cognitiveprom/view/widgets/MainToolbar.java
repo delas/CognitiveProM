@@ -24,6 +24,7 @@ public class MainToolbar extends JToolBar {
 //	private JButton newProcess = new JButton("New Session", ToolbarIcons.ICON_NEW);
 	private JButton openProcess = new JButton("Open a new log", ToolbarIcons.ICON_OPEN);
 	private JButton saveProcess = new JButton("Export log", ToolbarIcons.ICON_SAVE);
+	private JButton saveFigure = new JButton("Export figure", ToolbarIcons.ICON_EXPORT_PIC);
 //	private JButton generateLog = new JButton("Generate Log", ToolbarIcons.ICON_LOG);
 //	private JButton generateStream = new JButton("Stream", ToolbarIcons.ICON_STREAM);
 	private JToggleButton showConsole = new JToggleButton("", ToolbarIcons.ICON_CONSOLE);
@@ -35,6 +36,7 @@ public class MainToolbar extends JToolBar {
 //		add(newProcess);
 		add(openProcess);
 		add(saveProcess);
+		add(saveFigure);
 		add(Box.createHorizontalGlue());
 //		add(generateLog);
 //		add(generateStream);
@@ -69,6 +71,13 @@ public class MainToolbar extends JToolBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ApplicationController.instance().log().saveFile();
+			}
+		});
+		
+		saveFigure.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().getMainPage().getProcessVisualizer().getGraphVisualizer().exportView();
 			}
 		});
 		
