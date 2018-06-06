@@ -27,6 +27,7 @@ public class CognitiveModelController {
 	
 	public void setCognitiveModel(CognitiveModel model) {
 		this.model = model;
+		applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().populateComponents();
 	}
 	
 	public void mineLog() {

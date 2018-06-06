@@ -22,6 +22,7 @@ public class ProcessVisualizer extends ConfigurablePanel {
 	private static final long serialVersionUID = -1749483831141989186L;
 	
 	private DotPanel graphVisualizer;
+	private AdvancedConfiguration advancedConfiguration;
 	private JSlider abstractionSlider;
 
 	public ProcessVisualizer(ConfigurationSet conf) {
@@ -35,12 +36,15 @@ public class ProcessVisualizer extends ConfigurablePanel {
 		return graphVisualizer;
 	}
 	
+	public AdvancedConfiguration getAdvancedConfigurationPanel() {
+		return advancedConfiguration;
+	}
+	
 	public double getAbstractionValue() {
 		return (double) abstractionSlider.getValue() / (double) abstractionSlider.getMaximum();
 	}
 
 	private void placeComponents() {
-		
 		// set the slider
 		abstractionSlider = new JSlider(JSlider.VERTICAL, 0, 100, 100);
 		abstractionSlider.setBackground(Color.white);
@@ -55,6 +59,10 @@ public class ProcessVisualizer extends ConfigurablePanel {
 			}
 		});
 		
+		// sets the advanced configuration
+		advancedConfiguration = new AdvancedConfiguration(conf.getChild(AdvancedConfiguration.class.getCanonicalName()));
+		advancedConfiguration.setVisible(true);
+		
 		// set the graph
 		graphVisualizer = new DotPanel(new Dot());
 		graphVisualizer.setOpaque(true);
@@ -62,7 +70,7 @@ public class ProcessVisualizer extends ConfigurablePanel {
 		
 		// displace all elements
 		setLayout(new BorderLayout());
-//		add(attributePanel, BorderLayout.WEST);
+		add(advancedConfiguration, BorderLayout.WEST);
 		add(graphVisualizer, BorderLayout.CENTER);
 		add(abstractionSlider, BorderLayout.EAST);
 	}

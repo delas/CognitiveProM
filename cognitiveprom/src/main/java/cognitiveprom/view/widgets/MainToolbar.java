@@ -10,7 +10,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import cognitiveprom.controllers.ApplicationController;
-import cognitiveprom.view.collections.ToolbarIcons;
+import cognitiveprom.view.collections.ImageIcons;
 
 /**
  * This widget contains the main toolbar of the application
@@ -22,12 +22,12 @@ public class MainToolbar extends JToolBar {
 	private static final long serialVersionUID = -2290088626676975817L;
 
 //	private JButton newProcess = new JButton("New Session", ToolbarIcons.ICON_NEW);
-	private JButton openProcess = new JButton("Open a new log", ToolbarIcons.ICON_OPEN);
-	private JButton saveProcess = new JButton("Export log", ToolbarIcons.ICON_SAVE);
-	private JButton saveFigure = new JButton("Export figure", ToolbarIcons.ICON_EXPORT_PIC);
+	private JButton openProcess = new JButton("Open a new log", ImageIcons.ICON_OPEN);
+	private JButton saveProcess = new JButton("Export log", ImageIcons.ICON_SAVE);
+	private JButton saveFigure = new JButton("Export figure", ImageIcons.ICON_EXPORT_PIC);
 //	private JButton generateLog = new JButton("Generate Log", ToolbarIcons.ICON_LOG);
 //	private JButton generateStream = new JButton("Stream", ToolbarIcons.ICON_STREAM);
-	private JToggleButton showConsole = new JToggleButton("", ToolbarIcons.ICON_CONSOLE);
+	private JToggleButton showConsole = new JToggleButton("", ImageIcons.ICON_CONSOLE);
 	
 	public MainToolbar() {
 		setFloatable(false);
