@@ -16,7 +16,6 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.dataawarecnetminer.model.EventRelationStorage;
 import org.processmining.models.causalgraph.Relation;
-import org.processmining.plugins.InductiveMiner.mining.IMLogInfo;
 
 import com.google.common.collect.Multiset.Entry;
 
@@ -24,10 +23,10 @@ import cognitiveprom.log.projections.AggregationValues;
 
 public class Utils {
 
-	public static Long getMostFrequencActivity(IMLogInfo logInfo) {
-		List<XEventClass> acts = logInfo.getActivities().sortByCardinality();
-		return logInfo.getActivities().getCardinalityOf(acts.get(acts.size() - 1));
-	}
+//	public static Long getMostFrequencActivity(IMLogInfo logInfo) {
+//		List<XEventClass> acts = logInfo.getActivities().sortByCardinality();
+//		return logInfo.getActivities().getCardinalityOf(acts.get(acts.size() - 1));
+//	}
 	
 	public static Long getMostFrequencActivity(EventRelationStorage eventRelations) {
 		long max = 0;

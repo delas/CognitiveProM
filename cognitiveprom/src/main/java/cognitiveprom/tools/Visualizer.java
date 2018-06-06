@@ -12,7 +12,6 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.dataawarecnetminer.model.EventRelationStorage;
 import org.processmining.framework.util.Pair;
-import org.processmining.models.causalgraph.Relation;
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.dot.DotCluster;
 import org.processmining.plugins.graphviz.dot.DotEdge;
@@ -66,98 +65,98 @@ public class Visualizer {
 		return values;
 	}
 	
-	public static Dot visualize(DfgMinerResult dfgResult, double threshold, Collection<XTrace> tracesToConsider, AggregationValues attribute, AggregationFunctions function, Colors activityColor) {
-		EventRelationStorage eventRelations = dfgResult.ers;
-		Long maxAllowedToCut = dfgResult.maxAllowedToCut;
-
-		double mostOccurringRelation = Utils.getMostFrequentRelation(eventRelations);
-		double mostOccurringRelationStart = Utils.getMostFrequentRelationStart(eventRelations);
-		double mostOccurringRelationEnd = Utils.getMostFrequentRelationEnd(eventRelations);
-		
-		Map<String, Pair<String, Double>> activityDecoration = getAggregated(tracesToConsider, attribute, function);
-		
-		Dot dot = new Dot();
-		dot.setOption("outputorder", "edgesfirst");
-		
-		Map<XEventClass, DotNode> mapNodes = new HashMap<XEventClass, DotNode>();
-		
-		// adding nodes
-		DotCluster s = dot.addCluster();
-		DotCluster n = dot.addCluster();
-		DotCluster e = dot.addCluster();
-		
-		s.setOption("style", "invis");
-		n.setOption("style", "invis");
-		e.setOption("style", "invis");
-		
-		Set<XEventClass> activities = Utils.getActivities(eventRelations);
-		for(XEventClass act : activities) {
-			DotNode node = null;
-			if (act.equals(eventRelations.getStartEventClass())) {
-				node = new CognitiveDotStartNode();
-				s.addNode(node);
-			} else if (act.equals(eventRelations.getEndEventClass())) {
-				node = new CognitiveDotEndNode();
-				e.addNode(node);
-			} else {
-				String activity = act.toString();
-				node = new CognitiveDotNode(
-						act.toString(),
-						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getFirst() : null,
-						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getSecond() : null,
-						activityColor);
-				n.addNode(node);
-			}
-			mapNodes.put(act, node);
-		}
-
-		// adding relations
-		for (Entry<Relation> entry : eventRelations.getDirectlyFollowsRelations().entrySet()) {
-			Relation relation = entry.getElement();
-			XEventClass source = relation.getSource();
-			XEventClass target = relation.getTarget();
-			
-			long relationFrequency = eventRelations.countDirectlyFollows(relation);
-			if (source.equals(eventRelations.getStartEventClass())) {
-				
-				// relations from start event
-				if (relationFrequency >= (mostOccurringRelationStart * threshold)) {
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(mapNodes.get(source), mapNodes.get(target), Long.toString(relationFrequency), null);
-					dot.addEdge(dotEdge);
-				}
-				DotEdge invisibleEdge = dot.addEdge(mapNodes.get(source), mapNodes.get(target));
-				invisibleEdge.setOption("style", "invisible");
-				invisibleEdge.setOption("arrowhead", "none");
-				dot.addEdge(invisibleEdge);
-				
-			} else if (target.equals(eventRelations.getEndEventClass())) {
-				
-				// relation to end event
-				if (relationFrequency >= (mostOccurringRelationEnd * threshold)) {
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(mapNodes.get(source), mapNodes.get(target), Long.toString(relationFrequency), null);
-					dot.addEdge(dotEdge);
-				}
-				DotEdge invisibleEdge = dot.addEdge(mapNodes.get(source), mapNodes.get(target));
-				invisibleEdge.setOption("style", "invisible");
-				invisibleEdge.setOption("arrowhead", "none");
-				dot.addEdge(invisibleEdge);
-				
-			} else {
-				
-				// normal relation
-				double weight = (double) relationFrequency / mostOccurringRelation;
-				if (relationFrequency >= (maxAllowedToCut * threshold)) {
-					CognitiveDotNode dotSourceNode = (CognitiveDotNode) mapNodes.get(source);
-					CognitiveDotNode dotTargetNode = (CognitiveDotNode) mapNodes.get(target);
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(dotSourceNode, dotTargetNode, df.format(relationFrequency), weight);
-					n.addEdge(dotEdge);
-				}
-				
-			}
-		}
-		
-		return dot;
-	}
+//	public static Dot visualize(DfgMinerResult dfgResult, double threshold, Collection<XTrace> tracesToConsider, AggregationValues attribute, AggregationFunctions function, Colors activityColor) {
+//		EventRelationStorage eventRelations = dfgResult.ers;
+//		Long maxAllowedToCut = dfgResult.maxAllowedToCut;
+//
+//		double mostOccurringRelation = Utils.getMostFrequentRelation(eventRelations);
+//		double mostOccurringRelationStart = Utils.getMostFrequentRelationStart(eventRelations);
+//		double mostOccurringRelationEnd = Utils.getMostFrequentRelationEnd(eventRelations);
+//		
+//		Map<String, Pair<String, Double>> activityDecoration = getAggregated(tracesToConsider, attribute, function);
+//		
+//		Dot dot = new Dot();
+//		dot.setOption("outputorder", "edgesfirst");
+//		
+//		Map<XEventClass, DotNode> mapNodes = new HashMap<XEventClass, DotNode>();
+//		
+//		// adding nodes
+//		DotCluster s = dot.addCluster();
+//		DotCluster n = dot.addCluster();
+//		DotCluster e = dot.addCluster();
+//		
+//		s.setOption("style", "invis");
+//		n.setOption("style", "invis");
+//		e.setOption("style", "invis");
+//		
+//		Set<XEventClass> activities = Utils.getActivities(eventRelations);
+//		for(XEventClass act : activities) {
+//			DotNode node = null;
+//			if (act.equals(eventRelations.getStartEventClass())) {
+//				node = new CognitiveDotStartNode();
+//				s.addNode(node);
+//			} else if (act.equals(eventRelations.getEndEventClass())) {
+//				node = new CognitiveDotEndNode();
+//				e.addNode(node);
+//			} else {
+//				String activity = act.toString();
+//				node = new CognitiveDotNode(
+//						act.toString(),
+//						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getFirst() : null,
+//						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getSecond() : null,
+//						activityColor);
+//				n.addNode(node);
+//			}
+//			mapNodes.put(act, node);
+//		}
+//
+//		// adding relations
+//		for (Entry<Relation> entry : eventRelations.getDirectlyFollowsRelations().entrySet()) {
+//			Relation relation = entry.getElement();
+//			XEventClass source = relation.getSource();
+//			XEventClass target = relation.getTarget();
+//			
+//			long relationFrequency = eventRelations.countDirectlyFollows(relation);
+//			if (source.equals(eventRelations.getStartEventClass())) {
+//				
+//				// relations from start event
+//				if (relationFrequency >= (mostOccurringRelationStart * threshold)) {
+//					CognitiveDotEdge dotEdge = new CognitiveDotEdge(mapNodes.get(source), mapNodes.get(target), Long.toString(relationFrequency), null);
+//					dot.addEdge(dotEdge);
+//				}
+//				DotEdge invisibleEdge = dot.addEdge(mapNodes.get(source), mapNodes.get(target));
+//				invisibleEdge.setOption("style", "invisible");
+//				invisibleEdge.setOption("arrowhead", "none");
+//				dot.addEdge(invisibleEdge);
+//				
+//			} else if (target.equals(eventRelations.getEndEventClass())) {
+//				
+//				// relation to end event
+//				if (relationFrequency >= (mostOccurringRelationEnd * threshold)) {
+//					CognitiveDotEdge dotEdge = new CognitiveDotEdge(mapNodes.get(source), mapNodes.get(target), Long.toString(relationFrequency), null);
+//					dot.addEdge(dotEdge);
+//				}
+//				DotEdge invisibleEdge = dot.addEdge(mapNodes.get(source), mapNodes.get(target));
+//				invisibleEdge.setOption("style", "invisible");
+//				invisibleEdge.setOption("arrowhead", "none");
+//				dot.addEdge(invisibleEdge);
+//				
+//			} else {
+//				
+//				// normal relation
+//				double weight = (double) relationFrequency / mostOccurringRelation;
+//				if (relationFrequency >= (maxAllowedToCut * threshold)) {
+//					CognitiveDotNode dotSourceNode = (CognitiveDotNode) mapNodes.get(source);
+//					CognitiveDotNode dotTargetNode = (CognitiveDotNode) mapNodes.get(target);
+//					CognitiveDotEdge dotEdge = new CognitiveDotEdge(dotSourceNode, dotTargetNode, df.format(relationFrequency), weight);
+//					n.addEdge(dotEdge);
+//				}
+//				
+//			}
+//		}
+//		
+//		return dot;
+//	}
 
 
 	

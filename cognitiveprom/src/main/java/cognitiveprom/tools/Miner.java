@@ -17,77 +17,70 @@ import org.processmining.causalactivitygraphcreator.parameters.DiscoverCausalAct
 import org.processmining.contexts.cli.CLIContext;
 import org.processmining.contexts.cli.CLIPluginContext;
 import org.processmining.dataawarecnetminer.model.EventRelationStorage;
-import org.processmining.models.causalgraph.Relation;
-import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
-import org.processmining.plugins.InductiveMiner.dfgOnly.log2logInfo.IMLog2IMLogInfoDefault;
-import org.processmining.plugins.InductiveMiner.mining.IMLogInfo;
-import org.processmining.plugins.InductiveMiner.mining.logs.IMLog;
-import org.processmining.plugins.InductiveMiner.mining.logs.IMLogImpl;
-import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
 
 public class Miner {
 
-	public static DfgMinerResult mineDfg(XLog log) {
-		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-		EventRelationStorage eventStorage = EventRelationStorage.Factory.createEventRelations(
-				log,
-				new XEventNameClassifier(),
-				executorService);
-		
-		Map<XEventClass, Long> maxConn = new HashMap<XEventClass, Long>();
-		for (Relation r : eventStorage.getDirectlyFollowsRelations()) {
-			XEventClass source = r.getSource();
-			XEventClass target = r.getTarget();
-			if (	!source.equals(target) &&
-					!source.equals(eventStorage.getStartEventClass()) &&
-					!target.equals(eventStorage.getEndEventClass())) {
-				maxConn.put(source,
-						Math.max(
-								eventStorage.countDirectlyFollows(r),
-								(maxConn.containsKey(source)? maxConn.get(source) : 0)));
-				maxConn.put(target,
-						Math.max(
-								eventStorage.countDirectlyFollows(r),
-								(maxConn.containsKey(target)? maxConn.get(target) : 0)));
-			}
-		}
-		List<Long> maxConnList = new ArrayList<Long>(maxConn.values());
-		Collections.sort(maxConnList);
-
-		DfgMinerResult dfg = new DfgMinerResult();
-		dfg.ers = eventStorage;
-		dfg.maxAllowedToCut = (maxConn.size() > 0)? maxConnList.get(0) : 0;
-		
-		return dfg;
-	}
+//	public static DfgMinerResult mineDfg(XLog log) {
+//		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+//		EventRelationStorage eventStorage = EventRelationStorage.Factory.createEventRelations(
+//				log,
+//				new XEventNameClassifier(),
+//				executorService);
+//		
+//		Map<XEventClass, Long> maxConn = new HashMap<XEventClass, Long>();
+//		for (Relation r : eventStorage.getDirectlyFollowsRelations()) {
+//			XEventClass source = r.getSource();
+//			XEventClass target = r.getTarget();
+//			if (	!source.equals(target) &&
+//					!source.equals(eventStorage.getStartEventClass()) &&
+//					!target.equals(eventStorage.getEndEventClass())) {
+//				maxConn.put(source,
+//						Math.max(
+//								eventStorage.countDirectlyFollows(r),
+//								(maxConn.containsKey(source)? maxConn.get(source) : 0)));
+//				maxConn.put(target,
+//						Math.max(
+//								eventStorage.countDirectlyFollows(r),
+//								(maxConn.containsKey(target)? maxConn.get(target) : 0)));
+//			}
+//		}
+//		List<Long> maxConnList = new ArrayList<Long>(maxConn.values());
+//		Collections.sort(maxConnList);
+//
+//		DfgMinerResult dfg = new DfgMinerResult();
+//		dfg.ers = eventStorage;
+//		dfg.maxAllowedToCut = (maxConn.size() > 0)? maxConnList.get(0) : 0;
+//		
+//		return dfg;
+//	}
 	
-	public static DfgMinerResultOld mineDfgOld(XLog log) {
-		IMLog logIM = new IMLogImpl(log, new XEventNameClassifier(), new XLifeCycleClassifierIgnore());
-		IMLogInfo logInfo = IMLog2IMLogInfoDefault.log2logInfo(logIM);
-		Dfg dfg = logInfo.getDfg();
-		
-		Map<XEventClass, Long> maxConn = new HashMap<XEventClass, Long>();
-		for (Long edge : dfg.getDirectlyFollowsEdges()) {
-			XEventClass source = dfg.getDirectlyFollowsEdgeSource(edge);
-			XEventClass target = dfg.getDirectlyFollowsEdgeTarget(edge);
-			if (!source.equals(target)) {
-				maxConn.put(source,
-						Math.max(
-								dfg.getDirectlyFollowsEdgeCardinality(edge),
-								(maxConn.containsKey(source)? maxConn.get(source) : 0)));
-				maxConn.put(target,
-						Math.max(
-								dfg.getDirectlyFollowsEdgeCardinality(edge),
-								(maxConn.containsKey(target)? maxConn.get(target) : 0)));
-			}
-		}
-		
-		List<Long> maxConnList = new ArrayList<Long>(maxConn.values());
-		Collections.sort(maxConnList);
-		Long maxAllowedToCut = maxConnList.get(0);
-		
-		return new DfgMinerResultOld(logInfo, dfg, maxAllowedToCut);
-	}
+//	public static DfgMinerResultOld mineDfgOld(XLog log) {
+//		IMLog logIM = new IMLogImpl(log, new XEventNameClassifier(), new XLifeCycleClassifierIgnore());
+//		IMLogInfo logInfo = IMLog2IMLogInfoDefault.log2logInfo(logIM);
+//		Dfg dfg = logInfo.getDfg();
+//		
+//		Map<XEventClass, Long> maxConn = new HashMap<XEventClass, Long>();
+//		for (Long edge : dfg.getDirectlyFollowsEdges()) {
+//			XEventClass source = dfg.getDirectlyFollowsEdgeSource(edge);
+//			XEventClass target = dfg.getDirectlyFollowsEdgeTarget(edge);
+//			if (!source.equals(target)) {
+//				maxConn.put(source,
+//						Math.max(
+//								dfg.getDirectlyFollowsEdgeCardinality(edge),
+//								(maxConn.containsKey(source)? maxConn.get(source) : 0)));
+//				maxConn.put(target,
+//						Math.max(
+//								dfg.getDirectlyFollowsEdgeCardinality(edge),
+//								(maxConn.containsKey(target)? maxConn.get(target) : 0)));
+//			}
+//		}
+//		
+//		List<Long> maxConnList = new ArrayList<Long>(maxConn.values());
+//		Collections.sort(maxConnList);
+//		Long maxAllowedToCut = maxConnList.get(0);
+//		
+//		return new DfgMinerResultOld(logInfo, dfg, maxAllowedToCut);
+//	}
 	
 	public static CausalActivityGraph mineCag(XLog log) {
 		CLIContext context = new CLIContext();
