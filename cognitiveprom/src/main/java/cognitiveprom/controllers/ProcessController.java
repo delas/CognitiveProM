@@ -13,7 +13,7 @@ import cognitiveprom.workers.ModelRendererWorker;
  * 
  * @author Andrea Burattin
  */
-public class CognitiveModelController {
+public class ProcessController {
 
 	protected static final String KEY_ADVANCED_CONFIG_VISIBLE = "ADVANCED_CONFIGURATION_VISIBLE";
 	protected static final boolean DEFAULT_ADVANCED_CONFIG_VISIBILITY = false;
@@ -23,9 +23,9 @@ public class CognitiveModelController {
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
 	
-	public CognitiveModelController(ApplicationController applicationController) {
+	public ProcessController(ApplicationController applicationController) {
 		this.applicationController = applicationController;
-		this.configuration = applicationController.getConfiguration(CognitiveModelController.class.getCanonicalName());
+		this.configuration = applicationController.getConfiguration(ProcessController.class.getCanonicalName());
 		
 		// set default console visibility
 		setAdvancedConfigurationVisibility(configuration.getBoolean(KEY_ADVANCED_CONFIG_VISIBLE, DEFAULT_ADVANCED_CONFIG_VISIBILITY));
@@ -41,7 +41,7 @@ public class CognitiveModelController {
 	}
 	
 	public void mineLog() {
-		new MineLogWorker(applicationController.log().log()).execute();
+		new MineLogWorker(applicationController.logController().log()).execute();
 	}
 	
 	public void showModel(CognitiveDotModel model) {
@@ -51,7 +51,7 @@ public class CognitiveModelController {
 	public void updateVisualization() {
 		new ModelRendererWorker(
 				applicationController.getMainPage().getProcessVisualizer().getAbstractionValue(),
-				applicationController.log().log().getLog(),
+				applicationController.logController().log().getLog(),
 				AggregationValues.FREQUENCY,
 				AggregationFunctions.SUM,
 				ColorPalette.Colors.BLUE).execute();

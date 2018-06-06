@@ -22,7 +22,7 @@ import cognitiveprom.workers.SaveFileWorker;
  * 
  * @author Andrea Burattin
  */
-public class CognitiveLogController {
+public class LogController {
 
 	private static final String KEY_OPEN_LOG_LOCATION = "OPEN_LOG_LOCATION";
 	private static final String KEY_SAVE_LOG_LOCATION = "SAVE_LOG_LOCATION";
@@ -34,9 +34,9 @@ public class CognitiveLogController {
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
 	
-	public CognitiveLogController(ApplicationController applicationController) {
+	public LogController(ApplicationController applicationController) {
 		this.applicationController = applicationController;
-		this.configuration = applicationController.getConfiguration(CognitiveLogController.class.getCanonicalName());
+		this.configuration = applicationController.getConfiguration(LogController.class.getCanonicalName());
 	}
 	
 	public CognitiveLog log() {

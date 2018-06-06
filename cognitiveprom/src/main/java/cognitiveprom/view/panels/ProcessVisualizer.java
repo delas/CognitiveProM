@@ -55,7 +55,7 @@ public class ProcessVisualizer extends ConfigurablePanel {
 		abstractionSlider.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				ApplicationController.instance().model().updateVisualization();
+				ApplicationController.instance().processController().updateVisualization();
 			}
 		});
 		

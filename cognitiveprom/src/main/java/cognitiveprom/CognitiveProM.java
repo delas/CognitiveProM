@@ -23,7 +23,7 @@ public class CognitiveProM {
 			ApplicationController.instance().showLoadProcessPage();
 		} else {
 			String fileName = args[0];
-			ApplicationController.instance().log().loadFile(fileName, FileFilterHelper.getImporterFromFileName(fileName));
+			ApplicationController.instance().logController().loadFile(fileName, FileFilterHelper.getImporterFromFileName(fileName));
 		}
 	}
 }

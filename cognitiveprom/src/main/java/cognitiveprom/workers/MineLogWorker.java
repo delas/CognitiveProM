@@ -69,9 +69,9 @@ public class MineLogWorker extends SwingWorker<CognitiveModel, Void> {
 	protected void done() {
 		Logger.instance().debug("Mining complete");
 		try {
-			ApplicationController.instance().model().setCognitiveModel(get());
+			ApplicationController.instance().processController().setCognitiveModel(get());
 		} catch (InterruptedException | ExecutionException e) { }
 		
-		ApplicationController.instance().model().updateVisualization();
+		ApplicationController.instance().processController().updateVisualization();
 	}
 }

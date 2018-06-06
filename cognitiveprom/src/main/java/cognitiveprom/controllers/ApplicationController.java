@@ -21,8 +21,8 @@ public class ApplicationController {
 
 	private static ApplicationController controller = new ApplicationController();
 	
-	private CognitiveLogController logsController;
-	private CognitiveModelController modelController;
+	private LogController logsController;
+	private ProcessController modelController;
 	private ConsoleController consoleController;
 	
 	private ConfigurationSet configuration;
@@ -61,8 +61,8 @@ public class ApplicationController {
 		mainFrame.addPage(waitingPage);
 
 		// creates children controllers
-		logsController = new CognitiveLogController(this);
-		modelController = new CognitiveModelController(this);
+		logsController = new LogController(this);
+		modelController = new ProcessController(this);
 		consoleController = new ConsoleController(this);
 		
 		// initialization logging
@@ -152,7 +152,7 @@ public class ApplicationController {
 	 * 
 	 * @return the logs controller
 	 */
-	public CognitiveLogController log() {
+	public LogController logController() {
 		return logsController;
 	}
 	
@@ -161,7 +161,7 @@ public class ApplicationController {
 	 * 
 	 * @return the model controller
 	 */
-	public CognitiveModelController model() {
+	public ProcessController processController() {
 		return modelController;
 	}
 	
@@ -170,7 +170,7 @@ public class ApplicationController {
 	 * 
 	 * @return the console controller
 	 */
-	public ConsoleController console() {
+	public ConsoleController consoleController() {
 		return consoleController;
 	}
 }

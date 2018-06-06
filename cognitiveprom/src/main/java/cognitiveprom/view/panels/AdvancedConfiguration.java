@@ -58,14 +58,14 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	
 	public void populateComponents() {
 		comboAttributes.removeAllItems();
-		for (AggregationValues av : ApplicationController.instance().log().log().getProjectableAttributes()) {
+		for (AggregationValues av : ApplicationController.instance().logController().log().getProjectableAttributes()) {
 			comboAttributes.addItem(av);
 		}
 		comboAttributes.addItem(AggregationValues.FREQUENCY);
 		comboAttributes.setSelectedItem(AggregationValues.FREQUENCY);
 		
 		listModelSelectedTraces.removeAllElements();
-		for (XTrace trace : ApplicationController.instance().log().log().getLog()) {
+		for (XTrace trace : ApplicationController.instance().logController().log().getLog()) {
 			listModelSelectedTraces.addElement(trace);
 		}
 		tracesSelector.setSelectionInterval(0, listModelSelectedTraces.getSize() - 1);

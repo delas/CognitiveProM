@@ -32,13 +32,13 @@ public class LoadFileWorker extends SwingWorker<CognitiveLog, Void> {
 		Logger.instance().info("File `" + fileName + "` loaded");
 		
 		try {
-			ApplicationController.instance().log().setCognitiveLog(get());
+			ApplicationController.instance().logController().setCognitiveLog(get());
 		} catch (InterruptedException | ExecutionException e) { }
 		
 		ApplicationController.instance().getMainFrame().setTitle(fileName);
 		ApplicationController.instance().showMainPage();
 		
 		// once the file is loaded start the mining
-		ApplicationController.instance().model().mineLog();
+		ApplicationController.instance().processController().mineLog();
 	}
 }

@@ -27,7 +27,7 @@ public class LoadProcessPage extends ConfigurableWindowPage {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ApplicationController.instance().log().loadFile();
+				ApplicationController.instance().logController().loadFile();
 			}
 		});
 	}

@@ -68,14 +68,14 @@ public class MainToolbar extends JToolBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ApplicationController.instance().showLoadProcessPage();
-				ApplicationController.instance().log().loadFile();
+				ApplicationController.instance().logController().loadFile();
 			}
 		});
 		
 		saveProcess.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ApplicationController.instance().log().saveFile();
+				ApplicationController.instance().logController().saveFile();
 			}
 		});
 		
@@ -89,14 +89,14 @@ public class MainToolbar extends JToolBar {
 		showAdvancedConfiguration.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ApplicationController.instance().model().setAdvancedConfigurationVisibility(showAdvancedConfiguration.isSelected());
+				ApplicationController.instance().processController().setAdvancedConfigurationVisibility(showAdvancedConfiguration.isSelected());
 			}
 		});
 		
 		showConsole.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ApplicationController.instance().console().setConsoleVisibility(showConsole.isSelected());
+				ApplicationController.instance().consoleController().setConsoleVisibility(showConsole.isSelected());
 			}
 		});
 	}

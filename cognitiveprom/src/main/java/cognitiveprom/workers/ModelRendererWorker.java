@@ -56,7 +56,7 @@ public class ModelRendererWorker extends SwingWorker<CognitiveDotModel, Void> {
 			}, 500);
 		
 		return new CognitiveDotModel(
-				ApplicationController.instance().model().model(),
+				ApplicationController.instance().processController().model(),
 				threshold,
 				tracesToConsider,
 				attribute,
@@ -69,7 +69,7 @@ public class ModelRendererWorker extends SwingWorker<CognitiveDotModel, Void> {
 		this.done = true;
 		Logger.instance().debug("Rendering complete");
 		try {
-			ApplicationController.instance().model().showModel(get());
+			ApplicationController.instance().processController().showModel(get());
 		} catch (InterruptedException | ExecutionException e) { }
 		
 		ApplicationController.instance().getMainPage().getWaitingPanel().setTranslucent(false);
