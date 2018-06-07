@@ -6,6 +6,7 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 import cognitiveprom.config.ConfigurationSet;
+import cognitiveprom.view.panels.AdvancedConfiguration;
 import cognitiveprom.view.panels.Console;
 import cognitiveprom.view.panels.ProcessVisualizer;
 import cognitiveprom.view.panels.WaitingPanel;
@@ -42,6 +43,10 @@ public class MainPage extends ConfigurableWindowPage {
 		return waitingPanel;
 	}
 	
+	public ProcessVisualizer getProcessVisualizer() {
+		return processVisualizer;
+	}
+	
 	public void showWaitingPanel(String text) {
 		showPage(waitingPanel.getClass().getCanonicalName());
 		waitingPanel.start(text);
@@ -49,10 +54,6 @@ public class MainPage extends ConfigurableWindowPage {
 	
 	public void showProcessVisualizer() {
 		showPage(processVisualizer.getClass().getCanonicalName());
-	}
-	
-	public ProcessVisualizer getProcessVisualizer() {
-		return processVisualizer;
 	}
 	
 	/**

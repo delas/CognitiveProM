@@ -6,6 +6,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -14,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.deckfour.xes.model.XTrace;
 
@@ -39,6 +44,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	private JComboBox<AggregationFunctions> comboAttributesFunctions;
 	private JList<XTrace> tracesSelector;
 	private DefaultListModel<XTrace> listModelSelectedTraces;
+	private JComboBox<ColorPalette.Colors> comboColors;
 
 	/**
 	 * Basic class constructor
@@ -55,8 +61,25 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		setBackground(Color.white);
 		
 		placeComponents();
+		registerListeners();
 	}
 	
+	public AggregationValues getSelectedAggregationValue() {
+		return (AggregationValues) comboAttributes.getSelectedItem();
+	}
+	
+	public AggregationFunctions getSelectedAggregationFunction() {
+		return (AggregationFunctions) comboAttributesFunctions.getSelectedItem();
+	}
+	
+	public Collection<XTrace> getSelectedTraces() {
+		return tracesSelector.getSelectedValuesList();
+	}
+	
+	public ColorPalette.Colors getSelectedNodeColor() {
+		return (ColorPalette.Colors) comboColors.getSelectedItem();
+	}
+
 	public void populateComponents() {
 		comboAttributes.removeAllItems();
 		for (AggregationValues av : ApplicationController.instance().logController().log().getProjectableAttributes()) {
@@ -106,7 +129,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		});
 		
 		// the list of colors
-		JComboBox<ColorPalette.Colors> comboColors = new JComboBox<ColorPalette.Colors>();
+		comboColors = new JComboBox<ColorPalette.Colors>();
 		for (ColorPalette.Colors c : ColorPalette.Colors.values()) {
 			comboColors.addItem(c);
 		}
@@ -134,5 +157,32 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 
 		add(new JLabel("Activities color", ImageIcons.ICON_COLORS, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
 		add(comboColors, GridBagLayoutHelper.createHorizontalComponentConstraint(0, row++));
+	}
+	
+	private void registerListeners() {
+		comboAttributes.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().processController().updateVisualization();
+			}
+		});
+		comboAttributesFunctions.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().processController().updateVisualization();
+			}
+		});
+		tracesSelector.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				ApplicationController.instance().processController().updateVisualization();
+			}
+		});
+		comboColors.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().processController().updateVisualization();
+			}
+		});
 	}
 }

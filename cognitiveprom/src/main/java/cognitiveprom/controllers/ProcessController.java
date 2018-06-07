@@ -1,11 +1,8 @@
 package cognitiveprom.controllers;
 
 import cognitiveprom.config.ConfigurationSet;
-import cognitiveprom.log.projections.AggregationFunctions;
-import cognitiveprom.log.projections.AggregationValues;
 import cognitiveprom.process.CognitiveProcess;
 import cognitiveprom.view.graph.CognitiveDotModel;
-import cognitiveprom.view.graph.ColorPalette;
 import cognitiveprom.workers.MineLogWorker;
 import cognitiveprom.workers.ModelRendererWorker;
 
@@ -51,10 +48,10 @@ public class ProcessController {
 	public void updateVisualization() {
 		new ModelRendererWorker(
 				applicationController.getMainPage().getProcessVisualizer().getAbstractionValue(),
-				applicationController.logController().log().getLog(),
-				AggregationValues.FREQUENCY,
-				AggregationFunctions.SUM,
-				ColorPalette.Colors.BLUE).execute();
+				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedTraces(),
+				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationValue(),
+				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationFunction(),
+				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedNodeColor()).execute();
 	}
 
 	public void setAdvancedConfigurationVisibility(boolean visible) {
