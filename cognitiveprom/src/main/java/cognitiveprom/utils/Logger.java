@@ -56,8 +56,10 @@ public class Logger {
 	 */
 	public void info(String message) {
 		if (LOGGING_ENABLED) {
-			LOG_PRINT_STREAM.println(now() + " - INFO - " + message + " " + getCaller());
-			LOG_PRINT_STREAM.flush();
+			synchronized (logger) {
+				LOG_PRINT_STREAM.println(now() + " - INFO - " + message + " " + getCaller());
+				LOG_PRINT_STREAM.flush();
+			}
 		}
 	}
 	
@@ -68,8 +70,10 @@ public class Logger {
 	 */
 	public void debug(String message) {
 		if (LOGGING_ENABLED && DEBUG_ENABLED) {
-			LOG_PRINT_STREAM.println(now() + " - DEBUG - " + message + " " + getCaller());
-			LOG_PRINT_STREAM.flush();
+			synchronized (logger) {
+				LOG_PRINT_STREAM.println(now() + " - DEBUG - " + message + " " + getCaller());
+				LOG_PRINT_STREAM.flush();
+			}
 		}
 	}
 	

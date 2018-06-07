@@ -13,7 +13,7 @@ import org.processmining.plugins.graphviz.dot.DotNode;
 
 import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.log.projections.AggregationFunctions;
-import cognitiveprom.log.projections.AggregationValues;
+import cognitiveprom.log.projections.ValueProjector;
 import cognitiveprom.utils.Logger;
 import cognitiveprom.view.graph.CognitiveDotModel;
 import cognitiveprom.view.graph.ColorPalette.Colors;
@@ -23,14 +23,14 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 	private boolean done;
 	private double threshold;
 	private Collection<XTrace> tracesToConsider;
-	private AggregationValues attribute;
+	private ValueProjector attribute;
 	private AggregationFunctions function;
 	private Colors activityColor;
 
 	public RendererWorker(
 			double threshold,
 			Collection<XTrace> tracesToConsider,
-			AggregationValues attribute,
+			ValueProjector attribute,
 			AggregationFunctions function,
 			Colors activityColor) {
 		this.threshold = threshold;

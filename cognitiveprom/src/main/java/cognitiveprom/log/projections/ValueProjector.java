@@ -6,12 +6,18 @@ import java.util.List;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XTrace;
+import org.processmining.dataawarecnetminer.model.EventRelationStorage;
+import org.processmining.framework.util.Pair;
 
 import cognitiveprom.log.utils.XCognitiveLogHelper;
 
-public class AggregationValues implements Comparable<AggregationValues> {
+/**
+ * 
+ * @author Andrea Burattin
+ */
+public class ValueProjector implements Comparable<ValueProjector> {
 
-	public static AggregationValues FREQUENCY = new AggregationValues("Frequency in trace", true) {
+	public static ValueProjector FREQUENCY = new ValueProjector("Frequency in trace", true) {
 		@Override
 		public List<Double> getValues(XTrace trace, String AOIName) {
 			List<Double> values = new ArrayList<Double>();
@@ -24,9 +30,44 @@ public class AggregationValues implements Comparable<AggregationValues> {
 			values.add(counter);
 			return values;
 		}
+		
+		@Override
+		public List<Double> getValues(XTrace trace, String AOISource, String AOITarget) {
+			List<Double> values = new ArrayList<Double>();
+			// start activity case
+			if (AOISource.equals(EventRelationStorage.ARTIFICIAL_START)) {
+				if (AOITarget.equals(XCognitiveLogHelper.getAOIName(trace.get(0)))) {
+					values.add(1d);
+				} else {
+					values.add(0d);
+				}
+				return values;
+			}
+			
+			// end activity case
+			if (AOITarget.equals(EventRelationStorage.ARTIFICIAL_END)) {
+				if (AOISource.equals(XCognitiveLogHelper.getAOIName(trace.get(trace.size() - 1)))) {
+					values.add(1d);
+				} else {
+					values.add(0d);
+				}
+				return values;
+			}
+			
+			// general case
+			double val = 0d;
+			for (int i = 0; i < trace.size() - 1; i++) {
+				if (XCognitiveLogHelper.getAOIName(trace.get(i)).equals(AOISource) &&
+						XCognitiveLogHelper.getAOIName(trace.get(i + 1)).equals(AOITarget)) {
+					val++;
+				}
+			}
+			values.add(val);
+			return values;
+		}
 	};
 	
-	public static AggregationValues NONE = new AggregationValues("None", true) {
+	public static ValueProjector NONE = new ValueProjector("None", true) {
 		@Override
 		public List<Double> getValues(XTrace trace, String AOIName) {
 			return new ArrayList<Double>();
@@ -36,16 +77,16 @@ public class AggregationValues implements Comparable<AggregationValues> {
 	protected String attributeName = null;
 	protected boolean isSpecialFunction;
 	
-	protected AggregationValues(String attributeName, boolean isSpecialFunction) {
+	protected ValueProjector(String attributeName, boolean isSpecialFunction) {
 		this.attributeName = attributeName;
 		this.isSpecialFunction = isSpecialFunction;
 	}
 	
-	public AggregationValues(String attributeName) {
+	public ValueProjector(String attributeName) {
 		this(attributeName, false);
 	}
 	
-	public String getAttributeName() {
+	public String getProjectionName() {
 		return attributeName;
 	}
 	
@@ -63,16 +104,24 @@ public class AggregationValues implements Comparable<AggregationValues> {
 		}
 		return values;
 	}
+
+	public List<Double> getValues(XTrace trace, String AOISource, String AOITarget) {
+		return new ArrayList<Double>();
+	}
+	
+	public List<Double> getValues(XTrace trace, Pair<String, String> relation) {
+		return getValues(trace, relation.getFirst(), relation.getSecond());
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof AggregationValues)) {
+		if (!(obj instanceof ValueProjector)) {
 			return false;
 		}
-		AggregationValues rhs = (AggregationValues) obj;
+		ValueProjector rhs = (ValueProjector) obj;
 		boolean attName = (attributeName == null)? (rhs.attributeName == null) : attributeName.equals(rhs.attributeName);
 		return (isSpecialFunction == rhs.isSpecialFunction) && attName;
 	}
@@ -94,7 +143,7 @@ public class AggregationValues implements Comparable<AggregationValues> {
 		}
 	}
 
-	public int compareTo(AggregationValues o) {
+	public int compareTo(ValueProjector o) {
 		if (isSpecialFunction == o.isSpecialFunction) {
 			return attributeName.compareTo(o.attributeName);
 		} else {

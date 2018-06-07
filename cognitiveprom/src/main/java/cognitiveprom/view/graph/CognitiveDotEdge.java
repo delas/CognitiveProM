@@ -24,6 +24,12 @@ public class CognitiveDotEdge extends DotEdge {
 		if (weight != null) {
 			setOption("color", ColorPalette.colorToString(ColorPalette.getValue(Colors.DARK_GRAY, weight)));
 			setOption("penwidth", "" + (1 + (4 * weight)));
+		} else {
+			if ((source instanceof CognitiveDotStartNode) || (target instanceof CognitiveDotEndNode)) {
+				setOption("penwidth", "1");
+			} else {
+				setOption("penwidth", "2");
+			}
 		}
 		
 		if (source instanceof CognitiveDotStartNode) {

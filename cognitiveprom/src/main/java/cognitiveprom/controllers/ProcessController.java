@@ -3,7 +3,7 @@ package cognitiveprom.controllers;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 import cognitiveprom.config.ConfigurationSet;
-import cognitiveprom.process.CognitiveProcess;
+import cognitiveprom.map.ProcessMap;
 import cognitiveprom.view.workers.MineLogWorker;
 import cognitiveprom.view.workers.RendererWorker;
 
@@ -16,7 +16,7 @@ public class ProcessController {
 	protected static final String KEY_ADVANCED_CONFIG_VISIBLE = "ADVANCED_CONFIGURATION_VISIBLE";
 	protected static final boolean DEFAULT_ADVANCED_CONFIG_VISIBILITY = false;
 
-	private CognitiveProcess model;
+	private ProcessMap model;
 	
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
@@ -30,11 +30,11 @@ public class ProcessController {
 		setAdvancedConfigurationVisibility(configuration.getBoolean(KEY_ADVANCED_CONFIG_VISIBLE, DEFAULT_ADVANCED_CONFIG_VISIBILITY));
 	}
 	
-	public CognitiveProcess model() {
+	public ProcessMap model() {
 		return model;
 	}
 	
-	public void setCognitiveModel(CognitiveProcess model) {
+	public void setCognitiveModel(ProcessMap model) {
 		this.model = model;
 		applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().populateComponents();
 	}
@@ -48,7 +48,7 @@ public class ProcessController {
 		this.isShowingModel = true;
 	}
 	
-	public boolean iSshowingModel() {
+	public boolean isShowingModel() {
 		return isShowingModel;
 	}
 	

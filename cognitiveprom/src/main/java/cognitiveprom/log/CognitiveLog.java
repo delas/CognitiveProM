@@ -20,7 +20,7 @@ import org.processmining.framework.util.Pair;
 
 import cognitiveprom.log.io.CognitiveLogImporter;
 import cognitiveprom.log.projections.AggregationFunction;
-import cognitiveprom.log.projections.AggregationValues;
+import cognitiveprom.log.projections.ValueProjector;
 import cognitiveprom.tools.XLogHelper;
 
 /**
@@ -37,9 +37,9 @@ import cognitiveprom.tools.XLogHelper;
  */
 public class CognitiveLog implements Iterable<XTrace> {
 
-	private Map<Pair<Collection<XTrace>, AggregationValues>, Map<String, AggregationFunction>> summaryCache;
+	private Map<Pair<Collection<XTrace>, ValueProjector>, Map<String, AggregationFunction>> summaryCache;
 	private XLog log;
-	private List<AggregationValues> projectableAttributes = null;
+	private List<ValueProjector> projectableAttributes = null;
 	
 	/**
 	 * Constructor to create a new cognitive log wrapping a {@link XLog}.
@@ -51,7 +51,7 @@ public class CognitiveLog implements Iterable<XTrace> {
 	 */
 	public CognitiveLog(XLog log) {
 		this.log = log;
-		this.summaryCache = new HashMap<Pair<Collection<XTrace>, AggregationValues>, Map<String, AggregationFunction>>();
+		this.summaryCache = new HashMap<Pair<Collection<XTrace>, ValueProjector>, Map<String, AggregationFunction>>();
 	}
 	
 	/**
@@ -70,8 +70,8 @@ public class CognitiveLog implements Iterable<XTrace> {
 	 * @param attribute the attribute to inspect
 	 * @return a map where each activity is mapped to an aggregation function
 	 */
-	public Map<String, AggregationFunction> getSummary(Collection<XTrace> tracesToConsider, AggregationValues attribute) {
-		Pair<Collection<XTrace>, AggregationValues> key = new Pair<Collection<XTrace>, AggregationValues>(tracesToConsider, attribute);
+	public Map<String, AggregationFunction> getSummary(Collection<XTrace> tracesToConsider, ValueProjector attribute) {
+		Pair<Collection<XTrace>, ValueProjector> key = new Pair<Collection<XTrace>, ValueProjector>(tracesToConsider, attribute);
 		if (!summaryCache.containsKey(key)) {
 			summaryCache.put(key, constructSummary(tracesToConsider, attribute));
 		}
@@ -80,13 +80,13 @@ public class CognitiveLog implements Iterable<XTrace> {
 	
 	/**
 	 * Computes a summary of the attribute, to be cached in
-	 * {@link #getSummary(Collection, AggregationValues)}
+	 * {@link #getSummary(Collection, ValueProjector)}
 	 * 
 	 * @param tracesToConsider
 	 * @param attribute
 	 * @return
 	 */
-	private Map<String, AggregationFunction> constructSummary(Collection<XTrace> tracesToConsider, AggregationValues attribute) {
+	private Map<String, AggregationFunction> constructSummary(Collection<XTrace> tracesToConsider, ValueProjector attribute) {
 		Map<String, AggregationFunction> aggregators = new HashMap<String, AggregationFunction>();
 		for (XTrace trace : tracesToConsider) {
 			Set<String> processedActivities = new HashSet<String>();
@@ -113,7 +113,7 @@ public class CognitiveLog implements Iterable<XTrace> {
 	 * 
 	 * @return the cached list of attributes
 	 */
-	public List<AggregationValues> getProjectableAttributes() {
+	public List<ValueProjector> getProjectableAttributes() {
 		if (projectableAttributes == null) {
 			int MAX_TRACES_TO_CHECK = 10;
 			
@@ -144,9 +144,9 @@ public class CognitiveLog implements Iterable<XTrace> {
 				}
 			}
 			
-			projectableAttributes = new ArrayList<AggregationValues>(candidateAttributes.size());
+			projectableAttributes = new ArrayList<ValueProjector>(candidateAttributes.size());
 			for (String attr : candidateAttributes) {
-				projectableAttributes.add(new AggregationValues(attr));
+				projectableAttributes.add(new ValueProjector(attr));
 			}
 			Collections.sort(projectableAttributes);
 		}

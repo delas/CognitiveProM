@@ -25,7 +25,7 @@ import org.deckfour.xes.model.XTrace;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.log.projections.AggregationFunctions;
-import cognitiveprom.log.projections.AggregationValues;
+import cognitiveprom.log.projections.ValueProjector;
 import cognitiveprom.log.utils.XCognitiveLogHelper;
 import cognitiveprom.utils.GridBagLayoutHelper;
 import cognitiveprom.view.collections.ImageIcons;
@@ -40,7 +40,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	private static final long serialVersionUID = 1564244018050763210L;
 	protected static final int WIDTH = 200;
 	
-	private JComboBox<AggregationValues> comboAttributes;
+	private JComboBox<ValueProjector> comboAttributes;
 	private JComboBox<AggregationFunctions> comboAttributesFunctions;
 	private JList<XTrace> tracesSelector;
 	private DefaultListModel<XTrace> listModelSelectedTraces;
@@ -64,8 +64,8 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		registerListeners();
 	}
 	
-	public AggregationValues getSelectedAggregationValue() {
-		return (AggregationValues) comboAttributes.getSelectedItem();
+	public ValueProjector getSelectedAggregationValue() {
+		return (ValueProjector) comboAttributes.getSelectedItem();
 	}
 	
 	public AggregationFunctions getSelectedAggregationFunction() {
@@ -82,12 +82,12 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 
 	public void populateComponents() {
 		comboAttributes.removeAllItems();
-		for (AggregationValues av : ApplicationController.instance().logController().log().getProjectableAttributes()) {
+		for (ValueProjector av : ApplicationController.instance().logController().log().getProjectableAttributes()) {
 			comboAttributes.addItem(av);
 		}
-		comboAttributes.addItem(AggregationValues.FREQUENCY);
-		comboAttributes.addItem(AggregationValues.NONE);
-		comboAttributes.setSelectedItem(AggregationValues.FREQUENCY);
+		comboAttributes.addItem(ValueProjector.FREQUENCY);
+		comboAttributes.addItem(ValueProjector.NONE);
+		comboAttributes.setSelectedItem(ValueProjector.FREQUENCY);
 		
 		listModelSelectedTraces.removeAllElements();
 		for (XTrace trace : ApplicationController.instance().logController().log().getLog()) {
@@ -99,9 +99,9 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	private void placeComponents() {
 		// construct all elements
 		// the combo with aggregation attributes
-		comboAttributes = new JComboBox<AggregationValues>();
-		comboAttributes.addItem(AggregationValues.FREQUENCY);
-		comboAttributes.setSelectedItem(AggregationValues.FREQUENCY);
+		comboAttributes = new JComboBox<ValueProjector>();
+		comboAttributes.addItem(ValueProjector.FREQUENCY);
+		comboAttributes.setSelectedItem(ValueProjector.FREQUENCY);
 		
 		// the combo with aggregation functions
 		comboAttributesFunctions = new JComboBox<AggregationFunctions>();
@@ -164,7 +164,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		comboAttributes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (ApplicationController.instance().processController().iSshowingModel()) {
+				if (ApplicationController.instance().processController().isShowingModel()) {
 					ApplicationController.instance().processController().updateVisualization();
 				}
 			}
@@ -172,7 +172,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		comboAttributesFunctions.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (ApplicationController.instance().processController().iSshowingModel()) {
+				if (ApplicationController.instance().processController().isShowingModel()) {
 					ApplicationController.instance().processController().updateVisualization();
 				}
 			}
@@ -180,7 +180,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		tracesSelector.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (ApplicationController.instance().processController().iSshowingModel()) {
+				if (ApplicationController.instance().processController().isShowingModel()) {
 					ApplicationController.instance().processController().updateVisualization();
 				}
 			}
@@ -188,7 +188,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		comboColors.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (ApplicationController.instance().processController().iSshowingModel()) {
+				if (ApplicationController.instance().processController().isShowingModel()) {
 					ApplicationController.instance().processController().updateVisualization();
 				}
 			}

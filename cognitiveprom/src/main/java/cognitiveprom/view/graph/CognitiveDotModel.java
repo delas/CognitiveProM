@@ -1,6 +1,5 @@
 package cognitiveprom.view.graph;
 
-import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,9 +21,9 @@ import com.google.common.collect.Multiset.Entry;
 
 import cognitiveprom.log.projections.AggregationFunction;
 import cognitiveprom.log.projections.AggregationFunctions;
-import cognitiveprom.log.projections.AggregationValues;
-import cognitiveprom.process.CognitiveProcess;
-import cognitiveprom.tools.XLogHelper;
+import cognitiveprom.log.projections.ValueProjector;
+import cognitiveprom.log.utils.XCognitiveLogHelper;
+import cognitiveprom.map.ProcessMap;
 import cognitiveprom.view.graph.ColorPalette.Colors;
 
 /**
@@ -33,20 +32,20 @@ import cognitiveprom.view.graph.ColorPalette.Colors;
  */
 public class CognitiveDotModel extends Dot {
 
-	private static DecimalFormat df = new DecimalFormat("#.###");
+//	private static DecimalFormat df = new DecimalFormat("#.###");
 
-	private CognitiveProcess model;
+	private ProcessMap model;
 	private double threshold;
 	private Collection<XTrace> tracesToConsider;
-	private AggregationValues attribute;
+	private ValueProjector attribute;
 	private AggregationFunctions function;
 	private Colors activityColor;
 	
 	public CognitiveDotModel(
-			CognitiveProcess model,
+			ProcessMap model,
 			double threshold,
 			Collection<XTrace> tracesToConsider,
-			AggregationValues attribute,
+			ValueProjector attribute,
 			AggregationFunctions function,
 			Colors activityColor) {
 		
@@ -60,13 +59,67 @@ public class CognitiveDotModel extends Dot {
 		realize();
 	}
 	
-	private static Map<String, Pair<String, Double>> getAggregated(Collection<XTrace> tracesToConsider, AggregationValues attribute, AggregationFunctions function) {
+	private Map<Pair<String, String>, Pair<String, Double>> getAggregatedRelations() {
+		Map<Pair<String, String>, AggregationFunction> aggregators = new HashMap<Pair<String, String>, AggregationFunction>();
+		for (XTrace trace : tracesToConsider) {
+			// start case
+			Pair<String, String> startPair = new Pair<String, String>(EventRelationStorage.ARTIFICIAL_START, XCognitiveLogHelper.getAOIName(trace.get(0)));
+			if (!aggregators.containsKey(startPair) && attribute.getValues(trace, startPair).size() > 0) {
+				aggregators.put(startPair, new AggregationFunction());
+			}
+			for (Double value : attribute.getValues(trace, startPair)) {
+				aggregators.get(startPair).addObservation(value);
+			}
+			
+			// end case
+			Pair<String, String> endPair = new Pair<String, String>(XCognitiveLogHelper.getAOIName(trace.get(trace.size() - 1)), EventRelationStorage.ARTIFICIAL_END);
+			if (!aggregators.containsKey(endPair) && attribute.getValues(trace, endPair).size() > 0) {
+				aggregators.put(endPair, new AggregationFunction());
+			}
+			for (Double value : attribute.getValues(trace, endPair)) {
+				aggregators.get(endPair).addObservation(value);
+			}
+			
+			// normal case
+			for (int i = 0; i < trace.size() - 1; i++) {
+				// we want to process the activity only once per trace
+				Set<Pair<String, String>> processedRelations = new HashSet<Pair<String, String>>();
+				Pair<String, String> relation = new Pair<String, String>(XCognitiveLogHelper.getAOIName(trace.get(i)), XCognitiveLogHelper.getAOIName(trace.get(i + 1)));
+				if (!processedRelations.contains(relation)) {
+					if (!aggregators.containsKey(relation) && attribute.getValues(trace, relation).size() > 0) {
+						aggregators.put(relation, new AggregationFunction());
+					}
+					for (Double value : attribute.getValues(trace, relation)) {
+						aggregators.get(relation).addObservation(value);
+					}
+					processedRelations.add(relation);
+				}
+			}
+		}
+		
+		Double max = Double.MIN_VALUE;
+		for (Pair<String, String> relation : aggregators.keySet()) {
+			max = Math.max(max, aggregators.get(relation).getValue(function).doubleValue());
+		}
+		
+		Map<Pair<String, String>, Pair<String, Double>> values = new HashMap<Pair<String, String>, Pair<String, Double>>();
+		for (Pair<String, String> relation : aggregators.keySet()) {
+			AggregationFunction af = aggregators.get(relation);
+			Pair<String, Double> p = new Pair<String, Double>(af.getStringValue(function), af.getValue(function).doubleValue() / max);
+			values.put(relation, p);
+		}
+		
+		return values;
+	}
+	
+	private Map<String, Pair<String, Double>> getAggregatedActivities() {
 		Map<String, AggregationFunction> aggregators = new HashMap<String, AggregationFunction>();
 		for (XTrace trace : tracesToConsider) {
+			// we want to process the activity only once per trace
 			Set<String> processedActivities = new HashSet<String>();
 			for (XEvent event : trace) {
-				String activity = XLogHelper.getName(event);
-				if (!processedActivities.contains(activity)) {
+				String activity = XCognitiveLogHelper.getAOIName(event);
+				if (!processedActivities.contains(activity) && attribute.getValues(trace, activity).size() > 0) {
 					if (!aggregators.containsKey(activity)) {
 						aggregators.put(activity, new AggregationFunction());
 					}
@@ -95,14 +148,12 @@ public class CognitiveDotModel extends Dot {
 	
 	private void realize() {
 		EventRelationStorage eventRelations = model.getEventRelationStorage();
-		Long maxAllowedToCut = model.getMaxAllowedToCut();
 
-		double mostOccurringRelation = model.getMostFrequentRelation();
 		double mostOccurringRelationStart = model.getMostFrequentRelationStart();
 		double mostOccurringRelationEnd = model.getMostFrequentRelationEnd();
 		
-		Map<String, Pair<String, Double>> activityDecoration = getAggregated(tracesToConsider, attribute, function);
-
+		Map<String, Pair<String, Double>> activityDecoration = getAggregatedActivities();
+		Map<Pair<String, String>, Pair<String, Double>> relationDecoration = getAggregatedRelations();
 		
 		setOption("outputorder", "edgesfirst");
 		
@@ -142,13 +193,18 @@ public class CognitiveDotModel extends Dot {
 			Relation relation = entry.getElement();
 			XEventClass source = relation.getSource();
 			XEventClass target = relation.getTarget();
+			Pair<String, String> relationPair = new Pair<String, String>(source.toString(), target.toString());
 			
 			long relationFrequency = eventRelations.countDirectlyFollows(relation);
 			if (source.equals(eventRelations.getStartEventClass())) {
 				
 				// relations from start event
 				if (relationFrequency >= (mostOccurringRelationStart * threshold)) {
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(mapNodes.get(source), mapNodes.get(target), Long.toString(relationFrequency), null);
+					CognitiveDotEdge dotEdge = new CognitiveDotEdge(
+							mapNodes.get(source),
+							mapNodes.get(target),
+							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
+							null);
 					addEdge(dotEdge);
 				}
 				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
@@ -160,7 +216,11 @@ public class CognitiveDotModel extends Dot {
 				
 				// relation to end event
 				if (relationFrequency >= (mostOccurringRelationEnd * threshold)) {
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(mapNodes.get(source), mapNodes.get(target), Long.toString(relationFrequency), null);
+					CognitiveDotEdge dotEdge = new CognitiveDotEdge(
+							mapNodes.get(source),
+							mapNodes.get(target),
+							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
+							null);
 					addEdge(dotEdge);
 				}
 				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
@@ -171,11 +231,14 @@ public class CognitiveDotModel extends Dot {
 			} else {
 				
 				// normal relation
-				double weight = (double) relationFrequency / mostOccurringRelation;
-				if (relationFrequency >= (maxAllowedToCut * threshold)) {
+				if (relationFrequency >= (model.getMaxAllowedToCut() * threshold)) {
 					CognitiveDotNode dotSourceNode = (CognitiveDotNode) mapNodes.get(source);
 					CognitiveDotNode dotTargetNode = (CognitiveDotNode) mapNodes.get(target);
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(dotSourceNode, dotTargetNode, df.format(relationFrequency), weight);
+					CognitiveDotEdge dotEdge = new CognitiveDotEdge(
+							dotSourceNode,
+							dotTargetNode,
+							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
+							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
 					n.addEdge(dotEdge);
 				}
 				

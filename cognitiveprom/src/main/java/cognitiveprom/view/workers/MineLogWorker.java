@@ -18,10 +18,10 @@ import org.processmining.models.causalgraph.Relation;
 
 import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.log.CognitiveLog;
-import cognitiveprom.process.CognitiveProcess;
+import cognitiveprom.map.ProcessMap;
 import cognitiveprom.utils.Logger;
 
-public class MineLogWorker extends SwingWorker<CognitiveProcess, Void> {
+public class MineLogWorker extends SwingWorker<ProcessMap, Void> {
 
 	private CognitiveLog log;
 	
@@ -30,7 +30,7 @@ public class MineLogWorker extends SwingWorker<CognitiveProcess, Void> {
 	}
 	
 	@Override
-	protected CognitiveProcess doInBackground() throws Exception {
+	protected ProcessMap doInBackground() throws Exception {
 		Logger.instance().debug("Mining started...");
 		ApplicationController.instance().getMainPage().showWaitingPanel("Log mining...");
 		
@@ -60,7 +60,7 @@ public class MineLogWorker extends SwingWorker<CognitiveProcess, Void> {
 		List<Long> maxConnList = new ArrayList<Long>(maxConn.values());
 		Collections.sort(maxConnList);
 
-		return new CognitiveProcess(
+		return new ProcessMap(
 				eventStorage,
 				(maxConn.size() > 0)? maxConnList.get(0) : 0);
 	}

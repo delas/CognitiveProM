@@ -1,4 +1,4 @@
-package cognitiveprom.process;
+package cognitiveprom.map;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,18 +16,17 @@ import cognitiveprom.log.CognitiveLog;
  * 
  * @author Andrea Burattin
  */
-public class CognitiveProcess {
+public class ProcessMap {
 
 	private EventRelationStorage eventRelationStorage;
 	private Long maxAllowedToCut;
 	
 	// cached values
 	private Long mostFrequentActivity = null;
-	private Long mostFrequentRelation = null;
 	private Long mostFrequentRelationStart = null;
 	private Long mostFrequentRelationEnd = null;
 	
-	public CognitiveProcess(EventRelationStorage eventRelationStorage, long maxAllowedToCut) {
+	public ProcessMap(EventRelationStorage eventRelationStorage, long maxAllowedToCut) {
 		this.eventRelationStorage = eventRelationStorage;
 		this.maxAllowedToCut = maxAllowedToCut;
 	}
@@ -58,18 +57,6 @@ public class CognitiveProcess {
 			}
 		}
 		return mostFrequentActivity;
-	}
-
-	public Long getMostFrequentRelation() {
-		if (mostFrequentRelation == null) {
-			mostFrequentRelation = 0l;
-			for (Relation r : eventRelationStorage.getDirectlyFollowsRelations()) {
-				if (!r.getSource().equals(eventRelationStorage.getStartEventClass()) && !r.getTarget().equals(eventRelationStorage.getEndEventClass())) {
-					mostFrequentRelation = Math.max(mostFrequentRelation, eventRelationStorage.countDirectlyFollows(r));
-				}
-			}
-		}
-		return mostFrequentRelation;
 	}
 	
 	public Long getMostFrequentRelationStart() {

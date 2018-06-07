@@ -21,7 +21,7 @@ import com.google.common.collect.Multiset.Entry;
 
 import cognitiveprom.log.projections.AggregationFunction;
 import cognitiveprom.log.projections.AggregationFunctions;
-import cognitiveprom.log.projections.AggregationValues;
+import cognitiveprom.log.projections.ValueProjector;
 import cognitiveprom.view.graph.CognitiveDotEdge;
 import cognitiveprom.view.graph.CognitiveDotEndNode;
 import cognitiveprom.view.graph.CognitiveDotNode;
@@ -32,7 +32,7 @@ public class Visualizer {
 	
 	private static DecimalFormat df = new DecimalFormat("#.###");
 	
-	public static Map<String, Pair<String, Double>> getAggregated(Collection<XTrace> tracesToConsider, AggregationValues attribute, AggregationFunctions function) {
+	public static Map<String, Pair<String, Double>> getAggregated(Collection<XTrace> tracesToConsider, ValueProjector attribute, AggregationFunctions function) {
 		Map<String, AggregationFunction> aggregators = new HashMap<String, AggregationFunction>();
 		for (XTrace trace : tracesToConsider) {
 			Set<String> processedActivities = new HashSet<String>();
