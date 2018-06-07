@@ -1,6 +1,7 @@
 package cognitiveprom.map;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.deckfour.xes.classification.XEventClass;
@@ -19,20 +20,20 @@ import cognitiveprom.log.CognitiveLog;
 public class ProcessMap {
 
 	private EventRelationStorage eventRelationStorage;
-	private Long maxAllowedToCut;
+	private Map<XEventClass, Long> maxConn;
 	
 	// cached values
 	private Long mostFrequentActivity = null;
 	private Long mostFrequentRelationStart = null;
 	private Long mostFrequentRelationEnd = null;
 	
-	public ProcessMap(EventRelationStorage eventRelationStorage, long maxAllowedToCut) {
+	public ProcessMap(EventRelationStorage eventRelationStorage, Map<XEventClass, Long> maxConn) {
 		this.eventRelationStorage = eventRelationStorage;
-		this.maxAllowedToCut = maxAllowedToCut;
+		this.maxConn = maxConn;
 	}
 
-	public Long getMaxAllowedToCut() {
-		return maxAllowedToCut;
+	public Map<XEventClass, Long> getMaxAllowedToCut() {
+		return maxConn;
 	}
 	
 	public Set<XEventClass> getActivities() {

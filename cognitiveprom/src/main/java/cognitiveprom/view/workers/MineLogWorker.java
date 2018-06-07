@@ -62,7 +62,7 @@ public class MineLogWorker extends SwingWorker<ProcessMap, Void> {
 
 		return new ProcessMap(
 				eventStorage,
-				(maxConn.size() > 0)? maxConnList.get(0) : 0);
+				maxConn);
 	}
 
 	@Override

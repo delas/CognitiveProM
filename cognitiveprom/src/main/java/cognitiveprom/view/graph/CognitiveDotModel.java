@@ -231,7 +231,8 @@ public class CognitiveDotModel extends Dot {
 			} else {
 				
 				// normal relation
-				if (relationFrequency >= (model.getMaxAllowedToCut() * threshold)) {
+				double maxAllowedToCur = Math.min(model.getMaxAllowedToCut().get(source), model.getMaxAllowedToCut().get(target));
+				if (relationFrequency >= (maxAllowedToCur * threshold)) {
 					CognitiveDotNode dotSourceNode = (CognitiveDotNode) mapNodes.get(source);
 					CognitiveDotNode dotTargetNode = (CognitiveDotNode) mapNodes.get(target);
 					CognitiveDotEdge dotEdge = new CognitiveDotEdge(
