@@ -7,6 +7,10 @@ import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
 import org.deckfour.xes.factory.XFactory;
+import org.deckfour.xes.model.XAttributable;
+import org.deckfour.xes.model.XAttribute;
+import org.deckfour.xes.model.XAttributeContinuous;
+import org.deckfour.xes.model.XAttributeDiscrete;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -142,5 +146,25 @@ public class XCognitiveLogHelper {
 				}
 			});
 		}
+	}
+	
+	public static Double getDoubleAttribute(XAttributable element, String attributeName) {
+		XAttributeContinuous attribute = (XAttributeContinuous) element.getAttributes().get(attributeName);
+		return attribute.getValue();
+	}
+	
+	public static Long getLongAttribute(XAttributable element, String attributeName) {
+		XAttributeDiscrete attribute = (XAttributeDiscrete) element.getAttributes().get(attributeName);
+		return attribute.getValue();
+	}
+	
+	public static boolean hasDoubleAttribute(XAttributable element, String attributeName) {
+		XAttribute attribute = element.getAttributes().get(attributeName);
+		return (attribute instanceof XAttributeContinuous);
+	}
+	
+	public static boolean hasLongAttribute(XAttributable element, String attributeName) {
+		XAttribute attribute = element.getAttributes().get(attributeName);
+		return (attribute instanceof XAttributeDiscrete);
 	}
 }

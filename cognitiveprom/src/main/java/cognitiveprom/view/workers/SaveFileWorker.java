@@ -1,4 +1,4 @@
-package cognitiveprom.workers;
+package cognitiveprom.view.workers;
 
 import javax.swing.SwingWorker;
 

@@ -86,6 +86,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 			comboAttributes.addItem(av);
 		}
 		comboAttributes.addItem(AggregationValues.FREQUENCY);
+		comboAttributes.addItem(AggregationValues.NONE);
 		comboAttributes.setSelectedItem(AggregationValues.FREQUENCY);
 		
 		listModelSelectedTraces.removeAllElements();
@@ -163,25 +164,33 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		comboAttributes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ApplicationController.instance().processController().updateVisualization();
+				if (ApplicationController.instance().processController().iSshowingModel()) {
+					ApplicationController.instance().processController().updateVisualization();
+				}
 			}
 		});
 		comboAttributesFunctions.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ApplicationController.instance().processController().updateVisualization();
+				if (ApplicationController.instance().processController().iSshowingModel()) {
+					ApplicationController.instance().processController().updateVisualization();
+				}
 			}
 		});
 		tracesSelector.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				ApplicationController.instance().processController().updateVisualization();
+				if (ApplicationController.instance().processController().iSshowingModel()) {
+					ApplicationController.instance().processController().updateVisualization();
+				}
 			}
 		});
 		comboColors.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ApplicationController.instance().processController().updateVisualization();
+				if (ApplicationController.instance().processController().iSshowingModel()) {
+					ApplicationController.instance().processController().updateVisualization();
+				}
 			}
 		});
 	}

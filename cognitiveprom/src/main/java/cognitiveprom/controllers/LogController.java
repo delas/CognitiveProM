@@ -15,8 +15,8 @@ import cognitiveprom.log.io.CognitiveLogImporter;
 import cognitiveprom.utils.FileFilterHelper;
 import cognitiveprom.utils.RuntimeUtils;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
-import cognitiveprom.workers.LoadFileWorker;
-import cognitiveprom.workers.SaveFileWorker;
+import cognitiveprom.view.workers.LoadFileWorker;
+import cognitiveprom.view.workers.SaveFileWorker;
 
 /**
  * 

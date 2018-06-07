@@ -1,10 +1,11 @@
 package cognitiveprom.controllers;
 
+import org.processmining.plugins.graphviz.dot.Dot;
+
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.process.CognitiveProcess;
-import cognitiveprom.view.graph.CognitiveDotModel;
-import cognitiveprom.workers.MineLogWorker;
-import cognitiveprom.workers.ModelRendererWorker;
+import cognitiveprom.view.workers.MineLogWorker;
+import cognitiveprom.view.workers.RendererWorker;
 
 /**
  * 
@@ -19,6 +20,7 @@ public class ProcessController {
 	
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
+	private boolean isShowingModel = false;
 	
 	public ProcessController(ApplicationController applicationController) {
 		this.applicationController = applicationController;
@@ -41,12 +43,17 @@ public class ProcessController {
 		new MineLogWorker(applicationController.logController().log()).execute();
 	}
 	
-	public void showModel(CognitiveDotModel model) {
+	public void showModel(Dot model) {
 		applicationController.getMainPage().getProcessVisualizer().getGraphVisualizer().changeDot(model, true);
+		this.isShowingModel = true;
+	}
+	
+	public boolean iSshowingModel() {
+		return isShowingModel;
 	}
 	
 	public void updateVisualization() {
-		new ModelRendererWorker(
+		new RendererWorker(
 				applicationController.getMainPage().getProcessVisualizer().getAbstractionValue(),
 				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedTraces(),
 				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationValue(),

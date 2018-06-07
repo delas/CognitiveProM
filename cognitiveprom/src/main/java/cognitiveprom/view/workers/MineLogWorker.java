@@ -1,4 +1,4 @@
-package cognitiveprom.workers;
+package cognitiveprom.view.workers;
 
 import java.util.ArrayList;
 import java.util.Collections;

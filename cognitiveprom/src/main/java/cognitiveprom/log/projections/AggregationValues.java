@@ -7,22 +7,29 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XTrace;
 
-import cognitiveprom.tools.XLogHelper;
+import cognitiveprom.log.utils.XCognitiveLogHelper;
 
 public class AggregationValues implements Comparable<AggregationValues> {
 
-	public static AggregationValues FREQUENCY = new AggregationValues("Event frequency", true) {
+	public static AggregationValues FREQUENCY = new AggregationValues("Frequency in trace", true) {
 		@Override
-		public List<Double> getValues(XTrace trace, String activityName) {
+		public List<Double> getValues(XTrace trace, String AOIName) {
 			List<Double> values = new ArrayList<Double>();
 			double counter = 0;
 			for (XEvent event : trace) {
-				if (activityName.equals(XLogHelper.getName(event))) {
+				if (AOIName.equals(XCognitiveLogHelper.getAOIName(event))) {
 					counter++;
 				}
 			}
 			values.add(counter);
 			return values;
+		}
+	};
+	
+	public static AggregationValues NONE = new AggregationValues("None", true) {
+		@Override
+		public List<Double> getValues(XTrace trace, String AOIName) {
+			return new ArrayList<Double>();
 		}
 	};
 
@@ -42,15 +49,15 @@ public class AggregationValues implements Comparable<AggregationValues> {
 		return attributeName;
 	}
 	
-	public List<Double> getValues(XTrace trace, String activityName) {
+	public List<Double> getValues(XTrace trace, String AOIName) {
 		List<Double> values = new ArrayList<Double>();
 		for (XEvent event : trace) {
-			if (activityName.equals(XLogHelper.getName(event))) {
-				if (XLogHelper.hasDoubleAttribute(event, attributeName)) {
-					values.add(XLogHelper.getDoubleAttribute(event, attributeName));
+			if (AOIName.equals(XCognitiveLogHelper.getAOIName(event))) {
+				if (XCognitiveLogHelper.hasDoubleAttribute(event, attributeName)) {
+					values.add(XCognitiveLogHelper.getDoubleAttribute(event, attributeName));
 				}
-				if (XLogHelper.hasLongAttribute(event, attributeName)) {
-					values.add(XLogHelper.getLongAttribute(event, attributeName).doubleValue());
+				if (XCognitiveLogHelper.hasLongAttribute(event, attributeName)) {
+					values.add(XCognitiveLogHelper.getLongAttribute(event, attributeName).doubleValue());
 				}
 			}
 		}
