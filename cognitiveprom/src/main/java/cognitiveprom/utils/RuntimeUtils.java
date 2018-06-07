@@ -152,7 +152,7 @@ public class RuntimeUtils {
 	 */
 	public static String getSupportFolder() {
 		String homedir = getHomeFolder();
-		String dirName = "CognitiveProM";
+		String dirName = ".CognitiveProM";
 		if(isRunningWindows()) {
 			// any windows flavor
 			(new File(homedir + "\\" + dirName)).mkdirs(); // create directories if necessary

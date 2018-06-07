@@ -19,9 +19,10 @@ public class CognitiveDotNode extends DotNode {
 		setOption("fontname", "Arial");
 		setOption("gradientangle", "270");
 		setOption("penwidth", ".75");
+		setOption("margin", "0,0");
 		
 		if (secondLine != null) {
-			setLabel("<" + label + "<br/><font point-size=\"6\">" + secondLine + "</font>>");
+			setLabel("<" + label + " <br/><font point-size='7'>" + secondLine + "</font>>");
 		}
 		
 		if (weight == null) {
@@ -31,6 +32,7 @@ public class CognitiveDotNode extends DotNode {
 			Color fontColor = ColorPalette.getFontColor(backgroundColor);
 			setOption("fillcolor", ColorPalette.colorToString(backgroundColor) + ":" + ColorPalette.colorToString(backgroundColor.darker()));
 			setOption("fontcolor", ColorPalette.colorToString(fontColor));
+			setOption("fixedsize", "false");
 		}
 		
 		setSelectable(true);
