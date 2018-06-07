@@ -23,8 +23,7 @@ import com.google.common.collect.Multiset.Entry;
 import cognitiveprom.log.projections.AggregationFunction;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.AggregationValues;
-import cognitiveprom.model.CognitiveModel;
-import cognitiveprom.tools.Utils;
+import cognitiveprom.process.CognitiveProcess;
 import cognitiveprom.tools.XLogHelper;
 import cognitiveprom.view.graph.ColorPalette.Colors;
 
@@ -36,7 +35,7 @@ public class CognitiveDotModel extends Dot {
 
 	private static DecimalFormat df = new DecimalFormat("#.###");
 
-	private CognitiveModel model;
+	private CognitiveProcess model;
 	private double threshold;
 	private Collection<XTrace> tracesToConsider;
 	private AggregationValues attribute;
@@ -44,7 +43,7 @@ public class CognitiveDotModel extends Dot {
 	private Colors activityColor;
 	
 	public CognitiveDotModel(
-			CognitiveModel model,
+			CognitiveProcess model,
 			double threshold,
 			Collection<XTrace> tracesToConsider,
 			AggregationValues attribute,
@@ -98,9 +97,9 @@ public class CognitiveDotModel extends Dot {
 		EventRelationStorage eventRelations = model.getEventRelationStorage();
 		Long maxAllowedToCut = model.getMaxAllowedToCut();
 
-		double mostOccurringRelation = Utils.getMostFrequentRelation(eventRelations);
-		double mostOccurringRelationStart = Utils.getMostFrequentRelationStart(eventRelations);
-		double mostOccurringRelationEnd = Utils.getMostFrequentRelationEnd(eventRelations);
+		double mostOccurringRelation = model.getMostFrequentRelation();
+		double mostOccurringRelationStart = model.getMostFrequentRelationStart();
+		double mostOccurringRelationEnd = model.getMostFrequentRelationEnd();
 		
 		Map<String, Pair<String, Double>> activityDecoration = getAggregated(tracesToConsider, attribute, function);
 
@@ -118,8 +117,7 @@ public class CognitiveDotModel extends Dot {
 		
 		// adding all nodes
 		Map<XEventClass, DotNode> mapNodes = new HashMap<XEventClass, DotNode>();
-		Set<XEventClass> activities = Utils.getActivities(eventRelations);
-		for(XEventClass act : activities) {
+		for(XEventClass act : model.getActivities()) {
 			DotNode node = null;
 			if (act.equals(eventRelations.getStartEventClass())) {
 				node = new CognitiveDotStartNode();

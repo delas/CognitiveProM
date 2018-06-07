@@ -3,7 +3,7 @@ package cognitiveprom.controllers;
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.AggregationValues;
-import cognitiveprom.model.CognitiveModel;
+import cognitiveprom.process.CognitiveProcess;
 import cognitiveprom.view.graph.CognitiveDotModel;
 import cognitiveprom.view.graph.ColorPalette;
 import cognitiveprom.workers.MineLogWorker;
@@ -18,7 +18,7 @@ public class ProcessController {
 	protected static final String KEY_ADVANCED_CONFIG_VISIBLE = "ADVANCED_CONFIGURATION_VISIBLE";
 	protected static final boolean DEFAULT_ADVANCED_CONFIG_VISIBILITY = false;
 
-	private CognitiveModel model;
+	private CognitiveProcess model;
 	
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
@@ -31,11 +31,11 @@ public class ProcessController {
 		setAdvancedConfigurationVisibility(configuration.getBoolean(KEY_ADVANCED_CONFIG_VISIBLE, DEFAULT_ADVANCED_CONFIG_VISIBILITY));
 	}
 	
-	public CognitiveModel model() {
+	public CognitiveProcess model() {
 		return model;
 	}
 	
-	public void setCognitiveModel(CognitiveModel model) {
+	public void setCognitiveModel(CognitiveProcess model) {
 		this.model = model;
 		applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().populateComponents();
 	}

@@ -1,52 +1,5 @@
 package cognitiveprom;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.util.Set;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.ListCellRenderer;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import org.deckfour.xes.extension.std.XConceptExtension;
-import org.deckfour.xes.in.XParser;
-import org.deckfour.xes.in.XesXmlParser;
-import org.deckfour.xes.model.XAttributeLiteral;
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.processmining.plugins.graphviz.dot.DotElement;
-import org.processmining.plugins.graphviz.visualisation.DotPanel;
-import org.processmining.plugins.graphviz.visualisation.listeners.SelectionChangedListener;
-
-import cognitiveprom.log.CognitiveLog;
-import cognitiveprom.log.io.TSVCognitiveImporter;
-import cognitiveprom.log.projections.AggregationFunctions;
-import cognitiveprom.log.projections.AggregationValues;
-import cognitiveprom.tools.DfgMinerResult;
-import cognitiveprom.tools.Miner;
-import cognitiveprom.tools.Utils;
-import cognitiveprom.tools.Visualizer;
-import cognitiveprom.view.graph.ColorPalette;
-
 public class CognitiveProMTest {
 
 	public static void main(String[] args) throws Exception {
