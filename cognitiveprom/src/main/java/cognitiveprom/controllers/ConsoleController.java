@@ -9,7 +9,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import cognitiveprom.config.ConfigurationSet;
-import cognitiveprom.utils.Logger;
+import cognitiveprom.logger.Logger;
 import cognitiveprom.view.panels.Console;
 
 /**

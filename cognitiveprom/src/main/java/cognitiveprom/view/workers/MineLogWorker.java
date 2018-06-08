@@ -18,8 +18,8 @@ import org.processmining.models.causalgraph.Relation;
 
 import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.log.CognitiveLog;
+import cognitiveprom.logger.Logger;
 import cognitiveprom.map.ProcessMap;
-import cognitiveprom.utils.Logger;
 
 public class MineLogWorker extends SwingWorker<ProcessMap, Void> {
 

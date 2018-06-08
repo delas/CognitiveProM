@@ -11,6 +11,7 @@ import cognitiveprom.annotations.Importer;
 import cognitiveprom.log.io.CognitiveLogExporter;
 import cognitiveprom.log.io.CognitiveLogImporter;
 import cognitiveprom.log.io.RegisteredIO;
+import cognitiveprom.logger.Logger;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
 
 /**

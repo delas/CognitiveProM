@@ -1,4 +1,4 @@
-package cognitiveprom.utils;
+package cognitiveprom.logger;
 
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
@@ -72,10 +72,7 @@ public class Logger {
 	 */
 	public void info(String message) {
 		if (LOGGING_ENABLED) {
-			synchronized (logger) {
-				LOG_PRINT_STREAM.println(now() + INFO_SIGNATURE + message + " " + getCaller());
-				LOG_PRINT_STREAM.flush();
-			}
+			print(now() + INFO_SIGNATURE + message + " " + getCaller());
 		}
 	}
 	
@@ -86,10 +83,7 @@ public class Logger {
 	 */
 	public void debug(String message) {
 		if (LOGGING_ENABLED && DEBUG_ENABLED) {
-			synchronized (logger) {
-				LOG_PRINT_STREAM.println(now() + DEBUG_SIGNATURE + message + " " + getCaller());
-				LOG_PRINT_STREAM.flush();
-			}
+			print(now() + DEBUG_SIGNATURE + message + " " + getCaller());
 		}
 	}
 	
@@ -100,18 +94,29 @@ public class Logger {
 	 */
 	public void error(Exception exception) {
 		if (LOGGING_ENABLED && EXCEPTION_ENABLED) {
-			exception.printStackTrace();
-			synchronized (logger) {
-				LOG_PRINT_STREAM.println(now() + ERROR_SIGNATURE + exception.getMessage());
-				for (StackTraceElement ste : exception.getStackTrace()) {
-					String fileName = "";
-					if (ste.getFileName() != null) {
-						fileName = " @ " + ste.getFileName() + ":" + ste.getLineNumber();
-					}
-					LOG_PRINT_STREAM.println(now() + ERROR_SIGNATURE + "   at " + ste.getClassName() + "." + ste.getMethodName() + fileName);
+			print(now() + ERROR_SIGNATURE + exception.getMessage());
+			for (StackTraceElement ste : exception.getStackTrace()) {
+				String fileName = "";
+				if (ste.getFileName() != null) {
+					fileName = " @ " + ste.getFileName() + ":" + ste.getLineNumber();
 				}
-				LOG_PRINT_STREAM.flush();
+				print(now() + ERROR_SIGNATURE + "   at " + ste.getClassName() + "." + ste.getMethodName() + fileName);
 			}
+		}
+	}
+	
+	/**
+	 * This method is in charge of actually printing the message and archiving
+	 * it in a serialized file (using {@link LogSerializer#serialize(String)})
+	 * 
+	 * @param message the message to print
+	 */
+	private void print(String message) {
+		synchronized (logger) {
+			LOG_PRINT_STREAM.println(message);
+			LOG_PRINT_STREAM.flush();
+			
+			LogSerializer.serialize(message + "\n");
 		}
 	}
 	

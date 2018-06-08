@@ -4,7 +4,7 @@ import javax.swing.SwingWorker;
 
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.io.CognitiveLogExporter;
-import cognitiveprom.utils.Logger;
+import cognitiveprom.logger.Logger;
 
 public class SaveFileWorker extends SwingWorker<Void, Void> {
 

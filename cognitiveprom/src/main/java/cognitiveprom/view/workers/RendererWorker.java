@@ -14,7 +14,7 @@ import org.processmining.plugins.graphviz.dot.DotNode;
 import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.ValueProjector;
-import cognitiveprom.utils.Logger;
+import cognitiveprom.logger.Logger;
 import cognitiveprom.view.graph.CognitiveDotModel;
 import cognitiveprom.view.graph.ColorPalette.Colors;
 

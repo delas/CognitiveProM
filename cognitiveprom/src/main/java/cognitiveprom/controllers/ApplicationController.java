@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.config.UIConfiguration;
+import cognitiveprom.logger.LogSerializer;
+import cognitiveprom.logger.Logger;
 import cognitiveprom.utils.CPUUtils;
-import cognitiveprom.utils.Logger;
 import cognitiveprom.view.frames.MainFrame;
 import cognitiveprom.view.pages.LoadProcessPage;
 import cognitiveprom.view.pages.MainPage;
@@ -126,6 +127,7 @@ public class ApplicationController {
 	public void close() throws IOException {
 		UIConfiguration.save();
 		Logger.instance().debug("Application terminated");
+		LogSerializer.archive();
 	}
 	
 	/**

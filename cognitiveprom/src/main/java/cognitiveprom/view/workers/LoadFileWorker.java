@@ -7,7 +7,7 @@ import javax.swing.SwingWorker;
 import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.io.CognitiveLogImporter;
-import cognitiveprom.utils.Logger;
+import cognitiveprom.logger.Logger;
 
 public class LoadFileWorker extends SwingWorker<CognitiveLog, Void> {
 
