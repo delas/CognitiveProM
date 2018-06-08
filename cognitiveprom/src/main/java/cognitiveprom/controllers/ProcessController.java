@@ -30,6 +30,11 @@ public class ProcessController {
 		setAdvancedConfigurationVisibility(configuration.getBoolean(KEY_ADVANCED_CONFIG_VISIBLE, DEFAULT_ADVANCED_CONFIG_VISIBILITY));
 	}
 	
+	public void reset() {
+		isShowingModel = false;
+		model = null;
+	}
+	
 	public ProcessMap model() {
 		return model;
 	}

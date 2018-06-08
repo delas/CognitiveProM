@@ -74,6 +74,7 @@ public class LogController {
 		if (importer.getSecond() != null) {
 			importer.getSecond().configure(applicationController.getMainFrame(), importer.getFirst());
 		}
+		applicationController.processController().reset();
 		new LoadFileWorker(fileName, importer.getFirst()).execute();
 	}
 
