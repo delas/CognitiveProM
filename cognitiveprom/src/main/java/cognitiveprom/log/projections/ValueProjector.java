@@ -36,7 +36,6 @@ public class ValueProjector implements Comparable<ValueProjector> {
 		
 		@Override
 		public List<Double> getValuesForCaching(XTrace trace, String AOISource, String AOITarget) {
-			System.out.println("counting");
 			List<Double> values = new ArrayList<Double>();
 			// start activity case
 			if (AOISource.equals(EventRelationStorage.ARTIFICIAL_START)) {
