@@ -1,9 +1,12 @@
 package cognitiveprom.log.projections;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.tuple.Triple;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.dataawarecnetminer.model.EventRelationStorage;
@@ -19,7 +22,7 @@ public class ValueProjector implements Comparable<ValueProjector> {
 
 	public static ValueProjector FREQUENCY = new ValueProjector("Frequency in trace", true) {
 		@Override
-		public List<Double> getValues(XTrace trace, String AOIName) {
+		public List<Double> getValuesForCaching(XTrace trace, String AOIName) {
 			List<Double> values = new ArrayList<Double>();
 			double counter = 0;
 			for (XEvent event : trace) {
@@ -32,7 +35,8 @@ public class ValueProjector implements Comparable<ValueProjector> {
 		}
 		
 		@Override
-		public List<Double> getValues(XTrace trace, String AOISource, String AOITarget) {
+		public List<Double> getValuesForCaching(XTrace trace, String AOISource, String AOITarget) {
+			System.out.println("counting");
 			List<Double> values = new ArrayList<Double>();
 			// start activity case
 			if (AOISource.equals(EventRelationStorage.ARTIFICIAL_START)) {
@@ -69,13 +73,15 @@ public class ValueProjector implements Comparable<ValueProjector> {
 	
 	public static ValueProjector NONE = new ValueProjector("None", true) {
 		@Override
-		public List<Double> getValues(XTrace trace, String AOIName) {
+		public List<Double> getValuesForCaching(XTrace trace, String AOIName) {
 			return new ArrayList<Double>();
 		}
 	};
 
 	protected String attributeName = null;
 	protected boolean isSpecialFunction;
+	private Map<Triple<String, String, String>, List<Double>> cachedTraceValues = new HashMap<Triple<String, String, String>, List<Double>>();
+	private Map<Pair<String, String>, List<Double>> cachedActivityValues = new HashMap<Pair<String, String>, List<Double>>();
 	
 	protected ValueProjector(String attributeName, boolean isSpecialFunction) {
 		this.attributeName = attributeName;
@@ -90,7 +96,15 @@ public class ValueProjector implements Comparable<ValueProjector> {
 		return attributeName;
 	}
 	
-	public List<Double> getValues(XTrace trace, String AOIName) {
+	public final List<Double> getValues(XTrace trace, String AOIName) {
+		Pair<String, String> key = new Pair<String, String>(XCognitiveLogHelper.getSubjectName(trace), AOIName);
+		if (!cachedActivityValues.containsKey(key)) {
+			cachedActivityValues.put(key, getValuesForCaching(trace, AOIName));
+		}
+		return cachedActivityValues.get(key);
+	}
+	
+	protected List<Double> getValuesForCaching(XTrace trace, String AOIName) {
 		List<Double> values = new ArrayList<Double>();
 		for (XEvent event : trace) {
 			if (AOIName.equals(XCognitiveLogHelper.getAOIName(event))) {
@@ -105,12 +119,16 @@ public class ValueProjector implements Comparable<ValueProjector> {
 		return values;
 	}
 
-	public List<Double> getValues(XTrace trace, String AOISource, String AOITarget) {
-		return new ArrayList<Double>();
+	public final List<Double> getValues(XTrace trace, String AOISource, String AOITarget) {
+		Triple<String, String, String> key = Triple.of(XCognitiveLogHelper.getSubjectName(trace), AOISource, AOITarget);
+		if (!cachedTraceValues.containsKey(key)) {
+			cachedTraceValues.put(key, getValuesForCaching(trace, AOISource, AOITarget));
+		}
+		return cachedTraceValues.get(key);
 	}
 	
-	public List<Double> getValues(XTrace trace, Pair<String, String> relation) {
-		return getValues(trace, relation.getFirst(), relation.getSecond());
+	protected List<Double> getValuesForCaching(XTrace trace, String AOISource, String AOITarget) {
+		return new ArrayList<Double>();
 	}
 	
 	@Override

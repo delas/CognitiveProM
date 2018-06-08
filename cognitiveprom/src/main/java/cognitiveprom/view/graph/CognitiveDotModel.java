@@ -63,7 +63,7 @@ public class CognitiveDotModel extends Dot {
 		for (XTrace trace : tracesToConsider) {
 			// start case
 			Pair<String, String> startPair = new Pair<String, String>(EventRelationStorage.ARTIFICIAL_START, XCognitiveLogHelper.getAOIName(trace.get(0)));
-			List<Double> vals = attribute.getValues(trace, startPair);
+			List<Double> vals = attribute.getValues(trace, startPair.getFirst(), startPair.getSecond());
 			if (!aggregators.containsKey(startPair) && vals.size() > 0) {
 				aggregators.put(startPair, new AggregationFunction());
 			}
@@ -73,7 +73,7 @@ public class CognitiveDotModel extends Dot {
 			
 			// end case
 			Pair<String, String> endPair = new Pair<String, String>(XCognitiveLogHelper.getAOIName(trace.get(trace.size() - 1)), EventRelationStorage.ARTIFICIAL_END);
-			vals = attribute.getValues(trace, endPair);
+			vals = attribute.getValues(trace, endPair.getFirst(), endPair.getSecond());
 			if (!aggregators.containsKey(endPair) && vals.size() > 0) {
 				aggregators.put(endPair, new AggregationFunction());
 			}
@@ -87,7 +87,7 @@ public class CognitiveDotModel extends Dot {
 				// we want to process the activity only once per trace
 				Pair<String, String> relation = new Pair<String, String>(XCognitiveLogHelper.getAOIName(trace.get(i)), XCognitiveLogHelper.getAOIName(trace.get(i + 1)));
 				if (!processedRelations.contains(relation)) {
-					vals = attribute.getValues(trace, relation);
+					vals = attribute.getValues(trace, relation.getFirst(), relation.getSecond());
 					if (!aggregators.containsKey(relation) && vals.size() > 0) {
 						aggregators.put(relation, new AggregationFunction());
 					}
