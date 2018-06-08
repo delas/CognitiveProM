@@ -94,7 +94,9 @@ public class FileFilterHelper {
 			if (description.equals(fileFilter.getDescription())) {
 				try {
 					return (CognitiveLogExporter) exporter.newInstance();
-				} catch (InstantiationException | IllegalAccessException e) { }
+				} catch (InstantiationException | IllegalAccessException e) {
+					Logger.instance().error(e);
+				}
 			}
 		}
 		return null;
@@ -122,7 +124,7 @@ public class FileFilterHelper {
 							configurator
 						);
 				} catch (InstantiationException | IllegalAccessException e) {
-					e.printStackTrace();
+					Logger.instance().error(e);
 				}
 			}
 		}
@@ -150,7 +152,7 @@ public class FileFilterHelper {
 							configurator
 						);
 				} catch (InstantiationException | IllegalAccessException e) {
-					e.printStackTrace();
+					Logger.instance().error(e);
 				}
 			}
 		}

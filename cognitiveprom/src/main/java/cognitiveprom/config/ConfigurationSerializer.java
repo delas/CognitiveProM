@@ -64,6 +64,7 @@ public class ConfigurationSerializer {
 		doc.addComment("WARNING: Do not manually edit this file, unless you know what you are doing!");
 		SXTag root = doc.addNode("configuration");
 		root.addAttribute("timestamp", Long.toString(System.currentTimeMillis()));
+		root.addAttribute("version", CognitiveProMConstants.VERSION);
 		serialize(set, root);
 		doc.close();
 	}

@@ -83,7 +83,9 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 		Logger.instance().debug("Rendering complete");
 		try {
 			ApplicationController.instance().processController().showModel(get());
-		} catch (InterruptedException | ExecutionException e) { }
+		} catch (InterruptedException | ExecutionException e) {
+			Logger.instance().error(e);
+		}
 		
 		ApplicationController.instance().getMainPage().getWaitingPanel().setTranslucent(false);
 		ApplicationController.instance().getMainPage().showProcessVisualizer();

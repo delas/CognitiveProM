@@ -78,6 +78,7 @@ public class ConsoleController {
 		private StyledDocument log;
 		private SimpleAttributeSet infoStyle = new SimpleAttributeSet();
 		private SimpleAttributeSet debugStyle = new SimpleAttributeSet();
+		private SimpleAttributeSet exceptionStyle = new SimpleAttributeSet();
 		private SimpleAttributeSet fileStyle = new SimpleAttributeSet();
 		
 		/**
@@ -89,10 +90,12 @@ public class ConsoleController {
 			
 			infoStyle.addAttribute(StyleConstants.CharacterConstants.Foreground, Color.green);
 			debugStyle.addAttribute(StyleConstants.CharacterConstants.Foreground, Color.green.darker().darker().darker());
+			exceptionStyle.addAttribute(StyleConstants.CharacterConstants.Foreground, Color.red.brighter());
 			fileStyle.addAttribute(StyleConstants.CharacterConstants.Foreground, Color.darkGray.darker());
 			
 			infoStyle.addAttribute(StyleConstants.CharacterConstants.FontFamily, "Monospaced");
 			debugStyle.addAttribute(StyleConstants.CharacterConstants.FontFamily, "Monospaced");
+			exceptionStyle.addAttribute(StyleConstants.CharacterConstants.FontFamily, "Monospaced");
 			fileStyle.addAttribute(StyleConstants.CharacterConstants.FontFamily, "Monospaced");
 		}
 		
@@ -119,6 +122,17 @@ public class ConsoleController {
 		}
 		
 		/**
+		 * This method prints the provided string as a exception
+		 * 
+		 * @param message
+		 */
+		private void printException(String message, boolean withNewline) {
+			try {
+				log.insertString(console.getStyledDocument().getLength(), message  + ((withNewline)? "\n" : ""), exceptionStyle);
+			} catch (BadLocationException e) { }
+		}
+		
+		/**
 		 * This method prints the provided string as a file name and adds a new line
 		 * 
 		 * @param file
@@ -131,15 +145,23 @@ public class ConsoleController {
 		
 		@Override
 		public void println(String message) {
-			int fileStartingAt = message.lastIndexOf("(");
-			String file = message.substring(fileStartingAt, message.length());
+			int fileStartingAt = message.length();
+			String file = null;
+			if (message.contains("(")) {
+				fileStartingAt = message.lastIndexOf("(");
+				file = message.substring(fileStartingAt, message.length());
+			}
 			message = message.substring(0, fileStartingAt);
-			if (message.contains(" - DEBUG - ")) {
+			if (message.contains(Logger.DEBUG_SIGNATURE)) {
 				printDebug(message);
+			} else if (message.contains(Logger.ERROR_SIGNATURE)) {
+				printException(message, file == null);
 			} else {
 				printInfo(message);
 			}
-			printFile(file);
+			if (file != null) {
+				printFile(file);
+			}
 			console.resetCaret();
 		}
 	}

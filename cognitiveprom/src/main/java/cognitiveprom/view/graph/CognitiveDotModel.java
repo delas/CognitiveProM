@@ -32,8 +32,6 @@ import cognitiveprom.view.graph.ColorPalette.Colors;
  */
 public class CognitiveDotModel extends Dot {
 
-//	private static DecimalFormat df = new DecimalFormat("#.###");
-
 	private ProcessMap model;
 	private double threshold;
 	private Collection<XTrace> tracesToConsider;

@@ -33,7 +33,9 @@ public class LoadFileWorker extends SwingWorker<CognitiveLog, Void> {
 		
 		try {
 			ApplicationController.instance().logController().setCognitiveLog(get());
-		} catch (InterruptedException | ExecutionException e) { }
+		} catch (InterruptedException | ExecutionException e) {
+			Logger.instance().error(e);
+		}
 		
 		ApplicationController.instance().getMainFrame().setTitle(fileName);
 		ApplicationController.instance().showMainPage();

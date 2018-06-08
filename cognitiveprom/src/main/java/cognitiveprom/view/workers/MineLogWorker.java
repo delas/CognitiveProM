@@ -70,7 +70,9 @@ public class MineLogWorker extends SwingWorker<ProcessMap, Void> {
 		Logger.instance().debug("Mining complete");
 		try {
 			ApplicationController.instance().processController().setCognitiveModel(get());
-		} catch (InterruptedException | ExecutionException e) { }
+		} catch (InterruptedException | ExecutionException e) {
+			Logger.instance().error(e);
+		}
 		
 		ApplicationController.instance().processController().updateVisualization();
 	}

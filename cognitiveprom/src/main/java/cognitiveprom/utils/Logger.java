@@ -21,6 +21,22 @@ public class Logger {
 	 */
 	public static final boolean DEBUG_ENABLED = true;
 	/**
+	 * This field is used to indicate if exceptions should be logged.
+	 */
+	public static final boolean EXCEPTION_ENABLED = true;
+	/**
+	 * Signature for info message.
+	 */
+	public static final String INFO_SIGNATURE = " - INFO - ";
+	/**
+	 * Signature for debug message.
+	 */
+	public static final String DEBUG_SIGNATURE = " - DEBUG - ";
+	/**
+	 * Signature for error message.
+	 */
+	public static final String ERROR_SIGNATURE = " - ERROR - ";
+	/**
 	 * This field contains the date format for the logging text.
 	 */
 	public static final String DATE_FORMAT_NOW = "HH:mm:ss.SSS";
@@ -57,7 +73,7 @@ public class Logger {
 	public void info(String message) {
 		if (LOGGING_ENABLED) {
 			synchronized (logger) {
-				LOG_PRINT_STREAM.println(now() + " - INFO - " + message + " " + getCaller());
+				LOG_PRINT_STREAM.println(now() + INFO_SIGNATURE + message + " " + getCaller());
 				LOG_PRINT_STREAM.flush();
 			}
 		}
@@ -71,7 +87,29 @@ public class Logger {
 	public void debug(String message) {
 		if (LOGGING_ENABLED && DEBUG_ENABLED) {
 			synchronized (logger) {
-				LOG_PRINT_STREAM.println(now() + " - DEBUG - " + message + " " + getCaller());
+				LOG_PRINT_STREAM.println(now() + DEBUG_SIGNATURE + message + " " + getCaller());
+				LOG_PRINT_STREAM.flush();
+			}
+		}
+	}
+	
+	/**
+	 * This method is used to record exceptions
+	 * 
+	 * @param exception the exception to record
+	 */
+	public void error(Exception exception) {
+		if (LOGGING_ENABLED && EXCEPTION_ENABLED) {
+			exception.printStackTrace();
+			synchronized (logger) {
+				LOG_PRINT_STREAM.println(now() + ERROR_SIGNATURE + exception.getMessage());
+				for (StackTraceElement ste : exception.getStackTrace()) {
+					String fileName = "";
+					if (ste.getFileName() != null) {
+						fileName = " @ " + ste.getFileName() + ":" + ste.getLineNumber();
+					}
+					LOG_PRINT_STREAM.println(now() + ERROR_SIGNATURE + "   at " + ste.getClassName() + "." + ste.getMethodName() + fileName);
+				}
 				LOG_PRINT_STREAM.flush();
 			}
 		}
