@@ -3,6 +3,7 @@ package cognitiveprom.view.graph;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,32 +63,35 @@ public class CognitiveDotModel extends Dot {
 		for (XTrace trace : tracesToConsider) {
 			// start case
 			Pair<String, String> startPair = new Pair<String, String>(EventRelationStorage.ARTIFICIAL_START, XCognitiveLogHelper.getAOIName(trace.get(0)));
-			if (!aggregators.containsKey(startPair) && attribute.getValues(trace, startPair).size() > 0) {
+			List<Double> vals = attribute.getValues(trace, startPair);
+			if (!aggregators.containsKey(startPair) && vals.size() > 0) {
 				aggregators.put(startPair, new AggregationFunction());
 			}
-			for (Double value : attribute.getValues(trace, startPair)) {
+			for (Double value : vals) {
 				aggregators.get(startPair).addObservation(value);
 			}
 			
 			// end case
 			Pair<String, String> endPair = new Pair<String, String>(XCognitiveLogHelper.getAOIName(trace.get(trace.size() - 1)), EventRelationStorage.ARTIFICIAL_END);
-			if (!aggregators.containsKey(endPair) && attribute.getValues(trace, endPair).size() > 0) {
+			vals = attribute.getValues(trace, endPair);
+			if (!aggregators.containsKey(endPair) && vals.size() > 0) {
 				aggregators.put(endPair, new AggregationFunction());
 			}
-			for (Double value : attribute.getValues(trace, endPair)) {
+			for (Double value : vals) {
 				aggregators.get(endPair).addObservation(value);
 			}
 			
 			// normal case
+			Set<Pair<String, String>> processedRelations = new HashSet<Pair<String, String>>();
 			for (int i = 0; i < trace.size() - 1; i++) {
 				// we want to process the activity only once per trace
-				Set<Pair<String, String>> processedRelations = new HashSet<Pair<String, String>>();
 				Pair<String, String> relation = new Pair<String, String>(XCognitiveLogHelper.getAOIName(trace.get(i)), XCognitiveLogHelper.getAOIName(trace.get(i + 1)));
 				if (!processedRelations.contains(relation)) {
-					if (!aggregators.containsKey(relation) && attribute.getValues(trace, relation).size() > 0) {
+					vals = attribute.getValues(trace, relation);
+					if (!aggregators.containsKey(relation) && vals.size() > 0) {
 						aggregators.put(relation, new AggregationFunction());
 					}
-					for (Double value : attribute.getValues(trace, relation)) {
+					for (Double value : vals) {
 						aggregators.get(relation).addObservation(value);
 					}
 					processedRelations.add(relation);
