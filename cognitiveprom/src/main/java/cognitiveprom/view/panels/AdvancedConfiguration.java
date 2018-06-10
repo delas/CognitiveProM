@@ -42,6 +42,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	
 	private JComboBox<ValueProjector> comboAttributes;
 	private JComboBox<AggregationFunctions> comboAttributesFunctions;
+	private JLabel labelTraces;
 	private JList<XTrace> tracesSelector;
 	private DefaultListModel<XTrace> listModelSelectedTraces;
 	private JComboBox<ColorPalette.Colors> comboColors;
@@ -138,6 +139,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		
 		// add all elements to the panel
 		setLayout(new GridBagLayout());
+		this.labelTraces = new JLabel("", ImageIcons.ICON_TRACES, JLabel.LEFT);
 		
 		int row = 0;
 		add(new JLabel("Attribute to project", ImageIcons.ICON_ATTRIBUTE, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
@@ -146,7 +148,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		add(new JLabel("Aggregation function", ImageIcons.ICON_AGGREGATION, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
 		add(comboAttributesFunctions, GridBagLayoutHelper.createHorizontalComponentConstraint(0, row++));
 		
-		add(new JLabel("Traces to project", ImageIcons.ICON_TRACES, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
+		add(labelTraces, GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(0, 5, 5, 5);
 		c.gridx = 0;
@@ -183,6 +185,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 				if (ApplicationController.instance().processController().isShowingModel()) {
 					ApplicationController.instance().processController().updateVisualization();
 				}
+				labelTraces.setText("Traces to project (" + tracesSelector.getSelectedIndices().length + "/" + listModelSelectedTraces.size() + ")");
 			}
 		});
 		comboColors.addActionListener(new ActionListener() {
