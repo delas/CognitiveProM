@@ -15,24 +15,24 @@ public class CognitiveDotEdge extends DotEdge {
 		setOption("color", "#9F9F9F");
 		setOption("size", ".1");
 		setOption("arrowsize", ".5");
-		setOption("fontsize", "7");
+		setOption("fontsize", "15");
 		
 		if (edgeText != null) {
-			setLabel("  " + edgeText);
+			setLabel(" " + edgeText);
 		}
 		
 		if (weight != null) {
 			setOption("color", ColorPalette.colorToString(ColorPalette.getValue(Colors.DARK_GRAY, weight)));
 			if ((source instanceof CognitiveDotStartNode) || (target instanceof CognitiveDotEndNode)) {
-				setOption("penwidth", "" + (1 + (2 * weight)));
+				setOption("penwidth", "" + (1 + (10 * weight)));
 			} else {
-				setOption("penwidth", "" + (1 + (4 * weight)));
+				setOption("penwidth", "" + (1 + (8 * weight)));
 			}
 		} else {
 			if ((source instanceof CognitiveDotStartNode) || (target instanceof CognitiveDotEndNode)) {
-				setOption("penwidth", "1");
-			} else {
 				setOption("penwidth", "2");
+			} else {
+				setOption("penwidth", "3");
 			}
 		}
 		
