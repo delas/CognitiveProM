@@ -15,6 +15,8 @@ public class ProcessController {
 
 	protected static final String KEY_ADVANCED_CONFIG_VISIBLE = "ADVANCED_CONFIGURATION_VISIBLE";
 	protected static final boolean DEFAULT_ADVANCED_CONFIG_VISIBILITY = false;
+	protected static final String KEY_TRACES_VISIBLE = "TRACES_VISIBLE";
+	protected static final boolean DEFAULT_TRACES_VISIBILITY = false;
 
 	private ProcessMap model;
 	
@@ -28,6 +30,7 @@ public class ProcessController {
 		
 		// set default console visibility
 		setAdvancedConfigurationVisibility(configuration.getBoolean(KEY_ADVANCED_CONFIG_VISIBLE, DEFAULT_ADVANCED_CONFIG_VISIBILITY));
+		setTracesVisibility(configuration.getBoolean(KEY_TRACES_VISIBLE, DEFAULT_TRACES_VISIBILITY));
 	}
 	
 	public void reset() {
@@ -42,6 +45,7 @@ public class ProcessController {
 	public void setCognitiveModel(ProcessMap model) {
 		this.model = model;
 		applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().populateComponents();
+		applicationController.getMainPage().getProcessVisualizer().getShowTracesPanel().populateComponents();
 	}
 	
 	public void mineLog() {
@@ -70,5 +74,11 @@ public class ProcessController {
 		configuration.setBoolean(KEY_ADVANCED_CONFIG_VISIBLE, visible);
 		applicationController.getMainPage().getToolbar().setShowAdvancedConfigurationSelected(visible);
 		applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().setVisible(visible);
+	}
+
+	public void setTracesVisibility(boolean visible) {
+		configuration.setBoolean(KEY_TRACES_VISIBLE, visible);
+		applicationController.getMainPage().getToolbar().setShowTracesSelected(visible);
+		applicationController.getMainPage().getProcessVisualizer().getShowTracesPanel().setVisible(visible);
 	}
 }

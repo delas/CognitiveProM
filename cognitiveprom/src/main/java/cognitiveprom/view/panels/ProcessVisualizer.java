@@ -3,6 +3,9 @@ package cognitiveprom.view.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 
@@ -18,6 +21,7 @@ public class ProcessVisualizer extends ConfigurablePanel {
 	
 	private DotPanel graphVisualizer;
 	private AdvancedConfiguration advancedConfiguration;
+	private TracesVisualizer tracesVisualizer;
 	private AbstractionSlider abstractionSlider;
 
 	public ProcessVisualizer(ConfigurationSet conf) {
@@ -35,6 +39,10 @@ public class ProcessVisualizer extends ConfigurablePanel {
 		return advancedConfiguration;
 	}
 	
+	public TracesVisualizer getShowTracesPanel() {
+		return tracesVisualizer;
+	}
+	
 	public double getAbstractionValue() {
 		return abstractionSlider.getAbstractionValue();
 	}
@@ -43,8 +51,13 @@ public class ProcessVisualizer extends ConfigurablePanel {
 		// set the slider
 		abstractionSlider = new AbstractionSlider(conf.getChild(AbstractionSlider.class.getCanonicalName()));
 		
-		// sets the advanced configuration
+		// sets the panels on the left
 		advancedConfiguration = new AdvancedConfiguration(conf.getChild(AdvancedConfiguration.class.getCanonicalName()));
+		tracesVisualizer = new TracesVisualizer(conf.getChild(TracesVisualizer.class.getCanonicalName()));
+		JPanel leftContainer = new JPanel();
+		leftContainer.setLayout(new BoxLayout(leftContainer, BoxLayout.X_AXIS));
+		leftContainer.add(advancedConfiguration);
+		leftContainer.add(tracesVisualizer);
 		
 		// set the graph
 		graphVisualizer = new DotPanel(new Dot());
@@ -53,7 +66,7 @@ public class ProcessVisualizer extends ConfigurablePanel {
 		
 		// displace all elements
 		setLayout(new BorderLayout());
-		add(advancedConfiguration, BorderLayout.WEST);
+		add(leftContainer, BorderLayout.WEST);
 		add(graphVisualizer, BorderLayout.CENTER);
 		add(abstractionSlider, BorderLayout.EAST);
 	}
