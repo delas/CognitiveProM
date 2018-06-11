@@ -206,7 +206,7 @@ public class CognitiveDotModel extends Dot {
 							mapNodes.get(source),
 							mapNodes.get(target),
 							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
-							null);
+							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
 					addEdge(dotEdge);
 				}
 				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
@@ -222,7 +222,7 @@ public class CognitiveDotModel extends Dot {
 							mapNodes.get(source),
 							mapNodes.get(target),
 							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
-							null);
+							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
 					addEdge(dotEdge);
 				}
 				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
