@@ -35,34 +35,38 @@ public class MineLogWorker extends SwingWorker<ProcessMap, Void> {
 		ApplicationController.instance().getMainPage().showWaitingPanel("Log mining...");
 		
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-		EventRelationStorage eventStorage = EventRelationStorage.Factory.createEventRelations(
-				log,
-				new XEventNameClassifier(),
-				executorService);
-		
-		Map<XEventClass, Long> maxConn = new HashMap<XEventClass, Long>();
-		for (Relation r : eventStorage.getDirectlyFollowsRelations()) {
-			XEventClass source = r.getSource();
-			XEventClass target = r.getTarget();
-			if (!source.equals(target) &&
-					!source.equals(eventStorage.getStartEventClass()) &&
-					!target.equals(eventStorage.getEndEventClass())) {
-				maxConn.put(source,
-						Math.max(
-								eventStorage.countDirectlyFollows(r),
-								(maxConn.containsKey(source)? maxConn.get(source) : 0)));
-				maxConn.put(target,
-						Math.max(
-								eventStorage.countDirectlyFollows(r),
-								(maxConn.containsKey(target)? maxConn.get(target) : 0)));
+		try {
+			EventRelationStorage eventStorage = EventRelationStorage.Factory.createEventRelations(
+					log,
+					new XEventNameClassifier(),
+					executorService);
+			
+			Map<XEventClass, Long> maxConn = new HashMap<XEventClass, Long>();
+			for (Relation r : eventStorage.getDirectlyFollowsRelations()) {
+				XEventClass source = r.getSource();
+				XEventClass target = r.getTarget();
+				if (!source.equals(target) &&
+						!source.equals(eventStorage.getStartEventClass()) &&
+						!target.equals(eventStorage.getEndEventClass())) {
+					maxConn.put(source,
+							Math.max(
+									eventStorage.countDirectlyFollows(r),
+									(maxConn.containsKey(source)? maxConn.get(source) : 0)));
+					maxConn.put(target,
+							Math.max(
+									eventStorage.countDirectlyFollows(r),
+									(maxConn.containsKey(target)? maxConn.get(target) : 0)));
+				}
 			}
+			List<Long> maxConnList = new ArrayList<Long>(maxConn.values());
+			Collections.sort(maxConnList);
+	
+			return new ProcessMap(
+					eventStorage,
+					(maxConn.size() > 0)? maxConnList.get(0) : 0);
+		} finally {
+			executorService.shutdown();
 		}
-		List<Long> maxConnList = new ArrayList<Long>(maxConn.values());
-		Collections.sort(maxConnList);
-
-		return new ProcessMap(
-				eventStorage,
-				(maxConn.size() > 0)? maxConnList.get(0) : 0);
 	}
 
 	@Override

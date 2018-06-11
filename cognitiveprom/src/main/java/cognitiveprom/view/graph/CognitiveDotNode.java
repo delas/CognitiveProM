@@ -13,16 +13,16 @@ public class CognitiveDotNode extends DotNode {
 		
 		setOption("shape", "box");
 		setOption("style", "rounded,filled");
-		setOption("height", ".4");
-		setOption("width", "1");
-		setOption("fontsize", "10");
+//		setOption("height", ".4");
+//		setOption("width", "1");
+		setOption("fontsize", "12");
 		setOption("fontname", "Arial");
 		setOption("gradientangle", "270");
 		setOption("penwidth", ".75");
-		setOption("margin", "0,0");
+		setOption("margin", ".5,.2");
 		
 		if (secondLine != null) {
-			setLabel("<" + label + " <br/><font point-size='7'>" + secondLine + "</font>>");
+			setLabel("<" + label + " <br/><font point-size='10'>" + secondLine + "</font>>");
 		}
 		
 		if (weight == null) {
