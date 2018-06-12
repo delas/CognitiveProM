@@ -1,9 +1,12 @@
 package cognitiveprom;
 
+import java.awt.Dimension;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+
+import javax.swing.JFrame;
 
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
@@ -13,6 +16,13 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.out.XesXmlSerializer;
+import org.processmining.plugins.graphviz.dot.Dot;
+import org.processmining.plugins.graphviz.dot.DotElement;
+import org.processmining.plugins.graphviz.dot.DotNode;
+import org.processmining.plugins.graphviz.visualisation.DotPanel;
+import org.processmining.plugins.graphviz.visualisation.listeners.DotElementSelectionListener;
+
+import com.kitfox.svg.SVGDiagram;
 
 import cognitiveprom.exceptions.LogIOException;
 import cognitiveprom.log.CognitiveLog;
@@ -21,19 +31,60 @@ import cognitiveprom.log.extension.XCognitiveExtension;
 import cognitiveprom.log.io.TSVCognitiveImporter;
 import cognitiveprom.log.utils.XCognitiveLogHelper;
 
+class CustomDotNode extends DotNode {
+	public CustomDotNode(String label) {
+		super(label, null);
+		
+		setOption("shape", "box");
+		setOption("style", "rounded,filled");
+		
+		addSelectionListener(new DotElementSelectionListener() {
+			public void selected(DotElement element, SVGDiagram image) {
+				System.out.println("Selected " + getLabel());
+			}
+			public void deselected(DotElement element, SVGDiagram image) {
+				System.out.println("Deselected " + getLabel());
+			}
+		});
+	}
+}
+
 public class Test {
 
-	public static void main(String[] args) throws LogIOException, FileNotFoundException, IOException {
+	public static void main(String[] args) {
 		
-		TSVCognitiveImporter i = new TSVCognitiveImporter();
-		i.addAOIs("legend", "graph", "title");
+		Dot dot = new Dot();
 		
-		CognitiveLog l = i.load("C:\\Users\\andbur\\Desktop\\q1.1fixations.tsv");
-		XLog log = l.getLog();
-		new XesXmlSerializer().serialize(log, new FileOutputStream("C:\\Users\\andbur\\Desktop\\tmp.xes"));
+		dot.addNode(new CustomDotNode("n1"));
+		dot.addNode(new CustomDotNode("n2"));
 		
+		DotPanel p = new DotPanel(dot);
+		p.setPreferredSize(new Dimension(800, 600));
 		
+		JFrame f = new JFrame("test");
+		f.add(p);
+		f.pack();
 		
+		f.setVisible(true);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+}
+
+
+//public class Test {
+//
+//	public static void main(String[] args) throws LogIOException, FileNotFoundException, IOException {
+//		
+//		TSVCognitiveImporter i = new TSVCognitiveImporter();
+//		i.addAOIs("legend", "graph", "title");
+//		
+//		CognitiveLog l = i.load("C:\\Users\\andbur\\Desktop\\q1.1fixations.tsv");
+//		XLog log = l.getLog();
+//		new XesXmlSerializer().serialize(log, new FileOutputStream("C:\\Users\\andbur\\Desktop\\tmp.xes"));
+//		
+//		
+//		
 //		XCognitiveExtension ce = XCognitiveExtension.instance();
 //		XFactory factory = new XFactoryNaiveImpl();
 //		XLog log = XCognitiveLogHelper.prepareLog();
@@ -82,6 +133,6 @@ public class Test {
 ////		XCognitiveExtension.instance().assignSubjectName(t2, "Enrico");
 ////		t2.insertOrdered(e21);
 ////		t2.insertOrdered(e22);
-	}
-
-}
+//	}
+//
+//}

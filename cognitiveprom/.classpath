@@ -44,5 +44,6 @@
 	<classpathentry kind="lib" path="libs/XESLite.jar"/>
 	<classpathentry kind="lib" path="libs/DataAwareCNetMiner.jar"/>
 	<classpathentry kind="lib" path="libs/CNet.jar"/>
+	<classpathentry kind="lib" path="libs/KitFox.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

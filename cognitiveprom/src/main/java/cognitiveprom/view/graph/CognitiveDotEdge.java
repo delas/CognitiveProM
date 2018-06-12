@@ -16,6 +16,7 @@ public class CognitiveDotEdge extends DotEdge {
 		setOption("size", ".1");
 		setOption("arrowsize", ".5");
 		setOption("fontsize", "15");
+		setOption("fontname", "Arial");
 		
 		if (edgeText != null) {
 			setLabel(" " + edgeText);

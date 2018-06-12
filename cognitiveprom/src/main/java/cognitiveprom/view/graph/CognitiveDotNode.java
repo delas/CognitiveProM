@@ -15,7 +15,7 @@ public class CognitiveDotNode extends DotNode {
 		setOption("style", "rounded,filled");
 //		setOption("height", ".4");
 //		setOption("width", "1");
-		setOption("fontsize", "25");
+		setOption("fontsize", "20");
 		setOption("fontname", "Arial");
 		setOption("gradientangle", "270");
 		setOption("penwidth", ".75");
@@ -37,7 +37,7 @@ public class CognitiveDotNode extends DotNode {
 		
 		setSelectable(true);
 	}
-	
+
 	public void setMovedIn() {
 		setOption("fillcolor", "white");
 	}
