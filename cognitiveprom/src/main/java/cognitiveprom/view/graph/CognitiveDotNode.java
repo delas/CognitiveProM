@@ -45,4 +45,14 @@ public class CognitiveDotNode extends DotNode {
 	public void setMovedOut() {
 		setOption("fillcolor", "black");
 	}
+	
+	@Override
+	public int hashCode() {
+		return getLabel().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return getLabel().equals(object);
+	}
 }

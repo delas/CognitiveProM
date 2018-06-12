@@ -13,6 +13,6 @@ public class CognitiveDotEndNode extends DotNode {
 		setOption("fillcolor", "#D8BBB9:#BC9F9D");
 		setOption("gradientangle", "270");
 		setOption("color", "#614847");
-		setOption("width", ".15");
+		setOption("width", ".3");
 	}
 }

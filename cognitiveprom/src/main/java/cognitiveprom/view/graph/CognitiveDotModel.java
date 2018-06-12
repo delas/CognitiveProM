@@ -57,7 +57,7 @@ public class CognitiveDotModel extends Dot {
 		
 		realize();
 	}
-	
+
 	private Map<Pair<String, String>, Pair<String, Double>> getAggregatedRelations() {
 		Map<Pair<String, String>, AggregationFunction> aggregators = new HashMap<Pair<String, String>, AggregationFunction>();
 		for (XTrace trace : tracesToConsider) {

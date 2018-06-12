@@ -2,12 +2,22 @@ package cognitiveprom.view.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import org.processmining.plugins.graphviz.dot.Dot;
+import org.processmining.plugins.graphviz.dot.DotEdge;
+import org.processmining.plugins.graphviz.dot.DotElement;
+import org.processmining.plugins.graphviz.dot.DotNode;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
+import org.processmining.plugins.graphviz.visualisation.listeners.SelectionChangedListener;
+
+import com.kitfox.svg.Group;
+import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGElement;
 
 import cognitiveprom.config.ConfigurationSet;
 
@@ -29,6 +39,8 @@ public class ProcessVisualizer extends ConfigurablePanel {
 		
 		// place the components of the window
 		placeComponents();
+		
+		registerListener();
 	}
 	
 	public DotPanel getGraphVisualizer() {
@@ -69,5 +81,53 @@ public class ProcessVisualizer extends ConfigurablePanel {
 		add(leftContainer, BorderLayout.WEST);
 		add(graphVisualizer, BorderLayout.CENTER);
 		add(abstractionSlider, BorderLayout.EAST);
+	}
+	
+	public void registerListener() {
+		graphVisualizer.addSelectionChangedListener(new SelectionChangedListener<DotElement>() {
+			public void selectionChanged(Set<DotElement> selectedElements) {
+				if (selectedElements.isEmpty()) {
+					for (DotEdge edge : graphVisualizer.getEdges()) {
+						styleNode(edge, graphVisualizer.getSVG(), false);
+					}
+					for (DotNode node : graphVisualizer.getNodes()) {
+						styleNode(node, graphVisualizer.getSVG(), false);
+					}
+				} else {
+					for (DotEdge edge : graphVisualizer.getEdges()) {
+						styleNode(edge, graphVisualizer.getSVG(), true);
+					}
+					for (DotNode node : graphVisualizer.getNodes()) {
+						styleNode(node, graphVisualizer.getSVG(), true);
+					}
+					for (DotNode node : graphVisualizer.getNodes()) {
+						if (selectedElements.contains(node)) {
+							styleNode(node, graphVisualizer.getSVG(), false);
+							for (DotEdge edge : graphVisualizer.getEdges()) {
+								if (edge.getSource().getId().equals(node.getId()) && !"invisible".equals(edge.getOption("style"))) {
+									styleNode(edge, graphVisualizer.getSVG(), false);
+									styleNode(edge.getTarget(), graphVisualizer.getSVG(), false);
+								}
+								if (edge.getTarget().getId().equals(node.getId()) && !"invisible".equals(edge.getOption("style"))) {
+									styleNode(edge, graphVisualizer.getSVG(), false);
+									styleNode(edge.getSource(), graphVisualizer.getSVG(), false);
+								}
+							}
+						}
+					}
+				}
+				graphVisualizer.repaint();
+			}
+			private void styleNode(DotElement element, SVGDiagram svg, boolean hide) {
+				//prepare parts of the rendered dot element
+				Group group = DotPanel.getSVGElementOf(svg, element);
+				//transparency
+				if (hide) {
+					DotPanel.setCSSAttributeOf(group, "opacity", "0.25");
+				} else {
+					DotPanel.setCSSAttributeOf(group, "opacity", "1.0");
+				}
+			}
+		});
 	}
 }
