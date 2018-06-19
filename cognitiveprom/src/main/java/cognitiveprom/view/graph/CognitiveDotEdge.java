@@ -10,8 +10,6 @@ public class CognitiveDotEdge extends DotEdge {
 	public CognitiveDotEdge(DotNode source, DotNode target, String edgeText, Double weight) {
 		super(source, target);
 		
-		setSelectable(true);
-		
 		setOption("color", "#9F9F9F");
 		setOption("size", ".1");
 		setOption("arrowsize", ".5");

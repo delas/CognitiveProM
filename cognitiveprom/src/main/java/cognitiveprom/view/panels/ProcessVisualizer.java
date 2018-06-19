@@ -2,7 +2,6 @@ package cognitiveprom.view.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.BoxLayout;
@@ -17,7 +16,6 @@ import org.processmining.plugins.graphviz.visualisation.listeners.SelectionChang
 
 import com.kitfox.svg.Group;
 import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGElement;
 
 import cognitiveprom.config.ConfigurationSet;
 
