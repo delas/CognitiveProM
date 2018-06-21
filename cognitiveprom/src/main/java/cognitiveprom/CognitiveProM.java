@@ -14,7 +14,7 @@ import cognitiveprom.utils.FileFilterHelper;
 public class CognitiveProM {
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		// sets the look and feel
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		private UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
 		// gui startup
 		ApplicationController.instance().showMainFrame(true);
