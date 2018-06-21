@@ -90,7 +90,7 @@ public class LogController {
 			}
 		}
 		
-		int returnVal = fc.showOpenDialog(applicationController.getMainFrame());
+		int returnVal = fc.showSaveDialog(applicationController.getMainFrame());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			final String fileName = FileFilterHelper.fixFileName(fc.getSelectedFile().getAbsolutePath(), (FileNameExtensionFilter) fc.getFileFilter());
 			configuration.set(KEY_SAVE_LOG_LOCATION, fileName.substring(0, fileName.lastIndexOf(File.separator)));
