@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * This class is useful to convert milliseconds into a human readable time
  * format
  * 
- * @author Karaszi István
+ * @author Karaszi Istvan
  * @author Andrea Burattin (minor contributions)
  * @see {@link https://github.com/raszi/java-progressbar/}
  */
