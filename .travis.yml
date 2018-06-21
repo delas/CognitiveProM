@@ -4,4 +4,4 @@ jdk:
 
 script:
 - cd cognitiveprom
-- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+- gradle assemble
