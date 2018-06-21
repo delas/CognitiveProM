@@ -21,7 +21,7 @@ import org.processmining.framework.util.Pair;
 import cognitiveprom.log.io.CognitiveLogImporter;
 import cognitiveprom.log.projections.AggregationFunction;
 import cognitiveprom.log.projections.ValueProjector;
-import cognitiveprom.tools.XLogHelper;
+import cognitiveprom.log.utils.XCognitiveLogHelper;
 
 /**
  * This class represents a cognitive log. Specifically, a cognitive an XES log
@@ -91,7 +91,7 @@ public class CognitiveLog implements Iterable<XTrace> {
 		for (XTrace trace : tracesToConsider) {
 			Set<String> processedActivities = new HashSet<String>();
 			for (XEvent event : trace) {
-				String activity = XLogHelper.getName(event);
+				String activity = XCognitiveLogHelper.getAOIName(event);
 				if (!processedActivities.contains(activity)) {
 					if (!aggregators.containsKey(activity)) {
 						aggregators.put(activity, new AggregationFunction());
