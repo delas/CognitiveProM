@@ -32,7 +32,7 @@ public class MainToolbar extends JToolBar {
 		setFloatable(false);
 		setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 		
-		add(openProcess);
+//		add(openProcess);
 		add(saveProcess);
 		add(saveFigure);
 		add(Box.createHorizontalGlue());
