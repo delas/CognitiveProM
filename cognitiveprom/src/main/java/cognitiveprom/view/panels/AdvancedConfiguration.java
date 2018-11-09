@@ -12,6 +12,7 @@ import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -46,6 +47,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	private JList<XTrace> tracesSelector;
 	private DefaultListModel<XTrace> listModelSelectedTraces;
 	private JComboBox<ColorPalette.Colors> comboColors;
+	private JCheckBox checkBoxPreserveAllNodesConnected;
 
 	/**
 	 * Basic class constructor
@@ -79,6 +81,10 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	
 	public ColorPalette.Colors getSelectedNodeColor() {
 		return (ColorPalette.Colors) comboColors.getSelectedItem();
+	}
+
+	public boolean getPreserveAllNodesConnected() {
+		return checkBoxPreserveAllNodesConnected.isSelected();
 	}
 
 	public void populateComponents() {
@@ -160,6 +166,12 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 
 		add(new JLabel("Activities color", ImageIcons.ICON_COLORS, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
 		add(comboColors, GridBagLayoutHelper.createHorizontalComponentConstraint(0, row++));
+		
+		
+		checkBoxPreserveAllNodesConnected = new JCheckBox("<html>Preserve all nodes and their connectiveness</html>");
+		checkBoxPreserveAllNodesConnected.setOpaque(false);
+		add(new JLabel("Node connections", ImageIcons.ICON_CONNECTIONS, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
+		add(checkBoxPreserveAllNodesConnected, GridBagLayoutHelper.createHorizontalComponentConstraint(0, row++));
 	}
 	
 	private void registerListeners() {
@@ -189,6 +201,15 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 			}
 		});
 		comboColors.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (ApplicationController.instance().processController().isShowingModel()) {
+					ApplicationController.instance().processController().updateVisualization();
+				}
+			}
+		});
+		checkBoxPreserveAllNodesConnected.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (ApplicationController.instance().processController().isShowingModel()) {

@@ -26,7 +26,6 @@ public class ProcessController {
 	protected static final boolean DEFAULT_TRACES_VISIBILITY = false;
 
 	private ProcessMap model;
-	
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
 	private boolean isShowingModel = false;
@@ -80,9 +79,10 @@ public class ProcessController {
 		ValueProjector attribute = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationValue();
 		AggregationFunctions function = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationFunction();
 		Colors activityColor = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedNodeColor();
+		boolean preserveAllNodesConnected = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getPreserveAllNodesConnected();
 		Logger.instance().debug("Preparation for rendering: " + (System.currentTimeMillis() - time) + "ms");
 		
-		new RendererWorker(threshold, tracesToConsider, attribute, function, activityColor).execute();
+		new RendererWorker(threshold, tracesToConsider, attribute, function, activityColor, preserveAllNodesConnected).execute();
 	}
 
 	public void setAdvancedConfigurationVisibility(boolean visible) {

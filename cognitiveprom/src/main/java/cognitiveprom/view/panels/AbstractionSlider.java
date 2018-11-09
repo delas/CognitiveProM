@@ -44,7 +44,7 @@ public class AbstractionSlider extends ConfigurablePanel {
 		setLayout(new BorderLayout());
 		
 		// set the slider
-		abstractionSlider = new JSlider(JSlider.VERTICAL, 0, 100, 100);
+		abstractionSlider = new JSlider(JSlider.VERTICAL, 0, 100, 30);
 		abstractionSlider.setBackground(Color.white);
 		abstractionSlider.setMajorTickSpacing(25);
 		abstractionSlider.setMinorTickSpacing(5);

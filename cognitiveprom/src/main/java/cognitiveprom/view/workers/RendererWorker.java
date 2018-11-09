@@ -26,18 +26,21 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 	private ValueProjector attribute;
 	private AggregationFunctions function;
 	private Colors activityColor;
+	private boolean preserveAllNodesConnected;
 
 	public RendererWorker(
 			double threshold,
 			Collection<XTrace> tracesToConsider,
 			ValueProjector attribute,
 			AggregationFunctions function,
-			Colors activityColor) {
+			Colors activityColor,
+			boolean preserveAllNodesConnected) {
 		this.threshold = threshold;
 		this.tracesToConsider = tracesToConsider;
 		this.attribute = attribute;
 		this.function = function;
 		this.activityColor = activityColor;
+		this.preserveAllNodesConnected = preserveAllNodesConnected;
 	}
 	
 	@Override
@@ -73,7 +76,8 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 					tracesToConsider,
 					attribute,
 					function,
-					activityColor);
+					activityColor,
+					preserveAllNodesConnected);
 		}
 	}
 	
