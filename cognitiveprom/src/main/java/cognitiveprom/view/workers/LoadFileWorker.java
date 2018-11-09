@@ -24,6 +24,8 @@ public class LoadFileWorker extends SwingWorker<CognitiveLog, Void> {
 		ApplicationController.instance().showWaitingPage();
 		Logger.instance().info("Loading file `" + fileName + "`...");
 		
+		importer.setProgressReceiver(ApplicationController.instance().getWaitingPageProgressReceiver());
+		
 		return importer.load(fileName);
 	}
 	

@@ -3,6 +3,7 @@ package cognitiveprom.view.pages;
 import java.awt.BorderLayout;
 
 import cognitiveprom.config.ConfigurationSet;
+import cognitiveprom.view.panels.ProgressReceiver;
 import cognitiveprom.view.panels.WaitingPanel;
 
 public class WaitingPage extends ConfigurableWindowPage {
@@ -26,5 +27,9 @@ public class WaitingPage extends ConfigurableWindowPage {
 		
 		setLayout(new BorderLayout());
 		add(waitingPanel, BorderLayout.CENTER);
+	}
+
+	public ProgressReceiver getProgressReceiver() {
+		return waitingPanel;
 	}
 }

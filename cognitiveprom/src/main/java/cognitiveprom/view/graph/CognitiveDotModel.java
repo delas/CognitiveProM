@@ -24,6 +24,7 @@ import cognitiveprom.log.projections.AggregationFunction;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.ValueProjector;
 import cognitiveprom.log.utils.XCognitiveLogHelper;
+import cognitiveprom.logger.Logger;
 import cognitiveprom.map.ProcessMap;
 import cognitiveprom.view.graph.ColorPalette.Colors;
 
@@ -55,7 +56,9 @@ public class CognitiveDotModel extends Dot {
 		this.function = function;
 		this.activityColor = activityColor;
 		
+		long time = System.currentTimeMillis();
 		realize();
+		Logger.instance().debug("Model rendering: " + (System.currentTimeMillis() - time)+ "ms");
 	}
 
 	private Map<Pair<String, String>, Pair<String, Double>> getAggregatedRelations() {
@@ -158,6 +161,7 @@ public class CognitiveDotModel extends Dot {
 		Map<Pair<String, String>, Pair<String, Double>> relationDecoration = getAggregatedRelations();
 		
 		setOption("outputorder", "edgesfirst");
+		setOption("splines", "spline");
 		
 		// main clusters
 		DotCluster s = addCluster();

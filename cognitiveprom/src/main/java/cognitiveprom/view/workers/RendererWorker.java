@@ -44,7 +44,7 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 	protected Dot doInBackground() throws Exception {
 		int nodes = ApplicationController.instance().processController().model().getActivities().size();
 		if (nodes > 100) {
-			Logger.instance().debug("The model to render is way too big!");
+			Logger.instance().debug("The model to render is way too big (" + nodes + " nodes)!");
 			Dot dot = new Dot();
 			DotNode node = dot.addNode("The model contains " + nodes + ", and this is too big.\nRight now, up to 100 nodes are supported.");
 			node.setOption("shape", "box");
@@ -82,7 +82,9 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 		this.done = true;
 		Logger.instance().debug("Rendering complete");
 		try {
+			long time = System.currentTimeMillis();
 			ApplicationController.instance().processController().showModel(get());
+			Logger.instance().debug("Show rendered : " + (System.currentTimeMillis() - time) + "ms");
 		} catch (InterruptedException | ExecutionException e) {
 			Logger.instance().error(e);
 		}

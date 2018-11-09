@@ -4,13 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.utils.SetUtils;
 
-public class WaitingPanel extends ConfigurablePanel {
+public class WaitingPanel extends ConfigurablePanel implements ProgressReceiver {
 	
 	/**
 	 * Some waiting sentences (from Slickerbox) :)
@@ -29,6 +31,7 @@ public class WaitingPanel extends ConfigurablePanel {
 
 	private static final long serialVersionUID = 8735041859396682095L;
 	private JLabel label;
+	private JProgressBar progress;
 
 	public WaitingPanel(ConfigurationSet conf) {
 		super(conf);
@@ -39,9 +42,9 @@ public class WaitingPanel extends ConfigurablePanel {
 	
 	public void start(String firstLine) {
 		showNiceText(firstLine, SetUtils.getRandom(waitingSentences));
+		progress.setIndeterminate(true);
 		repaint();
 	}
-	
 	
 	public void setTranslucent(boolean translucent) {
 		if (translucent) {
@@ -49,6 +52,15 @@ public class WaitingPanel extends ConfigurablePanel {
 		} else {
 			setBackground(new Color(255, 255, 255, 255));
 		}
+	}
+	
+	@Override
+	public void update(int minProgress, int progressValue, int maxProgress) {
+		progress.setMinimum(minProgress);
+		progress.setValue(progressValue);
+		progress.setMaximum(maxProgress);
+		
+		progress.setIndeterminate(false);
 	}
 
 	private void placeComponents() {
@@ -61,7 +73,13 @@ public class WaitingPanel extends ConfigurablePanel {
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setForeground(Color.LIGHT_GRAY);
 		label.setFont(label.getFont().deriveFont(Font.PLAIN));
+		
+		progress = new JProgressBar(JProgressBar.HORIZONTAL);
+		progress.setIndeterminate(true);
+		
 		add(label, BorderLayout.CENTER);
+		add(progress, BorderLayout.SOUTH);
+		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 	}
 	
 	private void showNiceText(String firstLine, String text) {

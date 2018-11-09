@@ -36,11 +36,14 @@ public class MineLogWorker extends SwingWorker<ProcessMap, Void> {
 		
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		try {
+			long time = System.currentTimeMillis();
 			EventRelationStorage eventStorage = EventRelationStorage.Factory.createEventRelations(
 					log,
 					new XEventNameClassifier(),
 					executorService);
+			Logger.instance().debug("Computation of relations: " + (System.currentTimeMillis() - time)+ "ms");
 			
+			time = System.currentTimeMillis();
 			Map<XEventClass, Long> maxConn = new HashMap<XEventClass, Long>();
 			for (Relation r : eventStorage.getDirectlyFollowsRelations()) {
 				XEventClass source = r.getSource();
@@ -58,8 +61,12 @@ public class MineLogWorker extends SwingWorker<ProcessMap, Void> {
 									(maxConn.containsKey(target)? maxConn.get(target) : 0)));
 				}
 			}
+			Logger.instance().debug("Dependencies connection: " + (System.currentTimeMillis() - time)+ "ms");
+			
+			time = System.currentTimeMillis();
 			List<Long> maxConnList = new ArrayList<Long>(maxConn.values());
 			Collections.sort(maxConnList);
+			Logger.instance().debug("Relations sorting: " + (System.currentTimeMillis() - time)+ "ms");
 	
 			return new ProcessMap(
 					eventStorage,

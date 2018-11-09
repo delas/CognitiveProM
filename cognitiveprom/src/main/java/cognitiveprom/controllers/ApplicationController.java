@@ -11,6 +11,7 @@ import cognitiveprom.view.frames.MainFrame;
 import cognitiveprom.view.pages.LoadProcessPage;
 import cognitiveprom.view.pages.MainPage;
 import cognitiveprom.view.pages.WaitingPage;
+import cognitiveprom.view.panels.ProgressReceiver;
 
 /**
  * This class represents the application controller, and is in charge of
@@ -101,6 +102,10 @@ public class ApplicationController {
 	public void showWaitingPage() {
 		mainFrame.showPage(waitingPage.getClass().getCanonicalName());
 		waitingPage.start("Importing log...");
+	}
+	
+	public ProgressReceiver getWaitingPageProgressReceiver() {
+		return waitingPage.getProgressReceiver();
 	}
 	
 	/**

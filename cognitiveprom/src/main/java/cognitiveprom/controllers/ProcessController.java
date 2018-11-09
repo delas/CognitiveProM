@@ -1,9 +1,16 @@
 package cognitiveprom.controllers;
 
+import java.util.Collection;
+
+import org.deckfour.xes.model.XTrace;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 import cognitiveprom.config.ConfigurationSet;
+import cognitiveprom.log.projections.AggregationFunctions;
+import cognitiveprom.log.projections.ValueProjector;
+import cognitiveprom.logger.Logger;
 import cognitiveprom.map.ProcessMap;
+import cognitiveprom.view.graph.ColorPalette.Colors;
 import cognitiveprom.view.workers.MineLogWorker;
 import cognitiveprom.view.workers.RendererWorker;
 
@@ -44,8 +51,13 @@ public class ProcessController {
 	
 	public void setCognitiveModel(ProcessMap model) {
 		this.model = model;
+		long time = System.currentTimeMillis();
 		applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().populateComponents();
-		applicationController.getMainPage().getProcessVisualizer().getShowTracesPanel().populateComponents();
+		Logger.instance().debug("Advanced configuration population: " + (System.currentTimeMillis() - time) + "ms");
+		
+//		time = System.currentTimeMillis();
+//		applicationController.getMainPage().getProcessVisualizer().getShowTracesPanel().populateComponents();
+//		Logger.instance().debug("Traces population: " + (System.currentTimeMillis() - time));
 	}
 	
 	public void mineLog() {
@@ -62,12 +74,15 @@ public class ProcessController {
 	}
 	
 	public void updateVisualization() {
-		new RendererWorker(
-				applicationController.getMainPage().getProcessVisualizer().getAbstractionValue(),
-				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedTraces(),
-				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationValue(),
-				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationFunction(),
-				applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedNodeColor()).execute();
+		long time = System.currentTimeMillis();
+		double threshold = applicationController.getMainPage().getProcessVisualizer().getAbstractionValue();
+		Collection<XTrace> tracesToConsider = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedTraces();
+		ValueProjector attribute = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationValue();
+		AggregationFunctions function = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationFunction();
+		Colors activityColor = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedNodeColor();
+		Logger.instance().debug("Preparation for rendering: " + (System.currentTimeMillis() - time) + "ms");
+		
+		new RendererWorker(threshold, tracesToConsider, attribute, function, activityColor).execute();
 	}
 
 	public void setAdvancedConfigurationVisibility(boolean visible) {
@@ -78,7 +93,7 @@ public class ProcessController {
 
 	public void setTracesVisibility(boolean visible) {
 		configuration.setBoolean(KEY_TRACES_VISIBLE, visible);
-		applicationController.getMainPage().getToolbar().setShowTracesSelected(visible);
+//		applicationController.getMainPage().getToolbar().setShowTracesSelected(visible);
 		applicationController.getMainPage().getProcessVisualizer().getShowTracesPanel().setVisible(visible);
 	}
 }

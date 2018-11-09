@@ -25,7 +25,7 @@ public class MainToolbar extends JToolBar {
 	private JButton saveProcess = new JButton("Export log", ImageIcons.ICON_SAVE);
 	private JButton saveFigure = new JButton("Export figure", ImageIcons.ICON_EXPORT_PIC);
 	private JToggleButton showAdvancedConfiguration = new JToggleButton("Advanced configuration", ImageIcons.ICON_ADVANCED_CONFIG);
-	private JToggleButton showTraces = new JToggleButton("View traces", ImageIcons.ICON_TRACES);
+//	private JToggleButton showTraces = new JToggleButton("View traces", ImageIcons.ICON_TRACES);
 	private JToggleButton showConsole = new JToggleButton("", ImageIcons.ICON_CONSOLE);
 	
 	public MainToolbar() {
@@ -37,7 +37,7 @@ public class MainToolbar extends JToolBar {
 		add(saveFigure);
 		add(Box.createHorizontalGlue());
 		add(showAdvancedConfiguration);
-		add(showTraces);
+//		add(showTraces);
 		add(Box.createHorizontalGlue());
 		add(showConsole);
 		
@@ -62,14 +62,14 @@ public class MainToolbar extends JToolBar {
 		showAdvancedConfiguration.setSelected(visible);
 	}
 	
-	/**
-	 * Method to set the selection of the "show advanced configuration" button
-	 * 
-	 * @param visible
-	 */
-	public void setShowTracesSelected(boolean visible) {
-		showTraces.setSelected(visible);
-	}
+//	/**
+//	 * Method to set the selection of the "show advanced configuration" button
+//	 * 
+//	 * @param visible
+//	 */
+//	public void setShowTracesSelected(boolean visible) {
+//		showTraces.setSelected(visible);
+//	}
 	
 	/**
 	 * Method to register the button listeners
@@ -104,12 +104,12 @@ public class MainToolbar extends JToolBar {
 			}
 		});
 		
-		showTraces.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ApplicationController.instance().processController().setTracesVisibility(showTraces.isSelected());
-			}
-		});
+//		showTraces.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				ApplicationController.instance().processController().setTracesVisibility(showTraces.isSelected());
+//			}
+//		});
 		
 		showConsole.addActionListener(new ActionListener() {
 			@Override
