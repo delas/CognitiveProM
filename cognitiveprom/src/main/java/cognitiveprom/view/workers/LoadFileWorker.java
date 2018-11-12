@@ -21,7 +21,7 @@ public class LoadFileWorker extends SwingWorker<CognitiveLog, Void> {
 	
 	@Override
 	protected CognitiveLog doInBackground() throws Exception {
-		ApplicationController.instance().showWaitingPage();
+		ApplicationController.instance().showWaitingPage("Log importing");
 		Logger.instance().info("Loading file `" + fileName + "`...");
 		
 		importer.setProgressReceiver(ApplicationController.instance().getWaitingPageProgressReceiver());

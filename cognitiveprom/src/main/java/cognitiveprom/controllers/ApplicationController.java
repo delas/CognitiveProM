@@ -98,10 +98,12 @@ public class ApplicationController {
 	
 	/**
 	 * Shows the waiting page
+	 * 
+	 * @param message
 	 */
-	public void showWaitingPage() {
+	public void showWaitingPage(String message) {
 		mainFrame.showPage(waitingPage.getClass().getCanonicalName());
-		waitingPage.start("Importing log...");
+		waitingPage.start(message);
 	}
 	
 	public ProgressReceiver getWaitingPageProgressReceiver() {

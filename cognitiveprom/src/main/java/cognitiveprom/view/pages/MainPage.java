@@ -46,15 +46,6 @@ public class MainPage extends ConfigurableWindowPage {
 		return processVisualizer;
 	}
 	
-	public void showWaitingPanel(String text) {
-		showPage(waitingPanel.getClass().getCanonicalName());
-		waitingPanel.start(text);
-	}
-	
-	public void showProcessVisualizer() {
-		showPage(processVisualizer.getClass().getCanonicalName());
-	}
-	
 	/**
 	 * Method to get the toolbar
 	 * 

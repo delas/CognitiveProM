@@ -32,7 +32,7 @@ public class MineLogWorker extends SwingWorker<ProcessMap, Void> {
 	@Override
 	protected ProcessMap doInBackground() throws Exception {
 		Logger.instance().debug("Mining started...");
-		ApplicationController.instance().getMainPage().showWaitingPanel("Log mining...");
+		ApplicationController.instance().showWaitingPage("Log mining");
 		
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		try {

@@ -3,7 +3,6 @@ package cognitiveprom.view.workers;
 import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
@@ -62,15 +61,12 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 					@Override
 					public void run() {
 						if (!done) {
-							if (ApplicationController.instance().getMainPage().getProcessVisualizer().getGraphVisualizer().getDot().getEdges().size() > 0) {
-								ApplicationController.instance().getMainPage().getWaitingPanel().setTranslucent(true);
-							}
-							ApplicationController.instance().getMainPage().showWaitingPanel("Rendering model...");
+							ApplicationController.instance().showWaitingPage("Model rendering");
 						}
 					}
 				}, 500);
 			
-			return new CognitiveDotModel(
+			Dot dot = new CognitiveDotModel(
 					ApplicationController.instance().processController().model(),
 					threshold,
 					tracesToConsider,
@@ -78,6 +74,12 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 					function,
 					activityColor,
 					preserveAllNodesConnected);
+			
+			long time = System.currentTimeMillis();
+			ApplicationController.instance().processController().showModel(dot);
+			Logger.instance().debug("Show rendered : " + (System.currentTimeMillis() - time) + "ms");
+			
+			return dot;
 		}
 	}
 	
@@ -85,15 +87,6 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 	protected void done() {
 		this.done = true;
 		Logger.instance().debug("Rendering complete");
-		try {
-			long time = System.currentTimeMillis();
-			ApplicationController.instance().processController().showModel(get());
-			Logger.instance().debug("Show rendered : " + (System.currentTimeMillis() - time) + "ms");
-		} catch (InterruptedException | ExecutionException e) {
-			Logger.instance().error(e);
-		}
-		
-		ApplicationController.instance().getMainPage().getWaitingPanel().setTranslucent(false);
-		ApplicationController.instance().getMainPage().showProcessVisualizer();
+		ApplicationController.instance().showMainPage();
 	}
 }

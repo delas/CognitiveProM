@@ -3,6 +3,8 @@ package cognitiveprom.view.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -30,8 +32,11 @@ public class WaitingPanel extends ConfigurablePanel implements ProgressReceiver 
 	};
 
 	private static final long serialVersionUID = 8735041859396682095L;
+	private static final int UPDATE_PROGRESS_INTERVAL = 2000;
 	private JLabel label;
 	private JProgressBar progress;
+	private TimerTask taskUpdater;
+	private Timer timerUpdater;
 
 	public WaitingPanel(ConfigurationSet conf) {
 		super(conf);
@@ -41,17 +46,23 @@ public class WaitingPanel extends ConfigurablePanel implements ProgressReceiver 
 	}
 	
 	public void start(String firstLine) {
-		showNiceText(firstLine, SetUtils.getRandom(waitingSentences));
 		progress.setIndeterminate(true);
-		repaint();
-	}
-	
-	public void setTranslucent(boolean translucent) {
-		if (translucent) {
-			setBackground(new Color(255, 255, 255, 190));
-		} else {
-			setBackground(new Color(255, 255, 255, 255));
+		
+		if (timerUpdater != null) {
+			timerUpdater.cancel();
 		}
+		if (taskUpdater != null) {
+			taskUpdater.cancel();
+		}
+		
+		timerUpdater = new Timer();
+		taskUpdater = new TimerTask() {
+			@Override
+			public void run() {
+				showNiceText(firstLine, SetUtils.getRandom(waitingSentences));
+			}
+		};
+		timerUpdater.schedule(taskUpdater, 500, UPDATE_PROGRESS_INTERVAL);
 	}
 	
 	@Override
