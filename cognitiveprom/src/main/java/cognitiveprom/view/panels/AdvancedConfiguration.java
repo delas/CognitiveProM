@@ -168,7 +168,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		add(comboColors, GridBagLayoutHelper.createHorizontalComponentConstraint(0, row++));
 		
 		
-		checkBoxPreserveAllNodesConnected = new JCheckBox("<html>Preserve all nodes and their connectiveness</html>");
+		checkBoxPreserveAllNodesConnected = new JCheckBox("<html>Soft thresholding (preserves all nodes and their connectiveness)</html>");
 		checkBoxPreserveAllNodesConnected.setOpaque(false);
 		add(new JLabel("Node connections", ImageIcons.ICON_CONNECTIONS, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
 		add(checkBoxPreserveAllNodesConnected, GridBagLayoutHelper.createHorizontalComponentConstraint(0, row++));

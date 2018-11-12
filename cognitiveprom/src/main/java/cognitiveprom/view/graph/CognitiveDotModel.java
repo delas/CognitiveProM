@@ -169,8 +169,8 @@ public class CognitiveDotModel extends Dot {
 		
 		ImmutableMultiset<Relation> sortedRelations = Multisets.copyHighestCountFirst(eventRelations.getDirectlyFollowsRelations());
 		for (Entry<Relation> entry : sortedRelations.entrySet()) {
+			Relation relation = entry.getElement();
 			if (entry.getCount() >= eventRelations.countTraces() * threshold) {
-				Relation relation = entry.getElement();
 
 				String sourceActivity = relation.getSource().toString();
 				String targetActivity = relation.getTarget().toString();

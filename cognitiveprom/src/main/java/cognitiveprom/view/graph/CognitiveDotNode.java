@@ -41,7 +41,7 @@ public class CognitiveDotNode extends DotNode {
 
 	public void setColorWeight(Double weight, ColorPalette.Colors activityColor) {
 		if (weight == null) {
-			setOption("fillcolor", "#FDEFD8:#E1D3BC");
+			setOption("fillcolor", "#FDEFD8"); // #FDEFD8:#E1D3BC
 		} else {
 			Color backgroundColor = ColorPalette.getValue(activityColor, weight);
 			Color fontColor = ColorPalette.getFontColor(backgroundColor);
