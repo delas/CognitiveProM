@@ -10,7 +10,7 @@ public class CognitiveDotStartNode extends DotNode {
 		
 		setOption("shape", "circle");
 		setOption("style", "filled");
-		setOption("fillcolor", "#CED6BD:#B3BBA2");
+		setOption("fillcolor", "#CED6BD"); // #CED6BD:#B3BBA2
 		setOption("gradientangle", "270");
 		setOption("color", "#595F45");
 		setOption("width", ".3");

@@ -27,19 +27,8 @@ public class CognitiveDotNode extends DotNode {
 		setOption("penwidth", ".75");
 		setOption("margin", ".5,.2");
 		
-		if (secondLine != null) {
-			setLabel("<" + label + " <br/><font point-size='18'>" + secondLine + "</font>>");
-		}
-		
-		if (weight == null) {
-			setOption("fillcolor", "#FDEFD8:#E1D3BC");
-		} else {
-			Color backgroundColor = ColorPalette.getValue(activityColor, weight);
-			Color fontColor = ColorPalette.getFontColor(backgroundColor);
-			setOption("fillcolor", ColorPalette.colorToString(backgroundColor) + ":" + ColorPalette.colorToString(backgroundColor.darker()));
-			setOption("fontcolor", ColorPalette.colorToString(fontColor));
-			setOption("fixedsize", "false");
-		}
+		setSecondLine(secondLine);
+		setColorWeight(weight, activityColor);
 		
 		setSelectable(true);
 	}
@@ -56,7 +45,7 @@ public class CognitiveDotNode extends DotNode {
 		} else {
 			Color backgroundColor = ColorPalette.getValue(activityColor, weight);
 			Color fontColor = ColorPalette.getFontColor(backgroundColor);
-			setOption("fillcolor", ColorPalette.colorToString(backgroundColor) + ":" + ColorPalette.colorToString(backgroundColor.darker()));
+			setOption("fillcolor", ColorPalette.colorToString(backgroundColor)/* + ":" + ColorPalette.colorToString(backgroundColor.darker())*/);
 			setOption("fontcolor", ColorPalette.colorToString(fontColor));
 			setOption("fixedsize", "false");
 		}

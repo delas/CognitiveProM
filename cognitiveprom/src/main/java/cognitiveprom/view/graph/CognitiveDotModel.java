@@ -14,8 +14,6 @@ import org.processmining.dataawarecnetminer.model.EventRelationStorage;
 import org.processmining.framework.util.Pair;
 import org.processmining.models.causalgraph.Relation;
 import org.processmining.plugins.graphviz.dot.Dot;
-import org.processmining.plugins.graphviz.dot.DotCluster;
-import org.processmining.plugins.graphviz.dot.DotEdge;
 import org.processmining.plugins.graphviz.dot.DotNode;
 
 import com.google.common.collect.ImmutableMultiset;
@@ -212,17 +210,17 @@ public class CognitiveDotModel extends Dot {
 		Map<String, Pair<String, Double>> activityDecoration = getAggregatedActivities();
 		Map<Pair<String, String>, Pair<String, Double>> relationDecoration = getAggregatedRelations();
 		
-		setOption("outputorder", "edgesfirst");
-		setOption("splines", "spline");
+//		setOption("outputorder", "edgesfirst");
+//		setOption("splines", "spline");
 		
 		// main clusters
-		DotCluster s = addCluster();
-		DotCluster n = addCluster();
-		DotCluster e = addCluster();
-		
-		s.setOption("style", "invis");
-		n.setOption("style", "invis");
-		e.setOption("style", "invis");
+//		DotCluster s = addCluster();
+//		DotCluster n = addCluster();
+//		DotCluster e = addCluster();
+//		
+//		s.setOption("style", "invis");
+//		n.setOption("style", "invis");
+//		e.setOption("style", "invis");
 		
 		// adding all nodes
 		Map<XEventClass, DotNode> mapNodes = new HashMap<XEventClass, DotNode>();
@@ -230,10 +228,12 @@ public class CognitiveDotModel extends Dot {
 			DotNode node = null;
 			if (act.equals(eventRelations.getStartEventClass())) {
 				node = new CognitiveDotStartNode();
-				s.addNode(node);
+//				s.addNode(node);
+				addNode(node);
 			} else if (act.equals(eventRelations.getEndEventClass())) {
 				node = new CognitiveDotEndNode();
-				e.addNode(node);
+//				e.addNode(node);
+				addNode(node);
 			} else {
 				String activity = act.toString();
 				node = new CognitiveDotNode(
@@ -241,7 +241,8 @@ public class CognitiveDotModel extends Dot {
 						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getFirst() : null,
 						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getSecond() : null,
 						activityColor);
-				n.addNode(node);
+//				n.addNode(node);
+				addNode(node);
 			}
 			mapNodes.put(act, node);
 		}
@@ -265,10 +266,10 @@ public class CognitiveDotModel extends Dot {
 							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
 					addEdge(dotEdge);
 				}
-				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
-				invisibleEdge.setOption("style", "invisible");
-				invisibleEdge.setOption("arrowhead", "none");
-				addEdge(invisibleEdge);
+//				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
+//				invisibleEdge.setOption("style", "invisible");
+//				invisibleEdge.setOption("arrowhead", "none");
+//				addEdge(invisibleEdge);
 				
 			} else if (target.equals(eventRelations.getEndEventClass())) {
 				
@@ -281,10 +282,10 @@ public class CognitiveDotModel extends Dot {
 							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
 					addEdge(dotEdge);
 				}
-				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
-				invisibleEdge.setOption("style", "invisible");
-				invisibleEdge.setOption("arrowhead", "none");
-				addEdge(invisibleEdge);
+//				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
+//				invisibleEdge.setOption("style", "invisible");
+//				invisibleEdge.setOption("arrowhead", "none");
+//				addEdge(invisibleEdge);
 				
 			} else {
 				
@@ -297,7 +298,8 @@ public class CognitiveDotModel extends Dot {
 							dotTargetNode,
 							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
 							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
-					n.addEdge(dotEdge);
+//					n.addEdge(dotEdge);
+					addEdge(dotEdge);
 				}
 				
 			}
