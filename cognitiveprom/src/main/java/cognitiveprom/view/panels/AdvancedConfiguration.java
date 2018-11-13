@@ -46,6 +46,9 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	private JLabel labelTraces;
 	private JList<XTrace> tracesSelector;
 	private DefaultListModel<XTrace> listModelSelectedTraces;
+//	private JLabel labelActivities;
+//	private JList<XEventClass> activitiesSelector;
+//	private DefaultListModel<XEventClass> listModelSelectedActivities;
 	private JComboBox<ColorPalette.Colors> comboColors;
 	private JCheckBox checkBoxPreserveAllNodesConnected;
 
@@ -101,6 +104,12 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 			listModelSelectedTraces.addElement(trace);
 		}
 		tracesSelector.setSelectionInterval(0, listModelSelectedTraces.getSize() - 1);
+		
+//		listModelSelectedActivities.removeAllElements();
+//		for (XEventClass evClass : ApplicationController.instance().logController().log().getEventClasses()) {
+//			listModelSelectedActivities.addElement(evClass);
+//		}
+//		activitiesSelector.setSelectionInterval(0, listModelSelectedActivities.getSize() - 1);
 	}
 	
 	private void placeComponents() {
@@ -136,6 +145,25 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 			}
 		});
 		
+		// the list of activities
+//		listModelSelectedActivities = new DefaultListModel<XEventClass>();
+//		activitiesSelector = new JList<XEventClass>(listModelSelectedActivities);
+//		activitiesSelector.setCellRenderer(new ListCellRenderer<XEventClass>() {
+//			public Component getListCellRendererComponent(JList<? extends XEventClass> list, XEventClass value, int index, boolean isSelected, boolean cellHasFocus) {
+//				String activityName = value.toString();
+//				JLabel l = new JLabel(activityName);
+//				l.setOpaque(true);
+//				if (isSelected) {
+//					l.setBackground(tracesSelector.getSelectionBackground());
+//					l.setForeground(tracesSelector.getSelectionForeground());
+//				} else {
+//					l.setBackground(tracesSelector.getBackground());
+//					l.setForeground(tracesSelector.getForeground());
+//				}
+//				return l;
+//			}
+//		});
+		
 		// the list of colors
 		comboColors = new JComboBox<ColorPalette.Colors>();
 		for (ColorPalette.Colors c : ColorPalette.Colors.values()) {
@@ -146,6 +174,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		// add all elements to the panel
 		setLayout(new GridBagLayout());
 		this.labelTraces = new JLabel("", ImageIcons.ICON_TRACES, JLabel.LEFT);
+//		this.labelActivities = new JLabel("", ImageIcons.ICON_ACTIVITIES, JLabel.LEFT);
 		
 		int row = 0;
 		add(new JLabel("Attribute to project", ImageIcons.ICON_ATTRIBUTE, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
@@ -163,10 +192,19 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		c.weighty = 1;
 		c.fill = GridBagConstraints.BOTH;
 		add(new JScrollPane(tracesSelector), c);
+		
+//		add(labelActivities, GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
+//		c = new GridBagConstraints();
+//		c.insets = new Insets(0, 5, 5, 5);
+//		c.gridx = 0;
+//		c.gridy = row++;
+//		c.weightx = 1;
+//		c.weighty = 1;
+//		c.fill = GridBagConstraints.BOTH;
+//		add(new JScrollPane(activitiesSelector), c);
 
 		add(new JLabel("Activities color", ImageIcons.ICON_COLORS, JLabel.LEFT), GridBagLayoutHelper.createHorizontalTitleConstraint(0, row++));
 		add(comboColors, GridBagLayoutHelper.createHorizontalComponentConstraint(0, row++));
-		
 		
 		checkBoxPreserveAllNodesConnected = new JCheckBox("<html>Soft thresholding (preserves all nodes and their connectiveness)</html>");
 		checkBoxPreserveAllNodesConnected.setOpaque(false);
@@ -200,6 +238,15 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 				labelTraces.setText("Traces to project (" + tracesSelector.getSelectedIndices().length + "/" + listModelSelectedTraces.size() + ")");
 			}
 		});
+//		activitiesSelector.addListSelectionListener(new ListSelectionListener() {
+//			@Override
+//			public void valueChanged(ListSelectionEvent e) {
+//				if (ApplicationController.instance().processController().isShowingModel()) {
+//					ApplicationController.instance().processController().updateVisualization();
+//				}
+//				labelTraces.setText("Activities to map (" + activitiesSelector.getSelectedIndices().length + "/" + listModelSelectedActivities.size() + ")");
+//			}
+//		});
 		comboColors.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -18,6 +18,7 @@ public class ImageIcons {
 	public static final ImageIcon ICON_AGGREGATION = ImageUtils.loadImage("cognitiveprom/icons/sum.png");
 	public static final ImageIcon ICON_COLORS = ImageUtils.loadImage("cognitiveprom/icons/color_swatch.png");
 	public static final ImageIcon ICON_TRACES = ImageUtils.loadImage("cognitiveprom/icons/group.png");
+	public static final ImageIcon ICON_ACTIVITIES = ImageUtils.loadImage("cognitiveprom/icons/brick.png");
 	public static final ImageIcon ICON_CONNECTIONS = ImageUtils.loadImage("cognitiveprom/icons/plugin.png");
 	
 	public static final ImageIcon ICON_MAGIC = ImageUtils.loadImage("cognitiveprom/icons/wand.png");

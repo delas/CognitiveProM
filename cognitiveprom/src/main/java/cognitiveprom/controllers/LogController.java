@@ -72,7 +72,7 @@ public class LogController {
 	
 	public void loadFile(String fileName, Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> importer) {
 		if (importer.getSecond() != null) {
-			importer.getSecond().configure(applicationController.getMainFrame(), importer.getFirst());
+			importer.getSecond().configure(applicationController.getMainFrame(), importer.getFirst(), fileName);
 		}
 		applicationController.processController().reset();
 		new LoadFileWorker(fileName, importer.getFirst()).execute();

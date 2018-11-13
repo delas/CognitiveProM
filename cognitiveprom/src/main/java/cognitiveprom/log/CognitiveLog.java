@@ -62,7 +62,7 @@ public class CognitiveLog implements Iterable<XTrace> {
 	public XLog getLog() {
 		return log;
 	}
-	
+
 	/**
 	 * Returns a summary of the attributes for the given attribute name
 	 * 
