@@ -36,7 +36,7 @@ public class FileFilterHelper {
 	 * @param fileChooser the file chooser that will receive the file filters
 	 */
 	public static void assignImportFileFilters(JFileChooser fileChooser) {
-		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.setAcceptAllFileFilterUsed(true);
 		for (Class<?> importer : RegisteredIO.getAllImporters()) {
 			final Importer annotation = importer.getAnnotation(Importer.class);
 			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(

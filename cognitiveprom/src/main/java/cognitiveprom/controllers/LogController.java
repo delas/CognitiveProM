@@ -83,9 +83,15 @@ public class LogController {
 			configuration.set(KEY_OPEN_LOG_LOCATION, fc.getSelectedFile().getAbsolutePath().substring(0, fc.getSelectedFile().getAbsolutePath().lastIndexOf(File.separator)));
 			configuration.set(KEY_OPEN_FILE_FILTER, fc.getFileFilter().getDescription());
 			
-			loadFile(
-					fc.getSelectedFile().getAbsolutePath(),
-					FileFilterHelper.getImporterFromFileFilter((FileNameExtensionFilter) fc.getFileFilter()));
+			if (fc.getFileFilter() instanceof FileNameExtensionFilter) {
+				loadFile(
+						fc.getSelectedFile().getAbsolutePath(),
+						FileFilterHelper.getImporterFromFileFilter((FileNameExtensionFilter) fc.getFileFilter()));
+			} else {
+				loadFile(
+						fc.getSelectedFile().getAbsolutePath(),
+						FileFilterHelper.getImporterFromFileName(fc.getSelectedFile().getAbsolutePath()));
+			}
 		}
 	}
 	
