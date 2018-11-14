@@ -21,13 +21,10 @@ import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.deckfour.xes.model.XTrace;
-
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.ValueProjector;
-import cognitiveprom.log.utils.XCognitiveLogHelper;
 import cognitiveprom.utils.GridBagLayoutHelper;
 import cognitiveprom.view.collections.ImageIcons;
 import cognitiveprom.view.graph.ColorPalette;
@@ -44,8 +41,8 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	private JComboBox<ValueProjector> comboAttributes;
 	private JComboBox<AggregationFunctions> comboAttributesFunctions;
 	private JLabel labelTraces;
-	private JList<XTrace> tracesSelector;
-	private DefaultListModel<XTrace> listModelSelectedTraces;
+	private JList<String> tracesSelector;
+	private DefaultListModel<String> listModelSelectedTraces;
 //	private JLabel labelActivities;
 //	private JList<XEventClass> activitiesSelector;
 //	private DefaultListModel<XEventClass> listModelSelectedActivities;
@@ -78,7 +75,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		return (AggregationFunctions) comboAttributesFunctions.getSelectedItem();
 	}
 	
-	public Collection<XTrace> getSelectedTraces() {
+	public Collection<String> getSelectedTraces() {
 		return tracesSelector.getSelectedValuesList();
 	}
 	
@@ -89,9 +86,16 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 	public boolean getPreserveAllNodesConnected() {
 		return checkBoxPreserveAllNodesConnected.isSelected();
 	}
+	
+	public void reset() {
+		comboAttributes.removeAllItems();
+		listModelSelectedTraces.removeAllElements();
+//		listModelSelectedActivities.removeAllElements();
+	}
 
 	public void populateComponents() {
-		comboAttributes.removeAllItems();
+		reset();
+		
 		for (ValueProjector av : ApplicationController.instance().logController().log().getProjectableAttributes()) {
 			comboAttributes.addItem(av);
 		}
@@ -99,17 +103,12 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		comboAttributes.addItem(ValueProjector.NONE);
 		comboAttributes.setSelectedItem(ValueProjector.FREQUENCY);
 		
-		listModelSelectedTraces.removeAllElements();
-		for (XTrace trace : ApplicationController.instance().logController().log().getLog()) {
-			listModelSelectedTraces.addElement(trace);
+		tracesSelector.setModel(new DefaultListModel<String>());
+		for (String subjectName : ApplicationController.instance().logController().getSubjectNames()) {
+			listModelSelectedTraces.addElement(subjectName);
 		}
+		tracesSelector.setModel(listModelSelectedTraces);
 		tracesSelector.setSelectionInterval(0, listModelSelectedTraces.getSize() - 1);
-		
-//		listModelSelectedActivities.removeAllElements();
-//		for (XEventClass evClass : ApplicationController.instance().logController().log().getEventClasses()) {
-//			listModelSelectedActivities.addElement(evClass);
-//		}
-//		activitiesSelector.setSelectionInterval(0, listModelSelectedActivities.getSize() - 1);
 	}
 	
 	private void placeComponents() {
@@ -127,11 +126,11 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		comboAttributesFunctions.setSelectedItem(AggregationFunctions.SUM);
 		
 		// the list of active traces
-		listModelSelectedTraces = new DefaultListModel<XTrace>();
-		tracesSelector = new JList<XTrace>(listModelSelectedTraces);
-		tracesSelector.setCellRenderer(new ListCellRenderer<XTrace>() {
-			public Component getListCellRendererComponent(JList<? extends XTrace> list, XTrace value, int index, boolean isSelected, boolean cellHasFocus) {
-				String traceName = XCognitiveLogHelper.getSubjectName(value);
+		listModelSelectedTraces = new DefaultListModel<String>();
+		tracesSelector = new JList<String>(listModelSelectedTraces);
+		tracesSelector.setCellRenderer(new ListCellRenderer<String>() {
+			public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+				String traceName = value;
 				JLabel l = new JLabel(traceName);
 				l.setOpaque(true);
 				if (isSelected) {

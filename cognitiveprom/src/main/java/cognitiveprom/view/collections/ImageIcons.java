@@ -8,6 +8,7 @@ public class ImageIcons {
 	
 	// Toolbar icons
 	public static final ImageIcon ICON_OPEN = ImageUtils.loadImage("cognitiveprom/icons/folder_page.png");
+	public static final ImageIcon ICON_CLOSE = ImageUtils.loadImage("cognitiveprom/icons/delete.png");
 	public static final ImageIcon ICON_SAVE = ImageUtils.loadImage("cognitiveprom/icons/disk.png");
 	public static final ImageIcon ICON_EXPORT_PIC = ImageUtils.loadImage("cognitiveprom/icons/page_white_acrobat.png");
 	public static final ImageIcon ICON_CONSOLE = ImageUtils.loadImage("cognitiveprom/icons/application_xp_terminal.png");

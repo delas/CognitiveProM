@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multiset.Entry;
 import com.google.common.collect.Multisets;
 
+import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.log.projections.AggregationFunction;
 import cognitiveprom.log.projections.AggregationFunctions;
 import cognitiveprom.log.projections.ValueProjector;
@@ -36,7 +37,7 @@ public class CognitiveDotModel extends Dot {
 
 	private ProcessMap model;
 	private double threshold;
-	private Collection<XTrace> tracesToConsider;
+	private Collection<String> tracesToConsider;
 	private ValueProjector attribute;
 	private AggregationFunctions function;
 	private Colors activityColor;
@@ -44,7 +45,7 @@ public class CognitiveDotModel extends Dot {
 	public CognitiveDotModel(
 			ProcessMap model,
 			double threshold,
-			Collection<XTrace> tracesToConsider,
+			Collection<String> tracesToConsider,
 			ValueProjector attribute,
 			AggregationFunctions function,
 			Colors activityColor,
@@ -64,7 +65,8 @@ public class CognitiveDotModel extends Dot {
 
 	private Map<Pair<String, String>, Pair<String, Double>> getAggregatedRelations() {
 		Map<Pair<String, String>, AggregationFunction> aggregators = new HashMap<Pair<String, String>, AggregationFunction>();
-		for (XTrace trace : tracesToConsider) {
+		for (String subjectName : tracesToConsider) {
+			XTrace trace = ApplicationController.instance().logController().log(subjectName);
 			// start case
 			Pair<String, String> startPair = new Pair<String, String>(EventRelationStorage.ARTIFICIAL_START, XCognitiveLogHelper.getAOIName(trace.get(0)));
 			List<Double> vals = attribute.getValues(trace, startPair.getFirst(), startPair.getSecond());
@@ -120,7 +122,9 @@ public class CognitiveDotModel extends Dot {
 	
 	private Map<String, Pair<String, Double>> getAggregatedActivities() {
 		Map<String, AggregationFunction> aggregators = new HashMap<String, AggregationFunction>();
-		for (XTrace trace : tracesToConsider) {
+		for (String subjectName : tracesToConsider) {
+			XTrace trace = ApplicationController.instance().logController().log(subjectName);
+			
 			// we want to process the activity only once per trace
 			Set<String> processedActivities = new HashSet<String>();
 			for (XEvent event : trace) {

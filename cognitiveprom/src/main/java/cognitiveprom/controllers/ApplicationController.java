@@ -106,6 +106,10 @@ public class ApplicationController {
 		waitingPage.start(message);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public ProgressReceiver getWaitingPageProgressReceiver() {
 		return waitingPage.getProgressReceiver();
 	}

@@ -6,7 +6,6 @@ import java.util.TimerTask;
 
 import javax.swing.SwingWorker;
 
-import org.deckfour.xes.model.XTrace;
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.dot.DotNode;
 
@@ -21,7 +20,7 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 
 	private boolean done;
 	private double threshold;
-	private Collection<XTrace> tracesToConsider;
+	private Collection<String> tracesToConsider;
 	private ValueProjector attribute;
 	private AggregationFunctions function;
 	private Colors activityColor;
@@ -29,7 +28,7 @@ public class RendererWorker extends SwingWorker<Dot, Void> {
 
 	public RendererWorker(
 			double threshold,
-			Collection<XTrace> tracesToConsider,
+			Collection<String> tracesToConsider,
 			ValueProjector attribute,
 			AggregationFunctions function,
 			Colors activityColor,

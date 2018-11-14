@@ -22,6 +22,7 @@ public class MainToolbar extends JToolBar {
 	private static final long serialVersionUID = -2290088626676975817L;
 
 	private JButton openProcess = new JButton("Open a new log", ImageIcons.ICON_OPEN);
+	private JButton closeProcess = new JButton("Close process", ImageIcons.ICON_CLOSE);
 	private JButton saveProcess = new JButton("Export log", ImageIcons.ICON_SAVE);
 	private JButton saveFigure = new JButton("Export figure", ImageIcons.ICON_EXPORT_PIC);
 	private JToggleButton showAdvancedConfiguration = new JToggleButton("Advanced configuration", ImageIcons.ICON_ADVANCED_CONFIG);
@@ -34,6 +35,7 @@ public class MainToolbar extends JToolBar {
 		
 //		add(openProcess);
 		add(saveProcess);
+		add(closeProcess);
 		add(saveFigure);
 		add(Box.createHorizontalGlue());
 		add(showAdvancedConfiguration);
@@ -80,6 +82,17 @@ public class MainToolbar extends JToolBar {
 			public void actionPerformed(ActionEvent e) {
 				ApplicationController.instance().showLoadProcessPage();
 				ApplicationController.instance().logController().loadFile();
+			}
+		});
+		
+		closeProcess.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().logController().closeFile();
+				ApplicationController.instance().processController().reset();
+				
+				System.gc();
+				ApplicationController.instance().showLoadProcessPage();
 			}
 		});
 		

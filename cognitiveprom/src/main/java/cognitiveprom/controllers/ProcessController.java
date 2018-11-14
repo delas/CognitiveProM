@@ -2,7 +2,6 @@ package cognitiveprom.controllers;
 
 import java.util.Collection;
 
-import org.deckfour.xes.model.XTrace;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 import cognitiveprom.config.ConfigurationSet;
@@ -40,8 +39,10 @@ public class ProcessController {
 	}
 	
 	public void reset() {
+		applicationController.getMainPage().getProcessVisualizer().getGraphVisualizer().changeDot(new Dot(), false);
 		isShowingModel = false;
 		model = null;
+		applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().reset();
 	}
 	
 	public ProcessMap model() {
@@ -75,7 +76,7 @@ public class ProcessController {
 	public void updateVisualization() {
 		long time = System.currentTimeMillis();
 		double threshold = applicationController.getMainPage().getProcessVisualizer().getAbstractionValue();
-		Collection<XTrace> tracesToConsider = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedTraces();
+		Collection<String> tracesToConsider = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedTraces();
 		ValueProjector attribute = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationValue();
 		AggregationFunctions function = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedAggregationFunction();
 		Colors activityColor = applicationController.getMainPage().getProcessVisualizer().getAdvancedConfigurationPanel().getSelectedNodeColor();
