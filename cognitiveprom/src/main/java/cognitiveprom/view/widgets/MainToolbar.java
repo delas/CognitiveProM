@@ -21,9 +21,9 @@ public class MainToolbar extends JToolBar {
 
 	private static final long serialVersionUID = -2290088626676975817L;
 
-	private JButton openProcess = new JButton("Open a new log", ImageIcons.ICON_OPEN);
-	private JButton closeProcess = new JButton("Close process", ImageIcons.ICON_CLOSE);
-	private JButton saveProcess = new JButton("Export log", ImageIcons.ICON_SAVE);
+	private JButton openProcess = new JButton("", ImageIcons.ICON_OPEN);
+//	private JButton closeProcess = new JButton("", ImageIcons.ICON_CLOSE);
+	private JButton saveProcess = new JButton("", ImageIcons.ICON_SAVE);
 	private JButton saveFigure = new JButton("Export figure", ImageIcons.ICON_EXPORT_PIC);
 	private JToggleButton showAdvancedConfiguration = new JToggleButton("Advanced configuration", ImageIcons.ICON_ADVANCED_CONFIG);
 //	private JToggleButton showTraces = new JToggleButton("View traces", ImageIcons.ICON_TRACES);
@@ -33,14 +33,18 @@ public class MainToolbar extends JToolBar {
 		setFloatable(false);
 		setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 		
-//		add(openProcess);
+		openProcess.setToolTipText("Open a new log file");
+		saveProcess.setToolTipText("Export log file");
+		showConsole.setToolTipText("Toggle console visualization");
+		
+		add(openProcess);
 		add(saveProcess);
-		add(closeProcess);
 		add(saveFigure);
 		add(Box.createHorizontalGlue());
 		add(showAdvancedConfiguration);
 //		add(showTraces);
 		add(Box.createHorizontalGlue());
+//		add(closeProcess);
 		add(showConsole);
 		
 		registerListeners();
@@ -80,21 +84,22 @@ public class MainToolbar extends JToolBar {
 		openProcess.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().logController().closeFile();
+				ApplicationController.instance().processController().reset();
+				
 				ApplicationController.instance().showLoadProcessPage();
 				ApplicationController.instance().logController().loadFile();
 			}
 		});
 		
-		closeProcess.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ApplicationController.instance().logController().closeFile();
-				ApplicationController.instance().processController().reset();
-				
-				System.gc();
-				ApplicationController.instance().showLoadProcessPage();
-			}
-		});
+//		closeProcess.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				ApplicationController.instance().logController().closeFile();
+//				ApplicationController.instance().processController().reset();
+//				ApplicationController.instance().showLoadProcessPage();
+//			}
+//		});
 		
 		saveProcess.addActionListener(new ActionListener() {
 			@Override
