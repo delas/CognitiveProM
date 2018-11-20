@@ -10,11 +10,11 @@ public class CognitiveDotEdge extends DotEdge {
 	public CognitiveDotEdge(DotNode source, DotNode target, String edgeText, Double weight) {
 		super(source, target);
 		
-		setOption("color", "#9F9F9F");
-		setOption("size", ".1");
-		setOption("arrowsize", ".5");
-		setOption("fontsize", "15");
+		setOption("decorate", "false");
+		setOption("fontsize", "8");
+		setOption("arrowsize", "0.5");
 		setOption("fontname", "Arial");
+		setOption("tailclip", "false");
 		
 		if (edgeText != null) {
 			setLabel(" " + edgeText);

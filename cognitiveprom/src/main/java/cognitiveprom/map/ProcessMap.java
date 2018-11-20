@@ -23,8 +23,6 @@ public class ProcessMap {
 	
 	// cached values
 	private Long mostFrequentActivity = null;
-	private Long mostFrequentRelationStart = null;
-	private Long mostFrequentRelationEnd = null;
 	
 	public ProcessMap(EventRelationStorage eventRelationStorage, long maxAllowedToCut) {
 		this.eventRelationStorage = eventRelationStorage;
@@ -57,29 +55,5 @@ public class ProcessMap {
 			}
 		}
 		return mostFrequentActivity;
-	}
-	
-	public Long getMostFrequentRelationStart() {
-		if (mostFrequentRelationStart == null) {
-			mostFrequentRelationStart = 0l;
-			for (Relation r : eventRelationStorage.getDirectlyFollowsRelations()) {
-				if (r.getSource().equals(eventRelationStorage.getStartEventClass())) {
-					mostFrequentRelationStart = Math.max(mostFrequentRelationStart, eventRelationStorage.countDirectlyFollows(r));
-				}
-			}
-		}
-		return mostFrequentRelationStart;
-	}
-	
-	public Long getMostFrequentRelationEnd() {
-		if (mostFrequentRelationEnd == null) {
-			mostFrequentRelationEnd = 0l;
-			for (Relation r : eventRelationStorage.getDirectlyFollowsRelations()) {
-				if (r.getTarget().equals(eventRelationStorage.getEndEventClass())) {
-					mostFrequentRelationEnd = Math.max(mostFrequentRelationEnd, eventRelationStorage.countDirectlyFollows(r));
-				}
-			}
-		}
-		return mostFrequentRelationEnd;
 	}
 }

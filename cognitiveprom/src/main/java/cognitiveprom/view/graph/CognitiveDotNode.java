@@ -20,12 +20,11 @@ public class CognitiveDotNode extends DotNode {
 		setSelectable(true);
 		
 		setOption("shape", "box");
+		setOption("fixedsize", "true");
+		setOption("height", "0.23");
+		setOption("width", "1.2");
 		setOption("style", "rounded,filled");
-		setOption("fontsize", "20");
 		setOption("fontname", "Arial");
-		setOption("gradientangle", "270");
-		setOption("penwidth", ".75");
-		setOption("margin", ".5,.2");
 		
 		setSecondLine(secondLine);
 		setColorWeight(weight, activityColor);

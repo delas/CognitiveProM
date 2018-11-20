@@ -13,6 +13,12 @@ public class CognitiveDotEndNode extends DotNode {
 		setOption("fillcolor", "#D8BBB9"); // #D8BBB9:#BC9F9D
 		setOption("gradientangle", "270");
 		setOption("color", "#614847");
-		setOption("width", ".3");
+		setOption("height", "0.13");
+		setOption("width", "0.13");
+	}
+	
+	@Override
+	public String toString() {
+		return "{ rank = \"sink\"; " + super.toString() + "}";
 	}
 }

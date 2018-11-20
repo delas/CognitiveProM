@@ -14,6 +14,7 @@ import org.processmining.dataawarecnetminer.model.EventRelationStorage;
 import org.processmining.framework.util.Pair;
 import org.processmining.models.causalgraph.Relation;
 import org.processmining.plugins.graphviz.dot.Dot;
+import org.processmining.plugins.graphviz.dot.DotEdge;
 import org.processmining.plugins.graphviz.dot.DotNode;
 
 import com.google.common.collect.ImmutableMultiset;
@@ -157,160 +158,149 @@ public class CognitiveDotModel extends Dot {
 	}
 	
 	private void realize(boolean preserveAllNodesConnected) {
-		if (preserveAllNodesConnected) {
-			realizePreservingAllNodesAndConnections();
-		} else {
-			realizeWithDisconnectionsAllowed();
-		}
+		
+		setOption("ranksep", ".02");
+		setOption("fontsize", "9");
+		setOption("remincross", "true");
+		setOption("margin", "0.0,0.0");
+		setOption("outputorder", "edgesfirst");
+		
+		realizePreservingAllNodesAndConnections2(preserveAllNodesConnected);
 	}
 	
-	private void realizeWithDisconnectionsAllowed() {
+	private void realizePreservingAllNodesAndConnections2(boolean preserveAllNodesConnected) {
+		
 		EventRelationStorage eventRelations = model.getEventRelationStorage();
 		Map<XEventClass, DotNode> activityToNode = new HashMap<XEventClass, DotNode>();
+		Map<String, XEventClass> nodeToActivity = new HashMap<String, XEventClass>();
 		
 		Map<String, Pair<String, Double>> activityDecoration = getAggregatedActivities();
 		Map<Pair<String, String>, Pair<String, Double>> relationDecoration = getAggregatedRelations();
 		
+		// if we want all nodes, let's add all of them immediately
+		if (preserveAllNodesConnected) {
+			for(XEventClass act : model.getActivities()) {
+				String activity = act.toString();
+				DotNode node = addNodeIfNeeded(eventRelations, act, activityToNode, nodeToActivity);
+				if (node instanceof CognitiveDotNode) {
+					((CognitiveDotNode) node).setSecondLine((activityDecoration.containsKey(activity))? activityDecoration.get(activity).getFirst() : null);
+					((CognitiveDotNode) node).setColorWeight((activityDecoration.containsKey(activity))? activityDecoration.get(activity).getSecond() : null, activityColor);
+				}
+			}
+		}
+		
+		// add all relations
 		ImmutableMultiset<Relation> sortedRelations = Multisets.copyHighestCountFirst(eventRelations.getDirectlyFollowsRelations());
 		for (Entry<Relation> entry : sortedRelations.entrySet()) {
 			Relation relation = entry.getElement();
-			if (entry.getCount() >= eventRelations.countTraces() * threshold) {
-
+			
+			// apply filtering based on the relation type (between nodes or involving start/end node)
+			boolean addRelation = (entry.getCount() >= eventRelations.countTraces() * threshold);
+			// if the filtering applies
+			if (addRelation) {
 				String sourceActivity = relation.getSource().toString();
 				String targetActivity = relation.getTarget().toString();
 				
 				// adding source nodes
-				DotNode sourceNode = addNodeIfNeeded(eventRelations, relation.getSource(), activityToNode);
+				DotNode sourceNode = addNodeIfNeeded(eventRelations, relation.getSource(), activityToNode, nodeToActivity);
 				if (sourceNode instanceof CognitiveDotNode) {
 					((CognitiveDotNode) sourceNode).setSecondLine((activityDecoration.containsKey(sourceActivity))? activityDecoration.get(sourceActivity).getFirst() : null);
 					((CognitiveDotNode) sourceNode).setColorWeight((activityDecoration.containsKey(sourceActivity))? activityDecoration.get(sourceActivity).getSecond() : null, activityColor);
 				}
 
 				// adding target nodes
-				DotNode targetNode = addNodeIfNeeded(eventRelations, relation.getTarget(), activityToNode);
+				DotNode targetNode = addNodeIfNeeded(eventRelations, relation.getTarget(), activityToNode, nodeToActivity);
 				if (targetNode instanceof CognitiveDotNode) {
 					((CognitiveDotNode) targetNode).setSecondLine((activityDecoration.containsKey(targetActivity))? activityDecoration.get(targetActivity).getFirst() : null);
 					((CognitiveDotNode) targetNode).setColorWeight((activityDecoration.containsKey(targetActivity))? activityDecoration.get(targetActivity).getSecond() : null, activityColor);
 				}
 
 				// adding relations
-				Pair<String, String> relationPair = new Pair<String, String>(sourceActivity, targetActivity);
-				CognitiveDotEdge dotEdge = new CognitiveDotEdge(
-						sourceNode,
-						targetNode,
-						(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
-						(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
-				addEdge(dotEdge);
+				addRelation(relation, sourceNode, targetNode, relationDecoration);
 			}
 		}
-	}
-
-	private void realizePreservingAllNodesAndConnections() {
-		EventRelationStorage eventRelations = model.getEventRelationStorage();
-
-		double mostOccurringRelationStart = model.getMostFrequentRelationStart();
-		double mostOccurringRelationEnd = model.getMostFrequentRelationEnd();
 		
-		Map<String, Pair<String, Double>> activityDecoration = getAggregatedActivities();
-		Map<Pair<String, String>, Pair<String, Double>> relationDecoration = getAggregatedRelations();
-		
-//		setOption("outputorder", "edgesfirst");
-//		setOption("splines", "spline");
-		
-		// main clusters
-//		DotCluster s = addCluster();
-//		DotCluster n = addCluster();
-//		DotCluster e = addCluster();
-//		
-//		s.setOption("style", "invis");
-//		n.setOption("style", "invis");
-//		e.setOption("style", "invis");
-		
-		// adding all nodes
-		Map<XEventClass, DotNode> mapNodes = new HashMap<XEventClass, DotNode>();
-		for(XEventClass act : model.getActivities()) {
-			DotNode node = null;
-			if (act.equals(eventRelations.getStartEventClass())) {
-				node = new CognitiveDotStartNode();
-//				s.addNode(node);
-				addNode(node);
-			} else if (act.equals(eventRelations.getEndEventClass())) {
-				node = new CognitiveDotEndNode();
-//				e.addNode(node);
-				addNode(node);
-			} else {
-				String activity = act.toString();
-				node = new CognitiveDotNode(
-						act.toString(),
-						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getFirst() : null,
-						(activityDecoration.containsKey(activity))? activityDecoration.get(activity).getSecond() : null,
-						activityColor);
-//				n.addNode(node);
-				addNode(node);
-			}
-			mapNodes.put(act, node);
-		}
-		
-		// adding relations
-		for (Entry<Relation> entry : eventRelations.getDirectlyFollowsRelations().entrySet()) {
-			Relation relation = entry.getElement();
-			XEventClass source = relation.getSource();
-			XEventClass target = relation.getTarget();
-			Pair<String, String> relationPair = new Pair<String, String>(source.toString(), target.toString());
-			
-			long relationFrequency = eventRelations.countDirectlyFollows(relation);
-			if (source.equals(eventRelations.getStartEventClass())) {
-				
-				// relations from start event
-				if (relationFrequency >= (mostOccurringRelationStart * threshold)) {
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(
-							mapNodes.get(source),
-							mapNodes.get(target),
-							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
-							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
-					addEdge(dotEdge);
+		// connect all nodes to, at least, another one
+		if (preserveAllNodesConnected) {
+			for (DotNode node : getNodes()) {
+				if ((node instanceof CognitiveDotNode) || (node instanceof CognitiveDotStartNode)) {
+					if (getFirstDifferentTarget(node, this) == null) {
+						// add a target node
+						XEventClass nodeClass = nodeToActivity.get(node.getId());
+						Relation relation = getBestTarget(sortedRelations, nodeClass);
+						addRelation(relation, node, activityToNode.get(relation.getTarget()), relationDecoration);
+					}
 				}
-//				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
-//				invisibleEdge.setOption("style", "invisible");
-//				invisibleEdge.setOption("arrowhead", "none");
-//				addEdge(invisibleEdge);
-				
-			} else if (target.equals(eventRelations.getEndEventClass())) {
-				
-				// relation to end event
-				if (relationFrequency >= (mostOccurringRelationEnd * threshold)) {
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(
-							mapNodes.get(source),
-							mapNodes.get(target),
-							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
-							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
-					addEdge(dotEdge);
+				if ((node instanceof CognitiveDotNode) ||(node instanceof CognitiveDotEndNode)) {
+					if (getFirstDifferentSource(node, this) == null) {
+						// add a source
+						XEventClass nodeClass = nodeToActivity.get(node.getId());
+						Relation relation = getBestSource(sortedRelations, nodeClass);
+						addRelation(relation, activityToNode.get(relation.getSource()), node, relationDecoration);
+					}
 				}
-//				DotEdge invisibleEdge = addEdge(mapNodes.get(source), mapNodes.get(target));
-//				invisibleEdge.setOption("style", "invisible");
-//				invisibleEdge.setOption("arrowhead", "none");
-//				addEdge(invisibleEdge);
-				
-			} else {
-				
-				// normal relation
-				if (relationFrequency >= (model.getMaxAllowedToCut() * threshold)) {
-					CognitiveDotNode dotSourceNode = (CognitiveDotNode) mapNodes.get(source);
-					CognitiveDotNode dotTargetNode = (CognitiveDotNode) mapNodes.get(target);
-					CognitiveDotEdge dotEdge = new CognitiveDotEdge(
-							dotSourceNode,
-							dotTargetNode,
-							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
-							(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
-//					n.addEdge(dotEdge);
-					addEdge(dotEdge);
-				}
-				
 			}
 		}
 	}
 	
-	public DotNode addNodeIfNeeded(EventRelationStorage dfg, XEventClass eventClass, Map<XEventClass, DotNode> activityToNode) {
+	private void addRelation(Relation relation, DotNode sourceNode, DotNode targetNode, Map<Pair<String, String>, Pair<String, Double>> relationDecoration) {
+		String sourceActivity = relation.getSource().toString();
+		String targetActivity = relation.getTarget().toString();
+		
+		Pair<String, String> relationPair = new Pair<String, String>(sourceActivity, targetActivity);
+		CognitiveDotEdge dotEdge = new CognitiveDotEdge(
+				sourceNode,
+				targetNode,
+				(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getFirst() : null,
+				(relationDecoration.containsKey(relationPair))? relationDecoration.get(relationPair).getSecond() : null);
+		addEdge(dotEdge);
+	}
+	
+	private static Relation getBestTarget(ImmutableMultiset<Relation> relations, XEventClass source) {
+		int bestCount = 0;
+		Relation bestRelation = null;
+		for (Entry<Relation> entry : relations.entrySet()) {
+			Relation relation = entry.getElement();
+			if (relation.getSource().equals(source) && !relation.getTarget().equals(source) && entry.getCount() > bestCount) {
+				bestRelation = relation;
+				bestCount = entry.getCount();
+			}
+		}
+		return bestRelation;
+	}
+	
+	private static Relation getBestSource(ImmutableMultiset<Relation> relations, XEventClass target) {
+		int bestCount = 0;
+		Relation bestRelation = null;
+		for (Entry<Relation> entry : relations.entrySet()) {
+			Relation relation = entry.getElement();
+			if (relation.getTarget().equals(target) && !relation.getSource().equals(target) && entry.getCount() > bestCount) {
+				bestRelation = relation;
+				bestCount = entry.getCount();
+			}
+		}
+		return bestRelation;
+	}
+	
+	private static DotEdge getFirstDifferentTarget(DotNode source, Dot dot) {
+		for (DotEdge edge : dot.getEdges()) {
+			if (edge.getSource().getId().equals(source.getId()) && !edge.getTarget().getId().equals(source.getId())) {
+				return edge;
+			}
+		}
+		return null;
+	}
+	
+	private static DotEdge getFirstDifferentSource(DotNode target, Dot dot) {
+		for (DotEdge edge : dot.getEdges()) {
+			if (edge.getTarget().getId().equals(target.getId()) && !edge.getSource().getId().equals(target.getId())) {
+				return edge;
+			}
+		}
+		return null;
+	}
+	
+	public DotNode addNodeIfNeeded(EventRelationStorage dfg, XEventClass eventClass, Map<XEventClass, DotNode> activityToNode, Map<String, XEventClass> nodeToActivity) {
 		DotNode existingNode = activityToNode.get(eventClass);
 		if (existingNode == null) {
 			if (eventClass.equals(dfg.getStartEventClass())) {
@@ -318,18 +308,21 @@ public class CognitiveDotModel extends Dot {
 				addNode(startNode);
 				startNode.setSelectable(true);
 				activityToNode.put(eventClass, startNode);
+				nodeToActivity.put(startNode.getId(), eventClass);
 				return startNode;
 			} else if (eventClass.equals(dfg.getEndEventClass())) {
 				CognitiveDotEndNode endNode = new CognitiveDotEndNode();
 				addNode(endNode);
 				endNode.setSelectable(true);
 				activityToNode.put(eventClass, endNode);
+				nodeToActivity.put(endNode.getId(), eventClass);
 				return endNode;
 			} else {
 				CognitiveDotNode newNode = new CognitiveDotNode(eventClass.toString());
 				addNode(newNode);
 				newNode.setSelectable(true);
 				activityToNode.put(eventClass, newNode);
+				nodeToActivity.put(newNode.getId(), eventClass);
 				return newNode;
 			}
 		} else {
