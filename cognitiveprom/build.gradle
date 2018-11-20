@@ -24,6 +24,10 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	maven {
+		url "http://bits.netbeans.org/maven2"
+	}
+
 }
 
 dependencies {
@@ -42,6 +46,8 @@ dependencies {
 	compile "it.unimi.dsi:fastutil:8.2.1"
 	compile "org.reflections:reflections:0.9.11"
 	compile "org.apache.commons:commons-compress:1.17"
+	// for the dropdown menu
+	compile group: 'org.netbeans.api', name: 'org-openide-awt', version: 'RELEASE82'
 
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 }
