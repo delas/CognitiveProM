@@ -8,9 +8,11 @@ public class AggregationFunction {
 	
 	protected DescriptiveStatistics stat;
 	protected DecimalFormat df;
+	protected double noOfTraces;
 	
-	public AggregationFunction() {
+	public AggregationFunction(int noOfTraces) {
 		this.df = new DecimalFormat("#.###");
+		this.noOfTraces = noOfTraces;
 		reset();
 	}
 	
@@ -25,8 +27,10 @@ public class AggregationFunction {
 			return stat.getMin();
 		} else if (value == AggregationFunctions.MAX) {
 			return stat.getMax();
-		} else if (value == AggregationFunctions.MEAN) {
+		} else if (value == AggregationFunctions.MEAN_NO_MISSING_VALS) {
 			return stat.getMean();
+		} else if (value == AggregationFunctions.MEAN_ON_ALL_TRACES) {
+			return stat.getSum() / noOfTraces;
 		}
 		return 0;
 	}

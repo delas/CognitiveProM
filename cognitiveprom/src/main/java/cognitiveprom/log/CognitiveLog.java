@@ -3,13 +3,17 @@ package cognitiveprom.log;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
+import org.deckfour.xes.extension.std.XTimeExtension;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XAttributeContinuous;
 import org.deckfour.xes.model.XAttributeDiscrete;
@@ -37,8 +41,9 @@ import cognitiveprom.log.utils.XCognitiveLogHelper;
  */
 public class CognitiveLog implements Iterable<XTrace> {
 
-	private Map<Pair<Collection<XTrace>, ValueProjector>, Map<String, AggregationFunction>> summaryCache;
 	private XLog log;
+	private Map<Pair<Collection<XTrace>, ValueProjector>, Map<String, AggregationFunction>> summaryCache;
+	private Map<String, XTrace> tracesCache;
 	private List<ValueProjector> projectableAttributes = null;
 	
 	/**
@@ -51,7 +56,59 @@ public class CognitiveLog implements Iterable<XTrace> {
 	 */
 	public CognitiveLog(XLog log) {
 		this.log = log;
+		
+		resetCaches();
+	}
+
+	/**
+	 * Merge the provided log into the current one.
+	 * 
+	 * The merging, actually, happens as the concatenation of the traces of the
+	 * old log with the traces of the new one. Therefore, if two subject names
+	 * are the same, then they are merged into the same trace (where events are
+	 * sorted per timestamp)
+	 * 
+	 * @param newLog
+	 */
+	public void merge(CognitiveLog newLog) {
+		XLog newXLog = newLog.getLog();
+		
+		for (XTrace t : newXLog) {
+			XTrace oldT = get(XCognitiveLogHelper.getSubjectName(t));
+			
+			// do we have already a trace for this subject?
+			if (oldT == null) {
+				// nope, just add the trace to the log
+				log.add(t);
+			} else {
+				// yup, append the new trace to the existing one
+				log.removeIf(new Predicate<XTrace>() {
+					@Override
+					public boolean test(XTrace tr) {
+						return XCognitiveLogHelper.getSubjectName(tr).equals(XCognitiveLogHelper.getSubjectName(oldT));
+					}
+				});
+				oldT.addAll(t);
+				log.add(oldT);
+				
+				// sort and merge contiguous events
+				XCognitiveLogHelper.sortXLog(log);
+//				XCognitiveLogHelper.mergeEventsWithSameName(log);
+			}
+		}
+		
+		resetCaches();
+	}
+	
+	/**
+	 * 
+	 */
+	private void resetCaches() {
 		this.summaryCache = new HashMap<Pair<Collection<XTrace>, ValueProjector>, Map<String, AggregationFunction>>();
+		this.tracesCache = new HashMap<String, XTrace>();
+		for(XTrace trace : log) {
+			tracesCache.put(XCognitiveLogHelper.getSubjectName(trace), trace);
+		}
 	}
 	
 	/**
@@ -61,6 +118,25 @@ public class CognitiveLog implements Iterable<XTrace> {
 	 */
 	public XLog getLog() {
 		return log;
+	}
+	
+	/**
+	 * Returns the list of all subjects recorded in the log
+	 * 
+	 * @return
+	 */
+	public Collection<String> getSubjectNames() {
+		return tracesCache.keySet();
+	}
+	
+	/**
+	 * Returns the {@link XTrace} associated with the given subject name
+	 * 
+	 * @param subjectName the name of the subject associated with the trace
+	 * @return
+	 */
+	public XTrace get(String subjectName) {
+		return tracesCache.get(subjectName);
 	}
 
 	/**
@@ -94,7 +170,7 @@ public class CognitiveLog implements Iterable<XTrace> {
 				String activity = XCognitiveLogHelper.getAOIName(event);
 				if (!processedActivities.contains(activity)) {
 					if (!aggregators.containsKey(activity)) {
-						aggregators.put(activity, new AggregationFunction());
+						aggregators.put(activity, new AggregationFunction(tracesToConsider.size()));
 					}
 					for(Double value : attribute.getValues(trace, activity)) {
 						aggregators.get(activity).addObservation(value);

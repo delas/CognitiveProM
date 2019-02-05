@@ -104,7 +104,7 @@ public class AdvancedConfiguration extends ConfigurablePanel {
 		comboAttributes.setSelectedItem(ValueProjector.FREQUENCY);
 		
 		tracesSelector.setModel(new DefaultListModel<String>());
-		for (String subjectName : ApplicationController.instance().logController().getSubjectNames()) {
+		for (String subjectName : ApplicationController.instance().logController().log().getSubjectNames()) {
 			listModelSelectedTraces.addElement(subjectName);
 		}
 		tracesSelector.setModel(listModelSelectedTraces);

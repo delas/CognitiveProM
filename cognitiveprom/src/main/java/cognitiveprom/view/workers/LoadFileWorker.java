@@ -13,10 +13,12 @@ public class LoadFileWorker extends SwingWorker<CognitiveLog, Void> {
 
 	private String fileName;
 	private CognitiveLogImporter importer;
+	private boolean appendFile;
 	
-	public LoadFileWorker(String fileName, CognitiveLogImporter importer) {
+	public LoadFileWorker(String fileName, CognitiveLogImporter importer, boolean appendFile) {
 		this.fileName = fileName;
 		this.importer = importer;
+		this.appendFile = appendFile;
 	}
 	
 	@Override
@@ -26,7 +28,12 @@ public class LoadFileWorker extends SwingWorker<CognitiveLog, Void> {
 		
 		importer.setProgressReceiver(ApplicationController.instance().getWaitingPageProgressReceiver());
 		
-		return importer.load(fileName);
+		CognitiveLog log = importer.load(fileName);
+		if (appendFile) {
+			log.merge(ApplicationController.instance().logController().log());
+		}
+		
+		return log;
 	}
 	
 	@Override

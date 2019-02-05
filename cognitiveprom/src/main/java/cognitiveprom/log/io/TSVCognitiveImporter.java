@@ -9,11 +9,8 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -24,8 +21,6 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
 import org.deckfour.xes.extension.std.XConceptExtension;
-import org.deckfour.xes.extension.std.XTimeExtension;
-import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 
@@ -34,7 +29,6 @@ import com.google.common.base.Joiner;
 import cognitiveprom.annotations.Importer;
 import cognitiveprom.exceptions.LogIOException;
 import cognitiveprom.log.CognitiveLog;
-import cognitiveprom.log.extension.XCognitiveExtension;
 import cognitiveprom.log.utils.XCognitiveLogHelper;
 import cognitiveprom.view.io.TSVImporterConfigurator;
 
@@ -180,48 +174,8 @@ public class TSVCognitiveImporter extends CognitiveLogImporter {
 		
 		// finalization activities
 		XCognitiveLogHelper.sortXLog(log);
-		mergeEventsWithSameName(log);
+		XCognitiveLogHelper.mergeEventsWithSameName(log);
 		
 		return new CognitiveLog(log);
-	}
-	
-	/**
-	 * This method merges contiguous events which are referring to the same
-	 * activity.
-	 * 
-	 * @param log the input log
-	 * @return the log with the contiguous event merged
-	 */
-	private static void mergeEventsWithSameName(XLog log) {
-		for(XTrace trace : log) {
-			List<Integer> toRemove = new ArrayList<Integer>();
-			for(int i = 0; i < trace.size(); i++) {
-				XEvent current = trace.get(i);
-				long duration = 0;
-				int j = i;
-				while (j < trace.size() &&
-						XCognitiveLogHelper.getAOIName(current).equals(XCognitiveLogHelper.getAOIName(trace.get(j))) &&
-						XCognitiveExtension.instance().extractIsStimulus(current) == XCognitiveExtension.instance().extractIsStimulus(trace.get(j))) {
-					duration += XCognitiveExtension.instance().extractDuration(trace.get(j));
-					XCognitiveExtension.instance().addMetric(
-							current,
-							"fixation",
-							XTimeExtension.instance().extractTimestamp(trace.get(j)),
-							XCognitiveExtension.instance().extractDuration(trace.get(j)).doubleValue());
-					j++;
-				}
-				XCognitiveExtension.instance().assignDuration(current, duration);
-				duration = 0;
-				for (; i < j - 1; i++) {
-					toRemove.add(i + 1);
-				}
-			}
-			Collections.sort(toRemove);
-			int removed = 0;
-			for (Integer i : toRemove) {
-				trace.remove(i - removed);
-				removed++;
-			}
-		}
 	}
 }

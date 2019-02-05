@@ -1,7 +1,10 @@
 package cognitiveprom.log.utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
@@ -145,6 +148,46 @@ public class XCognitiveLogHelper {
 							XTimeExtension.instance().extractTimestamp(e2));
 				}
 			});
+		}
+	}
+	
+	/**
+	 * This method merges contiguous events which are referring to the same
+	 * activity.
+	 * 
+	 * @param log the input log
+	 * @return the log with the contiguous event merged
+	 */
+	public static void mergeEventsWithSameName(XLog log) {
+		for(XTrace trace : log) {
+			List<Integer> toRemove = new ArrayList<Integer>();
+			for(int i = 0; i < trace.size(); i++) {
+				XEvent current = trace.get(i);
+				long duration = 0;
+				int j = i;
+				while (j < trace.size() &&
+						XCognitiveLogHelper.getAOIName(current).equals(XCognitiveLogHelper.getAOIName(trace.get(j))) &&
+						XCognitiveExtension.instance().extractIsStimulus(current) == XCognitiveExtension.instance().extractIsStimulus(trace.get(j))) {
+					duration += XCognitiveExtension.instance().extractDuration(trace.get(j));
+					XCognitiveExtension.instance().addMetric(
+							current,
+							"fixation",
+							XTimeExtension.instance().extractTimestamp(trace.get(j)),
+							XCognitiveExtension.instance().extractDuration(trace.get(j)).doubleValue());
+					j++;
+				}
+				XCognitiveExtension.instance().assignDuration(current, duration);
+				duration = 0;
+				for (; i < j - 1; i++) {
+					toRemove.add(i + 1);
+				}
+			}
+			Collections.sort(toRemove);
+			int removed = 0;
+			for (Integer i : toRemove) {
+				trace.remove(i - removed);
+				removed++;
+			}
 		}
 	}
 	

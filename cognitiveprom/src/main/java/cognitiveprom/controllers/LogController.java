@@ -1,22 +1,17 @@
 package cognitiveprom.controllers;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.deckfour.xes.model.XTrace;
 import org.processmining.framework.util.Pair;
 
 import cognitiveprom.config.ConfigurationSet;
 import cognitiveprom.log.CognitiveLog;
 import cognitiveprom.log.io.CognitiveLogExporter;
 import cognitiveprom.log.io.CognitiveLogImporter;
-import cognitiveprom.log.utils.XCognitiveLogHelper;
 import cognitiveprom.utils.FileFilterHelper;
 import cognitiveprom.utils.RuntimeUtils;
 import cognitiveprom.view.io.CognitiveLogImporterConfigurator;
@@ -35,8 +30,6 @@ public class LogController {
 	private static final String KEY_SAVE_FILE_FILTER = "SAVE_LOG_FILTER";
 	
 	private CognitiveLog log;
-	private Map<String, XTrace> cache;
-	
 	private ApplicationController applicationController;
 	private ConfigurationSet configuration;
 	
@@ -49,24 +42,15 @@ public class LogController {
 		return log;
 	}
 	
-	public XTrace log(String subjectName) {
-		return cache.get(subjectName);
-	}
-	
-	public Collection<String> getSubjectNames() {
-		return cache.keySet();
-	}
-	
 	public void setCognitiveLog(CognitiveLog log) {
 		this.log = log;
-		this.cache = new HashMap<String, XTrace>();
-		
-		for(XTrace trace : log) {
-			cache.put(XCognitiveLogHelper.getSubjectName(trace), trace);
-		}
 	}
 	
 	public void loadFile() {
+		loadFile(false);
+	}
+	
+	public void loadFile(boolean appendFile) {
 		JFileChooser fc = new JFileChooser(new File(configuration.get(KEY_OPEN_LOG_LOCATION, RuntimeUtils.getHomeFolder())));
 		fc.setMultiSelectionEnabled(false);
 		
@@ -86,21 +70,27 @@ public class LogController {
 			if (fc.getFileFilter() instanceof FileNameExtensionFilter) {
 				loadFile(
 						fc.getSelectedFile().getAbsolutePath(),
-						FileFilterHelper.getImporterFromFileFilter((FileNameExtensionFilter) fc.getFileFilter()));
+						FileFilterHelper.getImporterFromFileFilter((FileNameExtensionFilter) fc.getFileFilter()),
+						appendFile);
 			} else {
 				loadFile(
 						fc.getSelectedFile().getAbsolutePath(),
-						FileFilterHelper.getImporterFromFileName(fc.getSelectedFile().getAbsolutePath()));
+						FileFilterHelper.getImporterFromFileName(fc.getSelectedFile().getAbsolutePath()),
+						appendFile);
 			}
 		}
 	}
 	
 	public void loadFile(String fileName, Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> importer) {
+		loadFile(fileName, importer, false);
+	}
+	
+	public void loadFile(String fileName, Pair<CognitiveLogImporter, CognitiveLogImporterConfigurator> importer, boolean appendFile) {
 		if (importer.getSecond() != null) {
 			importer.getSecond().configure(applicationController.getMainFrame(), importer.getFirst(), fileName);
 		}
 		applicationController.processController().reset();
-		new LoadFileWorker(fileName, importer.getFirst()).execute();
+		new LoadFileWorker(fileName, importer.getFirst(), appendFile).execute();
 	}
 
 	public void saveFile() {
@@ -128,6 +118,5 @@ public class LogController {
 	
 	public void closeFile() {
 		log = null;
-		cache = null;
 	}
 }

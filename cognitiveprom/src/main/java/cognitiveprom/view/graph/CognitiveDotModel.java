@@ -67,12 +67,12 @@ public class CognitiveDotModel extends Dot {
 	private Map<Pair<String, String>, Pair<String, Double>> getAggregatedRelations() {
 		Map<Pair<String, String>, AggregationFunction> aggregators = new HashMap<Pair<String, String>, AggregationFunction>();
 		for (String subjectName : tracesToConsider) {
-			XTrace trace = ApplicationController.instance().logController().log(subjectName);
+			XTrace trace = ApplicationController.instance().logController().log().get(subjectName);
 			// start case
 			Pair<String, String> startPair = new Pair<String, String>(EventRelationStorage.ARTIFICIAL_START, XCognitiveLogHelper.getAOIName(trace.get(0)));
 			List<Double> vals = attribute.getValues(trace, startPair.getFirst(), startPair.getSecond());
 			if (!aggregators.containsKey(startPair) && vals.size() > 0) {
-				aggregators.put(startPair, new AggregationFunction());
+				aggregators.put(startPair, new AggregationFunction(tracesToConsider.size()));
 			}
 			for (Double value : vals) {
 				aggregators.get(startPair).addObservation(value);
@@ -82,7 +82,7 @@ public class CognitiveDotModel extends Dot {
 			Pair<String, String> endPair = new Pair<String, String>(XCognitiveLogHelper.getAOIName(trace.get(trace.size() - 1)), EventRelationStorage.ARTIFICIAL_END);
 			vals = attribute.getValues(trace, endPair.getFirst(), endPair.getSecond());
 			if (!aggregators.containsKey(endPair) && vals.size() > 0) {
-				aggregators.put(endPair, new AggregationFunction());
+				aggregators.put(endPair, new AggregationFunction(tracesToConsider.size()));
 			}
 			for (Double value : vals) {
 				aggregators.get(endPair).addObservation(value);
@@ -96,7 +96,7 @@ public class CognitiveDotModel extends Dot {
 				if (!processedRelations.contains(relation)) {
 					vals = attribute.getValues(trace, relation.getFirst(), relation.getSecond());
 					if (!aggregators.containsKey(relation) && vals.size() > 0) {
-						aggregators.put(relation, new AggregationFunction());
+						aggregators.put(relation, new AggregationFunction(tracesToConsider.size()));
 					}
 					for (Double value : vals) {
 						aggregators.get(relation).addObservation(value);
@@ -124,7 +124,7 @@ public class CognitiveDotModel extends Dot {
 	private Map<String, Pair<String, Double>> getAggregatedActivities() {
 		Map<String, AggregationFunction> aggregators = new HashMap<String, AggregationFunction>();
 		for (String subjectName : tracesToConsider) {
-			XTrace trace = ApplicationController.instance().logController().log(subjectName);
+			XTrace trace = ApplicationController.instance().logController().log().get(subjectName);
 			
 			// we want to process the activity only once per trace
 			Set<String> processedActivities = new HashSet<String>();
@@ -132,7 +132,7 @@ public class CognitiveDotModel extends Dot {
 				String activity = XCognitiveLogHelper.getAOIName(event);
 				if (!processedActivities.contains(activity) && attribute.getValues(trace, activity).size() > 0) {
 					if (!aggregators.containsKey(activity)) {
-						aggregators.put(activity, new AggregationFunction());
+						aggregators.put(activity, new AggregationFunction(tracesToConsider.size()));
 					}
 					for(Double value : attribute.getValues(trace, activity)) {
 						aggregators.get(activity).addObservation(value);

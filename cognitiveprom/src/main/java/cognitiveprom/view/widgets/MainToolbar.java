@@ -6,8 +6,12 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+
+import org.openide.awt.DropDownButtonFactory;
 
 import cognitiveprom.controllers.ApplicationController;
 import cognitiveprom.view.collections.ImageIcons;
@@ -21,7 +25,10 @@ public class MainToolbar extends JToolBar {
 
 	private static final long serialVersionUID = -2290088626676975817L;
 
-	private JButton openProcess = new JButton("", ImageIcons.ICON_OPEN);
+	private JButton openProcess = null; //new JButton("", ImageIcons.ICON_OPEN);
+	private JMenuItem openNewLog = new JMenuItem("Open new log");
+	private JMenuItem appendLog = new JMenuItem("Append log to existing model");
+	
 //	private JButton closeProcess = new JButton("", ImageIcons.ICON_CLOSE);
 	private JButton saveProcess = new JButton("", ImageIcons.ICON_SAVE);
 	private JButton saveFigure = new JButton("Export figure", ImageIcons.ICON_EXPORT_PIC);
@@ -33,7 +40,10 @@ public class MainToolbar extends JToolBar {
 		setFloatable(false);
 		setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 		
-		openProcess.setToolTipText("Open a new log file");
+		JPopupMenu popupMenu = new JPopupMenu();
+		popupMenu.add(openNewLog);
+		popupMenu.add(appendLog);
+		openProcess = DropDownButtonFactory.createDropDownButton(ImageIcons.ICON_OPEN, popupMenu);
 		saveProcess.setToolTipText("Export log file");
 		showConsole.setToolTipText("Toggle console visualization");
 		
@@ -89,6 +99,24 @@ public class MainToolbar extends JToolBar {
 				
 				ApplicationController.instance().showLoadProcessPage();
 				ApplicationController.instance().logController().loadFile();
+			}
+		});
+		
+		openNewLog.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().logController().closeFile();
+				ApplicationController.instance().processController().reset();
+				
+				ApplicationController.instance().showLoadProcessPage();
+				ApplicationController.instance().logController().loadFile();
+			}
+		});
+		
+		appendLog.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationController.instance().logController().loadFile(true);
 			}
 		});
 		
