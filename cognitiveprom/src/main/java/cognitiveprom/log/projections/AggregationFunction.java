@@ -31,6 +31,10 @@ public class AggregationFunction {
 			return stat.getMean();
 		} else if (value == AggregationFunctions.MEAN_ON_ALL_TRACES) {
 			return stat.getSum() / noOfTraces;
+		} else if (value == AggregationFunctions.RATIO_OVER_ALL_ACTS) {
+//			double totalForAllTraces;
+//			return totalForAllTraces / noOfTraces;
+			return 0d;
 		}
 		return 0;
 	}

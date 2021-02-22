@@ -147,10 +147,16 @@ public class CognitiveDotModel extends Dot {
 			max = Math.max(max, aggregators.get(activity).getValue(function).doubleValue());
 		}
 		
+		Double sum = 0d;
+		for (String activity : aggregators.keySet()) {
+			sum += aggregators.get(activity).getValue(function).doubleValue();
+		}
+		
 		Map<String, Pair<String, Double>> values = new HashMap<String, Pair<String, Double>>();
 		for (String activity : aggregators.keySet()) {
 			AggregationFunction af = aggregators.get(activity);
-			Pair<String, Double> p = new Pair<String, Double>(af.getStringValue(function), af.getValue(function).doubleValue() / max);
+			Double v = af.getValue(function).doubleValue() / sum;
+			Pair<String, Double> p = new Pair<String, Double>(v.toString()/*af.getStringValue(function)*/, af.getValue(function).doubleValue() / max);
 			values.put(activity, p);
 		}
 		
